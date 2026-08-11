@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BARBER SERRA - Barbearia Bela Vista | Palhoça - SC</title>
+    <meta name="description" content="Barbearia premium em Bela Vista, Palhoça. Cortes modernos, barba e tratamentos. Agende seu horário online!">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header/Navbar -->
+    <header class="header" id="header">
+        <nav class="nav container">
+            <a href="#home" class="nav-logo">
+                <i class="fas fa-cut"></i>
+                <span>BARBER SERRA</span>
+            </a>
+
+            <div class="nav-menu" id="nav-menu">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="#home" class="nav-link active">Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#about" class="nav-link">Sobre</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#services" class="nav-link">Serviços</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#barbers" class="nav-link">Barbeiros</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#gallery" class="nav-link">Galeria</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#contact" class="nav-link">Contato</a>
+                    </li>
+                </ul>
+                <div class="nav-close" id="nav-close">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
+
+            <div class="nav-btns">
+                <button class="btn-agendar" id="btn-agendar-header">
+                    <i class="fas fa-calendar-check"></i> Agendar
+                </button>
+                <div class="nav-toggle" id="nav-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-overlay"></div>
+        <div class="hero-content container">
+            <div class="hero-text">
+                <span class="hero-subtitle">Bem-vindo à</span>
+                <h1 class="hero-title">BARBER SERRA</h1>
+                <p class="hero-description">
+                    Estilo, tradição e hospitalidade em Bela Vista. 
+                    Transformamos seu visual com cortes modernos e atendimento excepcional.
+                </p>
+                <div class="hero-rating">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <span>5.0 - 2 avaliações no Google</span>
+                </div>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" id="btn-agendar-hero">
+                        <i class="fas fa-calendar-check"></i> Agendar Horário
+                    </button>
+                    <a href="#about" class="btn btn-secondary">
+                        <i class="fas fa-info-circle"></i> Saiba Mais
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="hero-scroll">
+            <a href="#about">
+                <i class="fas fa-chevron-down"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about section" id="about">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Conheça-nos</span>
+                <h2 class="section-title">Sobre a BARBER SERRA</h2>
+            </div>
+
+            <div class="about-content">
+                <div class="about-img">
+                    <img src="images/about-placeholder.jpg" alt="Interior BARBER SERRA">
+                    <div class="about-badge">
+                        <i class="fas fa-award"></i>
+                        <span>3+ Anos</span>
+                    </div>
+                </div>
+                <div class="about-info">
+                    <h3>Local aconchegante com os melhores profissionais</h3>
+                    <p>
+                        Na BARBER SERRA, oferecemos uma experiência única em barbearia. 
+                        Localizada em Bela Vista, Palhoça, nossa missão é proporcionar cortes 
+                        impecáveis com hospitalidade excepcional.
+                    </p>
+                    <p>
+                        Nossos profissionais são especializados em cortes clássicos e modernos, 
+                        garantindo que você saia com a confiança renovada e o visual dos seus sonhos.
+                    </p>
+                    
+                    <div class="about-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Profissionais Qualificados</h4>
+                                <p>Barbeiros experientes e atualizados</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Ambiente Acolhedor</h4>
+                                <p>Espaço confortável e climatizado</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Produtos Premium</h4>
+                                <p>Utilizamos as melhores marcas</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" id="btn-agendar-about">
+                        <i class="fas fa-calendar-check"></i> Agendar Agora
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services section" id="services">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Nossos Serviços</span>
+                <h2 class="section-title">O que oferecemos</h2>
+            </div>
+
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-cut"></i>
+                    </div>
+                    <h3>Corte com Tesoura</h3>
+                    <p>Corte clássico e preciso com tesoura profissional</p>
+                    <span class="service-price">A partir de R$ 40</span>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-scissors"></i>
+                    </div>
+                    <h3>Corte Masculino</h3>
+                    <p>Cortes modernos e personalizados para seu estilo</p>
+                    <span class="service-price">A partir de R$ 45</span>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-razor"></i>
+                    </div>
+                    <h3>Barba</h3>
+                    <p>Design, aparo e tratamento profissional</p>
+                    <span class="service-price">A partir de R$ 30</span>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3>Combo Completo</h3>
+                    <p>Corte + Barba + Acabamento</p>
+                    <span class="service-price">A partir de R$ 70</span>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-child"></i>
+                    </div>
+                    <h3>Corte Infantil</h3>
+                    <p>Atendimento especial para crianças</p>
+                    <span class="service-price">A partir de R$ 35</span>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-paint-brush"></i>
+                    </div>
+                    <h3>Pigmentação</h3>
+                    <p>Pintura de cabelo e barba</p>
+                    <span class="service-price">A partir de R$ 50</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Barbers Section -->
+    <section class="barbers section" id="barbers">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Nossa Equipe</span>
+                <h2 class="section-title">Conheça Nossos Barbeiros</h2>
+            </div>
+
+            <div class="barbers-grid" id="barbers-grid">
+                <!-- Espaço para fotos dos barbeiros - será preenchido dinamicamente ou manualmente -->
+                <div class="barber-card">
+                    <div class="barber-img">
+                        <img src="images/barber1-placeholder.jpg" alt="Barbeiro 1">
+                        <div class="barber-overlay">
+                            <div class="barber-social">
+                                <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                                <a href="#" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="barber-info">
+                        <h3>Nome do Barbeiro</h3>
+                        <span>Especialista em Cortes Modernos</span>
+                        <p>Mais de 5 anos de experiência</p>
+                    </div>
+                </div>
+
+                <div class="barber-card">
+                    <div class="barber-img">
+                        <img src="images/barber2-placeholder.jpg" alt="Barbeiro 2">
+                        <div class="barber-overlay">
+                            <div class="barber-social">
+                                <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                                <a href="#" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="barber-info">
+                        <h3>Nome do Barbeiro</h3>
+                        <span>Especialista em Barba</span>
+                        <p>Certificado em design de barba</p>
+                    </div>
+                </div>
+
+                <div class="barber-card">
+                    <div class="barber-img">
+                        <img src="images/barber3-placeholder.jpg" alt="Barbeiro 3">
+                        <div class="barber-overlay">
+                            <div class="barber-social">
+                                <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                                <a href="#" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="barber-info">
+                        <h3>Nome do Barbeiro</h3>
+                        <span>Cortes Clássicos</span>
+                        <p>Tradição e qualidade</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="gallery section" id="gallery">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Nossos Trabalhos</span>
+                <h2 class="section-title">Galeria de Cortes</h2>
+            </div>
+
+            <div class="gallery-filters">
+                <button class="filter-btn active" data-filter="all">Todos</button>
+                <button class="filter-btn" data-filter="cortes">Cortes</button>
+                <button class="filter-btn" data-filter="barba">Barba</button>
+                <button class="filter-btn" data-filter="infantil">Infantil</button>
+            </div>
+
+            <div class="gallery-grid" id="gallery-grid">
+                <!-- Espaço para fotos dos cortes - será preenchido com suas fotos reais -->
+                <div class="gallery-item" data-category="cortes">
+                    <img src="images/corte1-placeholder.jpg" alt="Corte 1">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="cortes">
+                    <img src="images/corte2-placeholder.jpg" alt="Corte 2">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="barba">
+                    <img src="images/barba1-placeholder.jpg" alt="Barba 1">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="cortes">
+                    <img src="images/corte3-placeholder.jpg" alt="Corte 3">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="barba">
+                    <img src="images/barba2-placeholder.jpg" alt="Barba 2">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="infantil">
+                    <img src="images/infantil1-placeholder.jpg" alt="Infantil 1">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="cortes">
+                    <img src="images/corte4-placeholder.jpg" alt="Corte 4">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="infantil">
+                    <img src="images/infantil2-placeholder.jpg" alt="Infantil 2">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Depoimentos</span>
+                <h2 class="section-title">O que dizem nossos clientes</h2>
+            </div>
+
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">
+                        "Local aconchegante e o mano lá corta super bem e tem ótima hospitalidade !!"
+                    </p>
+                    <div class="testimonial-author">
+                        <img src="images/avatar-placeholder.jpg" alt="Felipe Gomes">
+                        <div>
+                            <h4>Felipe Gomes</h4>
+                            <span>Cliente Google</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">
+                        "Atendimento super da hora!! Super indico!!!"
+                    </p>
+                    <div class="testimonial-author">
+                        <img src="images/avatar-placeholder.jpg" alt="Claudinha Rocha">
+                        <div>
+                            <h4>Claudinha Rocha</h4>
+                            <span>Cliente Google</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact section" id="contact">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Entre em Contato</span>
+                <h2 class="section-title">Visite-nos ou Agende Online</h2>
+            </div>
+
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="info-card">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Endereço</h4>
+                            <p>R. Blumenau - Bela Vista<br>Palhoça - SC, 88132-745</p>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h4>Telefone</h4>
+                            <p>(48) 98813-9261</p>
+                            <a href="https://wa.me/5548988139261" target="_blank" class="btn-whatsapp">
+                                <i class="fab fa-whatsapp"></i> WhatsApp
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <h4>Horário de Funcionamento</h4>
+                            <p>Segunda a Sábado: 9h às 21h<br>Domingo: Fechado</p>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <i class="fas fa-share-alt"></i>
+                        <div>
+                            <h4>Redes Sociais</h4>
+                            <div class="social-links">
+                                <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                                <a href="#" target="_blank"><i class="fab fa-facebook"></i></a>
+                                <a href="https://wa.me/5548988139261" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-map">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3537.4207468844475!2d-48.6407!3d-27.6397!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjfCsDM4JzIzLjAiUyA0OMKwMzgnMjYuNSJX!5e0!3m2!1spt-BR!2sbr!4v1234567890123!5m2!1spt-BR!2sbr" 
+                        width="100%" 
+                        height="100%" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-about">
+                    <h3><i class="fas fa-cut"></i> BARBER SERRA</h3>
+                    <p>Barbearia premium em Bela Vista, Palhoça. Estilo, tradição e hospitalidade desde 2021.</p>
+                    <div class="footer-social">
+                        <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-facebook"></i></a>
+                        <a href="https://wa.me/5548988139261" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Links Rápidos</h4>
+                    <ul>
+                        <li><a href="#home">Início</a></li>
+                        <li><a href="#about">Sobre</a></li>
+                        <li><a href="#services">Serviços</a></li>
+                        <li><a href="#barbers">Barbeiros</a></li>
+                        <li><a href="#gallery">Galeria</a></li>
+                        <li><a href="#contact">Contato</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-hours">
+                    <h4>Horário</h4>
+                    <ul>
+                        <li>Segunda a Sexta: 9h - 21h</li>
+                        <li>Sábado: 9h - 21h</li>
+                        <li>Domingo: Fechado</li>
+                    </ul>
+                </div>
+
+                <div class="footer-contact">
+                    <h4>Contato</h4>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> (48) 98813-9261</li>
+                        <li><i class="fas fa-map-marker-alt"></i> R. Blumenau - Bela Vista</li>
+                        <li>Palhoça - SC, 88132-745</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 BARBER SERRA. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-top" id="scroll-top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Modal de Agendamento -->
+    <div class="modal" id="modal-agendamento">
+        <div class="modal-overlay" id="modal-overlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="modal-header">
+                <h2><i class="fas fa-calendar-check"></i> Agendar Horário</h2>
+                <p>Preencha os dados abaixo para agendar seu horário</p>
+            </div>
+
+            <form class="agendamento-form" id="agendamento-form">
+                <div class="form-step active" data-step="1">
+                    <h3>1. Escolha o Serviço</h3>
+                    <div class="form-group">
+                        <select id="servico" name="servico" required>
+                            <option value="">Selecione um serviço</option>
+                            <option value="corte-tesoura">Corte com Tesoura - R$ 40</option>
+                            <option value="corte-masculino">Corte Masculino - R$ 45</option>
+                            <option value="barba">Barba - R$ 30</option>
+                            <option value="combo-completo">Combo Completo - R$ 70</option>
+                            <option value="corte-infantil">Corte Infantil - R$ 35</option>
+                            <option value="pigmentacao">Pigmentação - R$ 50</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-next" onclick="nextStep(2)">
+                        Próximo <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <div class="form-step" data-step="2">
+                    <h3>2. Escolha o Barbeiro</h3>
+                    <div class="form-group" id="barbeiros-container">
+                        <!-- Será preenchido dinamicamente -->
+                    </div>
+                    <div class="form-buttons">
+                        <button type="button" class="btn btn-secondary" onclick="prevStep(1)">
+                            <i class="fas fa-arrow-left"></i> Voltar
+                        </button>
+                        <button type="button" class="btn btn-primary btn-next" onclick="nextStep(3)">
+                            Próximo <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-step" data-step="3">
+                    <h3>3. Data e Horário</h3>
+                    <div class="form-group">
+                        <label for="data">Data</label>
+                        <input type="date" id="data" name="data" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="horario">Horário Disponível</label>
+                        <select id="horario" name="horario" required>
+                            <option value="">Selecione um horário</option>
+                        </select>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="button" class="btn btn-secondary" onclick="prevStep(2)">
+                            <i class="fas fa-arrow-left"></i> Voltar
+                        </button>
+                        <button type="button" class="btn btn-primary btn-next" onclick="nextStep(4)">
+                            Próximo <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-step" data-step="4">
+                    <h3>4. Seus Dados</h3>
+                    <div class="form-group">
+                        <label for="nome">Nome Completo</label>
+                        <input type="text" id="nome" name="nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefone">Telefone/WhatsApp</label>
+                        <input type="tel" id="telefone" name="telefone" placeholder="(48) 99999-9999" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">E-mail (opcional)</label>
+                        <input type="email" id="email" name="email">
+                    </div>
+                    <div class="form-buttons">
+                        <button type="button" class="btn btn-secondary" onclick="prevStep(3)">
+                            <i class="fas fa-arrow-left"></i> Voltar
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-check"></i> Confirmar Agendamento
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-step" data-step="5">
+                    <div class="success-message">
+                        <i class="fas fa-check-circle"></i>
+                        <h3>Agendamento Confirmado!</h3>
+                        <p>Seu horário foi reservado com sucesso.</p>
+                        <div class="agendamento-details" id="agendamento-details"></div>
+                        <p class="success-note">Você receberá uma confirmação via WhatsApp.</p>
+                        <button type="button" class="btn btn-primary" onclick="fecharModal()">
+                            Fechar
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Galeria (Lightbox) -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" id="lightbox-close">
+            <i class="fas fa-times"></i>
+        </button>
+        <button class="lightbox-prev" id="lightbox-prev">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="lightbox-next" id="lightbox-next">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+        <img src="" alt="" id="lightbox-img">
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>

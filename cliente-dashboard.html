@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Agendamentos - BARBER SERRA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/cliente-dashboard.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container header-content">
+            <div class="brand">
+                <i class="fas fa-cut"></i>
+                <span>BARBER SERRA</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="#agendamentos" class="nav-link active">Meus Agendamentos</a>
+                <a href="#novo" class="nav-link">Novo Agendamento</a>
+                <a href="#perfil" class="nav-link">Perfil</a>
+            </nav>
+            <div class="user-actions">
+                <button class="btn-icon" title="Notificações">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">2</span>
+                </button>
+                <div class="user-menu">
+                    <img src="images/avatar-placeholder.jpg" alt="Usuário" id="user-avatar">
+                    <div class="dropdown">
+                        <span id="user-name-header">Cliente</span>
+                        <button onclick="logout()" class="btn-logout-small">
+                            <i class="fas fa-sign-out-alt"></i> Sair
+                        </button>
+                    </div>
+                </div>
+                <button class="mobile-toggle" id="mobile-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                <div class="welcome-text">
+                    <h1>Olá, <span id="user-name">Cliente</span>! 👋</h1>
+                    <p>Gerencie seus agendamentos e agende novos horários</p>
+                </div>
+                <button class="btn-primary" onclick="scrollToSection('novo')">
+                    <i class="fas fa-plus"></i>
+                    Novo Agendamento
+                </button>
+            </section>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon upcoming">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div>
+                        <span class="stat-label">Próximo Agendamento</span>
+                        <h3 class="stat-value" id="proximo-agendamento">--</h3>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon total">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <div>
+                        <span class="stat-label">Total de Atendimentos</span>
+                        <h3 class="stat-value" id="total-atendimentos">0</h3>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon points">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div>
+                        <span class="stat-label">Pontos Fidelidade</span>
+                        <h3 class="stat-value" id="pontos-fidelidade">0</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Agendamentos Section -->
+            <section id="agendamentos" class="section">
+                <div class="section-header">
+                    <h2>Meus Agendamentos</h2>
+                    <div class="filter-tabs">
+                        <button class="filter-tab active" data-filter="todos">Todos</button>
+                        <button class="filter-tab" data-filter="confirmado">Confirmados</button>
+                        <button class="filter-tab" data-filter="concluido">Concluídos</button>
+                    </div>
+                </div>
+                
+                <div class="agendamentos-list" id="agendamentos-list">
+                    <div class="loading-state">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Carregando agendamentos...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Novo Agendamento Section -->
+            <section id="novo" class="section">
+                <div class="section-header">
+                    <h2>Novo Agendamento</h2>
+                    <p>Escolha o serviço, barbeiro e horário desejado</p>
+                </div>
+
+                <div class="booking-wizard">
+                    <!-- Step 1: Serviço -->
+                    <div class="wizard-step active" data-step="1">
+                        <h3>1. Escolha o Serviço</h3>
+                        <div class="services-grid" id="services-grid">
+                            <!-- Carregado dinamicamente -->
+                        </div>
+                        <button class="btn-next" onclick="nextBookingStep(2)" disabled>
+                            Próximo <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+
+                    <!-- Step 2: Barbeiro -->
+                    <div class="wizard-step" data-step="2">
+                        <h3>2. Escolha o Barbeiro</h3>
+                        <div class="barbers-grid" id="barbers-grid">
+                            <!-- Carregado dinamicamente -->
+                        </div>
+                        <div class="wizard-buttons">
+                            <button class="btn-back" onclick="prevBookingStep(1)">
+                                <i class="fas fa-arrow-left"></i> Voltar
+                            </button>
+                            <button class="btn-next" onclick="nextBookingStep(3)" disabled>
+                                Próximo <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Data e Horário -->
+                    <div class="wizard-step" data-step="3">
+                        <h3>3. Escolha Data e Horário</h3>
+                        <div class="datetime-picker">
+                            <div class="date-picker">
+                                <label>Data</label>
+                                <input type="date" id="booking-date" min="">
+                            </div>
+                            <div class="time-slots" id="time-slots">
+                                <p class="hint">Selecione uma data para ver os horários disponíveis</p>
+                            </div>
+                        </div>
+                        <div class="wizard-buttons">
+                            <button class="btn-back" onclick="prevBookingStep(2)">
+                                <i class="fas fa-arrow-left"></i> Voltar
+                            </button>
+                            <button class="btn-next" onclick="nextBookingStep(4)" disabled>
+                                Próximo <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Confirmação -->
+                    <div class="wizard-step" data-step="4">
+                        <h3>4. Confirme seu Agendamento</h3>
+                        <div class="booking-summary" id="booking-summary">
+                            <!-- Preenchido dinamicamente -->
+                        </div>
+                        <div class="wizard-buttons">
+                            <button class="btn-back" onclick="prevBookingStep(3)">
+                                <i class="fas fa-arrow-left"></i> Voltar
+                            </button>
+                            <button class="btn-confirm" onclick="confirmBooking()">
+                                <i class="fas fa-check"></i> Confirmar Agendamento
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 5: Sucesso -->
+                    <div class="wizard-step" data-step="5">
+                        <div class="success-state">
+                            <i class="fas fa-check-circle"></i>
+                            <h3>Agendamento Confirmado!</h3>
+                            <p>Você receberá uma confirmação via WhatsApp</p>
+                            <div class="booking-details" id="booking-details-final"></div>
+                            <button class="btn-primary" onclick="resetBooking()">
+                                Fazer Novo Agendamento
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Perfil Section -->
+            <section id="perfil" class="section">
+                <div class="section-header">
+                    <h2>Meu Perfil</h2>
+                </div>
+                
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <img src="images/avatar-placeholder.jpg" alt="Avatar" class="profile-avatar">
+                        <div>
+                            <h3 id="profile-name">Cliente</h3>
+                            <p id="profile-email">email@exemplo.com</p>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-info">
+                        <div class="info-item">
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <span class="label">Telefone</span>
+                                <span class="value" id="profile-phone">--</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-calendar-check"></i>
+                            <div>
+                                <span class="label">Cliente desde</span>
+                                <span class="value" id="profile-since">--</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-logout" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Sair da Conta
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 BARBER SERRA. Todos os direitos reservados.</p>
+            <a href="index.html">Voltar ao site</a>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/cliente-dashboard.js"></script>
+</body>
+</html>
