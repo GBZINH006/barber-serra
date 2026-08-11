@@ -784,6 +784,27 @@ button {
     gap: 20px;
 }
 
+.instagram-widget-wrapper {
+    margin: 40px 0;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+/* Elfsight Widget Customization */
+.elfsight-app-4eaae77c-d16e-4d85-aa4b-1af71f3974fe {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto;
+}
+
+/* Garantir responsividade do widget */
+@media (max-width: 768px) {
+    .instagram-widget-wrapper {
+        margin: 20px -20px; /* Full width em mobile */
+        border-radius: 0;
+    }
+}
+
 .instagram-post {
     position: relative;
     aspect-ratio: 1;
