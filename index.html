@@ -285,76 +285,80 @@
         </div>
     </section>
 
-    <!-- Gallery Section -->
-    <section class="gallery section" id="gallery">
+    <!-- Instagram Feed Section -->
+    <section class="instagram-feed section" id="gallery">
         <div class="container">
             <div class="section-header">
                 <span class="section-subtitle">Nossos Trabalhos</span>
-                <h2 class="section-title">Galeria de Cortes</h2>
+                <h2 class="section-title">Feed do Instagram</h2>
+                <p style="color: var(--text-light); margin-top: 10px;">
+                    Acompanhe nossos trabalhos diariamente no Instagram
+                </p>
             </div>
 
-            <div class="gallery-filters">
-                <button class="filter-btn active" data-filter="all">Todos</button>
-                <button class="filter-btn" data-filter="cortes">Cortes</button>
-                <button class="filter-btn" data-filter="barba">Barba</button>
-                <button class="filter-btn" data-filter="infantil">Infantil</button>
-            </div>
-
-            <div class="gallery-grid" id="gallery-grid">
-                <!-- Espaço para fotos dos cortes - será preenchido com suas fotos reais -->
-                <div class="gallery-item" data-category="cortes">
-                    <img src="images/corte1-placeholder.jpg" alt="Corte 1">
-                    <div class="gallery-overlay">
-                        <i class="fas fa-search-plus"></i>
+            <!-- Instagram Widget Container -->
+            <div class="instagram-widget-wrapper">
+                <!-- OPÇÃO 1: EmbedSocial (Recomendado) -->
+                <!-- Substitua 'SEU_CODIGO_AQUI' pelo código do seu widget -->
+                <!-- Cadastre-se em: https://embedsocial.com -->
+                <div id="embedsocial-instagram-feed"></div>
+                
+                <!-- OPÇÃO 2: SnapWidget -->
+                <!-- Descomente se preferir usar SnapWidget -->
+                <!-- <iframe src="https://snapwidget.com/embed/SEU_CODIGO" 
+                        class="snapwidget-widget" 
+                        allowtransparency="true" 
+                        frameborder="0" 
+                        scrolling="no"
+                        style="border:none; overflow:hidden; width:100%; height:600px;">
+                </iframe> -->
+                
+                <!-- OPÇÃO 3: Feed Manual (Fallback) -->
+                <div class="instagram-fallback">
+                    <div class="instagram-grid">
+                        <a href="https://www.instagram.com/barberserra/" target="_blank" class="instagram-post">
+                            <div class="instagram-placeholder">
+                                <i class="fab fa-instagram"></i>
+                                <span>Ver no Instagram</span>
+                            </div>
+                        </a>
+                        <a href="https://www.instagram.com/barberserra/" target="_blank" class="instagram-post">
+                            <div class="instagram-placeholder">
+                                <i class="fab fa-instagram"></i>
+                                <span>Ver no Instagram</span>
+                            </div>
+                        </a>
+                        <a href="https://www.instagram.com/barberserra/" target="_blank" class="instagram-post">
+                            <div class="instagram-placeholder">
+                                <i class="fab fa-instagram"></i>
+                                <span>Ver no Instagram</span>
+                            </div>
+                        </a>
+                        <a href="https://www.instagram.com/barberserra/" target="_blank" class="instagram-post">
+                            <div class="instagram-placeholder">
+                                <i class="fab fa-instagram"></i>
+                                <span>Ver no Instagram</span>
+                            </div>
+                        </a>
+                        <a href="https://www.instagram.com/barberserra/" target="_blank" class="instagram-post">
+                            <div class="instagram-placeholder">
+                                <i class="fab fa-instagram"></i>
+                                <span>Ver no Instagram</span>
+                            </div>
+                        </a>
+                        <a href="https://www.instagram.com/barberserra/" target="_blank" class="instagram-post">
+                            <div class="instagram-placeholder">
+                                <i class="fab fa-instagram"></i>
+                                <span>Ver no Instagram</span>
+                            </div>
+                        </a>
                     </div>
-                </div>
-
-                <div class="gallery-item" data-category="cortes">
-                    <img src="images/corte2-placeholder.jpg" alt="Corte 2">
-                    <div class="gallery-overlay">
-                        <i class="fas fa-search-plus"></i>
-                    </div>
-                </div>
-
-                <div class="gallery-item" data-category="barba">
-                    <img src="images/barba1-placeholder.jpg" alt="Barba 1">
-                    <div class="gallery-overlay">
-                        <i class="fas fa-search-plus"></i>
-                    </div>
-                </div>
-
-                <div class="gallery-item" data-category="cortes">
-                    <img src="images/corte3-placeholder.jpg" alt="Corte 3">
-                    <div class="gallery-overlay">
-                        <i class="fas fa-search-plus"></i>
-                    </div>
-                </div>
-
-                <div class="gallery-item" data-category="barba">
-                    <img src="images/barba2-placeholder.jpg" alt="Barba 2">
-                    <div class="gallery-overlay">
-                        <i class="fas fa-search-plus"></i>
-                    </div>
-                </div>
-
-                <div class="gallery-item" data-category="infantil">
-                    <img src="images/infantil1-placeholder.jpg" alt="Infantil 1">
-                    <div class="gallery-overlay">
-                        <i class="fas fa-search-plus"></i>
-                    </div>
-                </div>
-
-                <div class="gallery-item" data-category="cortes">
-                    <img src="images/corte4-placeholder.jpg" alt="Corte 4">
-                    <div class="gallery-overlay">
-                        <i class="fas fa-search-plus"></i>
-                    </div>
-                </div>
-
-                <div class="gallery-item" data-category="infantil">
-                    <img src="images/infantil2-placeholder.jpg" alt="Infantil 2">
-                    <div class="gallery-overlay">
-                        <i class="fas fa-search-plus"></i>
+                    
+                    <div class="instagram-cta">
+                        <a href="https://www.instagram.com/barberserra/" target="_blank" class="btn-instagram">
+                            <i class="fab fa-instagram"></i>
+                            Seguir no Instagram
+                        </a>
                     </div>
                 </div>
             </div>
