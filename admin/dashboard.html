@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - BARBER SERRA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body class="admin-page">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="brand">
+                <i class="fas fa-cut"></i>
+                <span>BARBER SERRA</span>
+            </div>
+            <button class="sidebar-toggle" id="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item active">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="agendamentos.html" class="nav-item">
+                <i class="fas fa-calendar-check"></i>
+                <span>Agendamentos</span>
+                <span class="badge">12</span>
+            </a>
+            <a href="horarios.html" class="nav-item">
+                <i class="fas fa-clock"></i>
+                <span>Horários</span>
+            </a>
+            <a href="servicos.html" class="nav-item">
+                <i class="fas fa-cut"></i>
+                <span>Serviços</span>
+            </a>
+            <a href="barbeiros.html" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>Barbeiros</span>
+            </a>
+            <a href="clientes.html" class="nav-item">
+                <i class="fas fa-user-group"></i>
+                <span>Clientes</span>
+            </a>
+            <a href="relatorios.html" class="nav-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Relatórios</span>
+            </a>
+            <a href="configuracoes.html" class="nav-item">
+                <i class="fas fa-gear"></i>
+                <span>Configurações</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <img src="../images/barber1-placeholder.jpg" alt="Usuário" class="user-avatar">
+                <div class="user-details">
+                    <span class="user-name" id="user-name">Carregando...</span>
+                    <span class="user-role">Barbeiro</span>
+                </div>
+            </div>
+            <button class="btn-logout" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Sair</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Topbar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="mobile-toggle" id="mobile-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title">Dashboard</h1>
+            </div>
+
+            <div class="topbar-right">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Buscar...">
+                </div>
+
+                <button class="topbar-btn" title="Notificações">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </button>
+
+                <button class="topbar-btn" title="Mensagens">
+                    <i class="fas fa-envelope"></i>
+                    <span class="notification-badge">5</span>
+                </button>
+
+                <div class="user-menu">
+                    <img src="../images/barber1-placeholder.jpg" alt="Usuário" class="user-avatar-small">
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <div class="page-content">
+            <!-- Welcome Banner -->
+            <div class="welcome-banner">
+                <div class="welcome-content">
+                    <h2>Bem-vindo de volta, <span id="welcome-name">Barbeiro</span>! 👋</h2>
+                    <p>Aqui está um resumo das suas atividades hoje</p>
+                </div>
+                <div class="welcome-actions">
+                    <button class="btn-primary" onclick="window.location.href='agendamentos.html'">
+                        <i class="fas fa-plus"></i>
+                        Novo Agendamento
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-label">Hoje</span>
+                        <h3 class="stat-value" id="stat-hoje">0</h3>
+                        <span class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i> 12% vs ontem
+                        </span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #4ecdc4 0%, #44a3a0 100%);">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-label">Esta Semana</span>
+                        <h3 class="stat-value" id="stat-semana">0</h3>
+                        <span class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i> 8% vs semana passada
+                        </span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-label">Faturamento Mensal</span>
+                        <h3 class="stat-value" id="stat-faturamento">R$ 0</h3>
+                        <span class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i> 23% vs mês passado
+                        </span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-label">Novos Clientes</span>
+                        <h3 class="stat-value" id="stat-clientes">0</h3>
+                        <span class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i> 15 este mês
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts and Tables Row -->
+            <div class="dashboard-row">
+                <!-- Agendamentos de Hoje -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>
+                            <i class="fas fa-calendar-day"></i>
+                            Agendamentos de Hoje
+                        </h3>
+                        <a href="agendamentos.html" class="card-action">Ver todos</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="timeline" id="agendamentos-hoje">
+                            <div class="empty-state">
+                                <i class="fas fa-calendar-check"></i>
+                                <p>Carregando agendamentos...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gráfico de Agendamentos -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>
+                            <i class="fas fa-chart-line"></i>
+                            Agendamentos da Semana
+                        </h3>
+                        <select class="filter-select">
+                            <option>Esta semana</option>
+                            <option>Semana passada</option>
+                            <option>Este mês</option>
+                        </select>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="agendamentos-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Second Row -->
+            <div class="dashboard-row">
+                <!-- Serviços Populares -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>
+                            <i class="fas fa-fire"></i>
+                            Serviços Mais Populares
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="service-list" id="servicos-populares">
+                            <div class="empty-state">
+                                <i class="fas fa-cut"></i>
+                                <p>Carregando serviços...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Atividade Recente -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>
+                            <i class="fas fa-history"></i>
+                            Atividade Recente
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="activity-list" id="atividade-recente">
+                            <div class="empty-state">
+                                <i class="fas fa-clock"></i>
+                                <p>Nenhuma atividade recente</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
