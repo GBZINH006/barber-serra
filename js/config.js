@@ -1,8 +1,8 @@
 // Configuração do Supabase
 // IMPORTANTE: Substitua estas credenciais pelas suas próprias do painel Supabase
 const SUPABASE_CONFIG = {
-    url: 'https://SEU_PROJETO.supabase.co',
-    anonKey: 'SUA_CHAVE_ANONIMA_AQUI'
+    url: 'https://jfgupdmcsenvlgvpckxo.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpmZ3VwZG1jc2VudmxndnBja3hvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0Njc2NTQsImV4cCI6MjEwMjA0MzY1NH0.Cf1S3WOHgp1RQ1_CrwhyA_6O1w84Rn5p_mhylEw6MyM'
 };
 
 // Configuração de horários de funcionamento
