@@ -171,54 +171,57 @@
                     <div class="service-icon">
                         <i class="fas fa-cut"></i>
                     </div>
-                    <h3>Corte com Tesoura</h3>
-                    <p>Corte clássico e preciso com tesoura profissional</p>
-                    <span class="service-price">A partir de R$ 40</span>
+                    <h3>Corte Degradê</h3>
+                    <p>Degradê moderno e preciso, estilo personalizado</p>
+                    <span class="service-price">R$ 40,00</span>
                 </div>
 
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="fas fa-scissors"></i>
                     </div>
-                    <h3>Corte Masculino</h3>
-                    <p>Cortes modernos e personalizados para seu estilo</p>
-                    <span class="service-price">A partir de R$ 45</span>
+                    <h3>Navalhado ou Tesoura</h3>
+                    <p>Corte clássico com navalha ou tesoura profissional</p>
+                    <span class="service-price">R$ 45,00</span>
                 </div>
 
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="fas fa-razor"></i>
                     </div>
-                    <h3>Barba</h3>
-                    <p>Design, aparo e tratamento profissional</p>
-                    <span class="service-price">A partir de R$ 30</span>
+                    <h3>Barba Simples</h3>
+                    <p>Design, aparo e acabamento profissional da barba</p>
+                    <span class="service-price">R$ 35,00</span>
+                </div>
+
+                <div class="service-card featured">
+                    <div class="service-badge">
+                        <i class="fas fa-star"></i> Destaque
+                    </div>
+                    <div class="service-icon">
+                        <i class="fas fa-spa"></i>
+                    </div>
+                    <h3>Barba com Ozônio</h3>
+                    <p>Tratamento premium com vapor de ozônio para hidratação profunda</p>
+                    <span class="service-price">R$ 50,00</span>
                 </div>
 
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="fas fa-star"></i>
                     </div>
-                    <h3>Combo Completo</h3>
-                    <p>Corte + Barba + Acabamento</p>
-                    <span class="service-price">A partir de R$ 70</span>
+                    <h3>Combo Degradê + Barba</h3>
+                    <p>Corte Degradê + Barba Simples</p>
+                    <span class="service-price">R$ 75,00</span>
                 </div>
 
                 <div class="service-card">
                     <div class="service-icon">
-                        <i class="fas fa-child"></i>
+                        <i class="fas fa-crown"></i>
                     </div>
-                    <h3>Corte Infantil</h3>
-                    <p>Atendimento especial para crianças</p>
-                    <span class="service-price">A partir de R$ 35</span>
-                </div>
-
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-paint-brush"></i>
-                    </div>
-                    <h3>Pigmentação</h3>
-                    <p>Pintura de cabelo e barba</p>
-                    <span class="service-price">A partir de R$ 50</span>
+                    <h3>Combo Premium</h3>
+                    <p>Navalhado/Tesoura + Barba com Ozônio</p>
+                    <span class="service-price">R$ 95,00</span>
                 </div>
             </div>
         </div>
@@ -506,12 +509,18 @@
                     <div class="form-group">
                         <select id="servico" name="servico" required>
                             <option value="">Selecione um serviço</option>
-                            <option value="corte-tesoura">Corte com Tesoura - R$ 40</option>
-                            <option value="corte-masculino">Corte Masculino - R$ 45</option>
-                            <option value="barba">Barba - R$ 30</option>
-                            <option value="combo-completo">Combo Completo - R$ 70</option>
-                            <option value="corte-infantil">Corte Infantil - R$ 35</option>
-                            <option value="pigmentacao">Pigmentação - R$ 50</option>
+                            <optgroup label="Cortes">
+                                <option value="corte-degrade" data-preco="40">Corte Degradê - R$ 40,00</option>
+                                <option value="navalhado-tesoura" data-preco="45">Navalhado ou Tesoura - R$ 45,00</option>
+                            </optgroup>
+                            <optgroup label="Barba e Tratamento">
+                                <option value="barba-simples" data-preco="35">Barba Simples - R$ 35,00</option>
+                                <option value="barba-ozonio" data-preco="50">Barba com Ozônio - R$ 50,00 ⭐</option>
+                            </optgroup>
+                            <optgroup label="Combos">
+                                <option value="combo-degrade-barba" data-preco="75">Combo Degradê + Barba - R$ 75,00</option>
+                                <option value="combo-premium" data-preco="95">Combo Premium (Navalhado + Ozônio) - R$ 95,00</option>
+                            </optgroup>
                         </select>
                     </div>
                     <button type="button" class="btn btn-primary btn-next" onclick="nextStep(2)">

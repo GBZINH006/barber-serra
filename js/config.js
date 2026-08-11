@@ -16,15 +16,21 @@ const HORARIOS_FUNCIONAMENTO = {
     domingo: { fechado: true }
 };
 
-// Lista de serviços
+// Lista de serviços - PREÇOS REAIS BARBER SERRA
 const SERVICOS = [
-    { id: 'corte-tesoura', nome: 'Corte com Tesoura', preco: 40, duracao: 45 },
-    { id: 'corte-masculino', nome: 'Corte Masculino', preco: 45, duracao: 45 },
-    { id: 'barba', nome: 'Barba', preco: 30, duracao: 30 },
-    { id: 'combo-completo', nome: 'Combo Completo', preco: 70, duracao: 75 },
-    { id: 'corte-infantil', nome: 'Corte Infantil', preco: 35, duracao: 30 },
-    { id: 'pigmentacao', nome: 'Pigmentação', preco: 50, duracao: 60 }
+    // CORTES
+    { id: 'corte-degrade', nome: 'Corte Degradê', preco: 40, duracao: 45, categoria: 'cortes' },
+    { id: 'navalhado-tesoura', nome: 'Navalhado ou Tesoura', preco: 45, duracao: 50, categoria: 'cortes' },
+    
+    // BARBA E TRATAMENTO
+    { id: 'barba-simples', nome: 'Barba Simples', preco: 35, duracao: 30, categoria: 'barba' },
+    { id: 'barba-ozonio', nome: 'Barba com Ozônio', preco: 50, duracao: 40, categoria: 'barba', destaque: true },
+    
+    // COMBOS
+    { id: 'combo-degrade-barba', nome: 'Combo Degradê + Barba', preco: 75, duracao: 75, categoria: 'combos' },
+    { id: 'combo-premium', nome: 'Combo Premium (Navalhado + Ozônio)', preco: 95, duracao: 90, categoria: 'combos', destaque: true }
 ];
+
 
 // Dados dos barbeiros (serão carregados do Supabase)
 let BARBEIROS = [
