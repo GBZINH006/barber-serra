@@ -91,9 +91,9 @@ CREATE TRIGGER trigger_atualizar_agendamentos
 -- ==================== DADOS INICIAIS ====================
 -- Inserir barbeiros de exemplo
 INSERT INTO barbeiros (nome, especialidade, foto, ordem, ativo) VALUES
-('Carlos Silva', 'Especialista em Cortes Modernos', 'images/barber1-placeholder.jpg', 1, true),
-('João Pedro', 'Expert em Barba e Degradê', 'images/barber2-placeholder.jpg', 2, true),
-('Rafael Santos', 'Cortes Clássicos e Tradicionais', 'images/barber3-placeholder.jpg', 3, true)
+('Mateus Rabelo', 'Especialista em Cortes Modernos', 'images/barber-1.svg', 1, true),
+('Caio Martins', 'Design de Barba e Estilo', 'images/barber-2.svg', 2, true),
+('Bruno Costa', 'Cortes Clássicos e Tradicionais', 'images/barber-3.svg', 3, true)
 ON CONFLICT DO NOTHING;
 
 -- ==================== POLÍTICAS RLS (Row Level Security) ====================

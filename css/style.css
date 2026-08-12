@@ -344,7 +344,7 @@ button {
     display: flex;
     align-items: center;
     background: var(--gradient-dark);
-    background-image: url('../images/hero-bg.jpg');
+    background-image: url('../images/hero-bg.svg');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
