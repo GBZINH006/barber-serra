@@ -69,9 +69,45 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trg_update_barbeiros BEFORE UPDATE ON barbeiros FOR EACH ROW EXECUTE FUNCTION atualizar_timestamp();
-CREATE TRIGGER trg_update_clientes BEFORE UPDATE ON clientes FOR EACH ROW EXECUTE FUNCTION atualizar_timestamp();
-CREATE TRIGGER trg_update_agendamentos BEFORE UPDATE ON agendamentos FOR EACH ROW EXECUTE FUNCTION atualizar_timestamp();
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_trigger
+    WHERE tgname = 'trg_update_barbeiros'
+      AND tgrelid = 'public.barbeiros'::regclass
+  ) THEN
+    EXECUTE $create$
+      CREATE TRIGGER trg_update_barbeiros BEFORE UPDATE ON barbeiros FOR EACH ROW EXECUTE FUNCTION atualizar_timestamp();
+    $create$;
+  END IF;
+END
+$$;
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_trigger
+    WHERE tgname = 'trg_update_clientes'
+      AND tgrelid = 'public.clientes'::regclass
+  ) THEN
+    EXECUTE $create$
+      CREATE TRIGGER trg_update_clientes BEFORE UPDATE ON clientes FOR EACH ROW EXECUTE FUNCTION atualizar_timestamp();
+    $create$;
+  END IF;
+END
+$$;
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_trigger
+    WHERE tgname = 'trg_update_agendamentos'
+      AND tgrelid = 'public.agendamentos'::regclass
+  ) THEN
+    EXECUTE $create$
+      CREATE TRIGGER trg_update_agendamentos BEFORE UPDATE ON agendamentos FOR EACH ROW EXECUTE FUNCTION atualizar_timestamp();
+    $create$;
+  END IF;
+END
+$$;
 
 -- Índices
 CREATE INDEX IF NOT EXISTS idx_agendamentos_data ON agendamentos(data);

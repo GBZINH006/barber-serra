@@ -78,15 +78,39 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Triggers para atualizar automaticamente
-CREATE TRIGGER trigger_atualizar_barbeiros
-    BEFORE UPDATE ON barbeiros
-    FOR EACH ROW
-    EXECUTE FUNCTION atualizar_timestamp();
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_trigger
+    WHERE tgname = 'trigger_atualizar_barbeiros'
+      AND tgrelid = 'public.barbeiros'::regclass
+  ) THEN
+    EXECUTE $create$
+      CREATE TRIGGER trigger_atualizar_barbeiros
+      BEFORE UPDATE ON barbeiros
+      FOR EACH ROW
+      EXECUTE FUNCTION atualizar_timestamp();
+    $create$;
+  END IF;
+END
+$$;
 
-CREATE TRIGGER trigger_atualizar_agendamentos
-    BEFORE UPDATE ON agendamentos
-    FOR EACH ROW
-    EXECUTE FUNCTION atualizar_timestamp();
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_trigger
+    WHERE tgname = 'trigger_atualizar_agendamentos'
+      AND tgrelid = 'public.agendamentos'::regclass
+  ) THEN
+    EXECUTE $create$
+      CREATE TRIGGER trigger_atualizar_agendamentos
+      BEFORE UPDATE ON agendamentos
+      FOR EACH ROW
+      EXECUTE FUNCTION atualizar_timestamp();
+    $create$;
+  END IF;
+END
+$$;
 
 -- ==================== DADOS INICIAIS ====================
 -- Inserir barbeiros de exemplo
@@ -101,26 +125,58 @@ ON CONFLICT DO NOTHING;
 ALTER TABLE barbeiros ENABLE ROW LEVEL SECURITY;
 ALTER TABLE agendamentos ENABLE ROW LEVEL SECURITY;
 
--- Política para leitura pública dos barbeiros
-CREATE POLICY "Barbeiros visíveis publicamente"
-    ON barbeiros FOR SELECT
-    USING (ativo = true);
+-- Política para leitura pública dos barbeiros (idempotente)
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policy WHERE polname = 'Barbeiros visíveis publicamente' AND polrelid = 'public.barbeiros'::regclass) THEN
+    EXECUTE $create$
+      CREATE POLICY "Barbeiros visíveis publicamente"
+        ON barbeiros FOR SELECT
+        USING (ativo = true);
+    $create$;
+  END IF;
+END
+$$;
 
--- Política para leitura de agendamentos (apenas autenticados podem ver todos)
-CREATE POLICY "Agendamentos visíveis publicamente"
-    ON agendamentos FOR SELECT
-    USING (true);
+-- Política para leitura de agendamentos (idempotente)
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policy WHERE polname = 'Agendamentos visíveis publicamente' AND polrelid = 'public.agendamentos'::regclass) THEN
+    EXECUTE $create$
+      CREATE POLICY "Agendamentos visíveis publicamente"
+        ON agendamentos FOR SELECT
+        USING (true);
+    $create$;
+  END IF;
+END
+$$;
 
--- Política para inserção de agendamentos (público pode criar)
-CREATE POLICY "Qualquer um pode criar agendamentos"
-    ON agendamentos FOR INSERT
-    WITH CHECK (true);
+-- Política para inserção de agendamentos (idempotente)
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policy WHERE polname = 'Qualquer um pode criar agendamentos' AND polrelid = 'public.agendamentos'::regclass) THEN
+    EXECUTE $create$
+      CREATE POLICY "Qualquer um pode criar agendamentos"
+        ON agendamentos FOR INSERT
+        WITH CHECK (true);
+    $create$;
+  END IF;
+END
+$$;
 
--- Política para atualização de agendamentos (apenas autenticados)
-CREATE POLICY "Apenas autenticados podem atualizar agendamentos"
-    ON agendamentos FOR UPDATE
-    USING (auth.role() = 'authenticated')
-    WITH CHECK (auth.role() = 'authenticated');
+-- Política para atualização de agendamentos (idempotente)
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policy WHERE polname = 'Apenas autenticados podem atualizar agendamentos' AND polrelid = 'public.agendamentos'::regclass) THEN
+    EXECUTE $create$
+      CREATE POLICY "Apenas autenticados podem atualizar agendamentos"
+        ON agendamentos FOR UPDATE
+        USING (auth.role() = 'authenticated')
+        WITH CHECK (auth.role() = 'authenticated');
+    $create$;
+  END IF;
+END
+$$;
 
 -- ==================== VIEWS ÚTEIS ====================
 -- View para agendamentos com informações do barbeiro
@@ -223,10 +279,22 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trigger_validar_agendamento
-    BEFORE INSERT OR UPDATE ON agendamentos
-    FOR EACH ROW
-    EXECUTE FUNCTION validar_agendamento();
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_trigger
+    WHERE tgname = 'trigger_validar_agendamento'
+      AND tgrelid = 'public.agendamentos'::regclass
+  ) THEN
+    EXECUTE $create$
+      CREATE TRIGGER trigger_validar_agendamento
+      BEFORE INSERT OR UPDATE ON agendamentos
+      FOR EACH ROW
+      EXECUTE FUNCTION validar_agendamento();
+    $create$;
+  END IF;
+END
+$$;
 
 -- ==================== CONFIGURAÇÃO CONCLUÍDA ====================
 -- Para verificar se tudo foi criado corretamente, execute:
