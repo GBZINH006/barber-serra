@@ -70,16 +70,35 @@ CREATE TABLE IF NOT EXISTS agendamentos (
   UNIQUE(barbeiro_id, data, horario)
 );
 
--- ADMINS table linking to Supabase Auth users
--- Note: create the user in Auth (via Supabase dashboard or API) then INSERT the user_id here to mark admin
-CREATE TABLE IF NOT EXISTS admins (
-  id BIGSERIAL PRIMARY KEY,
-  user_id UUID NOT NULL,
-  role TEXT DEFAULT 'admin',
-  criado_em TIMESTAMPTZ DEFAULT NOW(),
-  CONSTRAINT fk_admin_user FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE,
-  UNIQUE(user_id)
-);
+-- ADMINS table linking to Supabase Auth users (create with or without FK depending on auth schema availability)
+DO $$
+BEGIN
+  IF to_regclass('auth.users') IS NOT NULL THEN
+    -- auth.users exists; create admins with FK to auth.users
+    EXECUTE $$
+      CREATE TABLE IF NOT EXISTS admins (
+        id BIGSERIAL PRIMARY KEY,
+        user_id UUID NOT NULL,
+        role TEXT DEFAULT 'admin',
+        criado_em TIMESTAMPTZ DEFAULT NOW(),
+        CONSTRAINT fk_admin_user FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE,
+        UNIQUE(user_id)
+      );
+    $$;
+  ELSE
+    -- auth.users not present (e.g., plain Postgres); create admins without FK, to be linked later
+    EXECUTE $$
+      CREATE TABLE IF NOT EXISTS admins (
+        id BIGSERIAL PRIMARY KEY,
+        user_id UUID NOT NULL,
+        role TEXT DEFAULT 'admin',
+        criado_em TIMESTAMPTZ DEFAULT NOW(),
+        UNIQUE(user_id)
+      );
+    $$;
+  END IF;
+END
+$$;
 
 -- TIMESTAMP helper
 CREATE OR REPLACE FUNCTION atualizar_timestamp() RETURNS TRIGGER AS $$

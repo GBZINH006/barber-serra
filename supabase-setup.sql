@@ -69,15 +69,33 @@ CREATE TABLE IF NOT EXISTS agendamentos (
   UNIQUE(barbeiro_id, data, horario)
 );
 
--- Admins table referencing Supabase Auth users
-CREATE TABLE IF NOT EXISTS admins (
-  id BIGSERIAL PRIMARY KEY,
-  user_id UUID NOT NULL,
-  role TEXT DEFAULT 'admin',
-  criado_em TIMESTAMPTZ DEFAULT NOW(),
-  CONSTRAINT fk_admin_user FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE,
-  UNIQUE(user_id)
-);
+-- Admins table referencing Supabase Auth users (create with FK if auth.users exists)
+DO $$
+BEGIN
+  IF to_regclass('auth.users') IS NOT NULL THEN
+    EXECUTE $$
+      CREATE TABLE IF NOT EXISTS admins (
+        id BIGSERIAL PRIMARY KEY,
+        user_id UUID NOT NULL,
+        role TEXT DEFAULT 'admin',
+        criado_em TIMESTAMPTZ DEFAULT NOW(),
+        CONSTRAINT fk_admin_user FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE,
+        UNIQUE(user_id)
+      );
+    $$;
+  ELSE
+    EXECUTE $$
+      CREATE TABLE IF NOT EXISTS admins (
+        id BIGSERIAL PRIMARY KEY,
+        user_id UUID NOT NULL,
+        role TEXT DEFAULT 'admin',
+        criado_em TIMESTAMPTZ DEFAULT NOW(),
+        UNIQUE(user_id)
+      );
+    $$;
+  END IF;
+END
+$$;
 
 -- Indexes
 CREATE INDEX IF NOT EXISTS idx_clientes_email ON clientes(email);
