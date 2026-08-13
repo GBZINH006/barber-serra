@@ -118,50 +118,232 @@ function initModals() {
     const modal = document.getElementById('modal-agendamento');
     const modalOverlay = document.getElementById('modal-overlay');
     const modalClose = document.getElementById('modal-close');
+    const authModal = document.getElementById('modal-auth');
+    const authModalClose = document.getElementById('auth-modal-close');
+    const authOverlay = document.getElementById('auth-modal-overlay');
     const btnsAgendar = [
         document.getElementById('btn-agendar-header'),
         document.getElementById('btn-agendar-hero'),
         document.getElementById('btn-agendar-about')
     ];
-    
-    // Abrir modal
+
+    const authTabs = document.querySelectorAll('.auth-tab');
+    const authPanels = document.querySelectorAll('.auth-panel');
+    const socialButtons = document.querySelectorAll('[data-social-auth]');
+    const loginForm = document.getElementById('auth-login-form');
+    const registerForm = document.getElementById('auth-register-form');
+
     btnsAgendar.forEach(btn => {
         if (btn) {
             btn.addEventListener('click', () => {
+                if (!isClienteLogado()) {
+                    abrirAuthModal();
+                    return;
+                }
                 abrirModal();
             });
         }
     });
-    
-    // Fechar modal
+
     if (modalClose) {
         modalClose.addEventListener('click', fecharModal);
     }
-    
+
     if (modalOverlay) {
         modalOverlay.addEventListener('click', fecharModal);
     }
-    
-    // Fechar com ESC
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            fecharModal();
-        }
+
+    if (authModalClose) {
+        authModalClose.addEventListener('click', fecharAuthModal);
+    }
+
+    if (authOverlay) {
+        authOverlay.addEventListener('click', fecharAuthModal);
+    }
+
+    authTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const target = tab.dataset.authTab;
+            authTabs.forEach(item => item.classList.toggle('active', item === tab));
+            authPanels.forEach(panel => {
+                panel.classList.toggle('active', panel.id === `auth-${target}-panel`);
+            });
+            mostrarAuthMessage('', '');
+        });
     });
+
+    if (loginForm) {
+        loginForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const email = document.getElementById('auth-login-email').value.trim();
+            const password = document.getElementById('auth-login-password').value.trim();
+
+            if (!email || !password) {
+                mostrarAuthMessage('Preencha e-mail e senha para continuar.', 'error');
+                return;
+            }
+
+            const session = {
+                user: { id: 'demo-' + Date.now(), email },
+                cliente: {
+                    nome: email.split('@')[0].replace(/[._-]/g, ' '),
+                    email,
+                    telefone: '(48) 99999-9999'
+                },
+                provider: 'email'
+            };
+
+            salvarClienteSession(session);
+            mostrarAuthMessage('Login realizado com sucesso!', 'success');
+            setTimeout(() => {
+                fecharAuthModal();
+                abrirModal();
+            }, 500);
+        });
+    }
+
+    if (registerForm) {
+        registerForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const nome = document.getElementById('auth-register-name').value.trim();
+            const telefone = document.getElementById('auth-register-phone').value.trim();
+            const email = document.getElementById('auth-register-email').value.trim();
+            const password = document.getElementById('auth-register-password').value.trim();
+            const confirmPassword = document.getElementById('auth-register-confirm').value.trim();
+
+            if (!nome || !telefone || !email || !password || !confirmPassword) {
+                mostrarAuthMessage('Preencha todos os campos para criar sua conta.', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                mostrarAuthMessage('A senha deve ter pelo menos 6 caracteres.', 'error');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                mostrarAuthMessage('As senhas não coincidem.', 'error');
+                return;
+            }
+
+            const session = {
+                user: { id: 'demo-' + Date.now(), email },
+                cliente: { nome, email, telefone },
+                provider: 'email'
+            };
+
+            salvarClienteSession(session);
+            mostrarAuthMessage('Cadastro realizado com sucesso!', 'success');
+            setTimeout(() => {
+                fecharAuthModal();
+                abrirModal();
+            }, 500);
+        });
+    }
+
+    socialButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const provider = button.dataset.socialAuth;
+            const nome = provider === 'google' ? 'Cliente Google' : 'Cliente Facebook';
+            const email = provider === 'google' ? 'cliente.google@barberserra.com' : 'cliente.facebook@barberserra.com';
+            const telefone = '(48) 99999-9999';
+
+            salvarClienteSession({
+                user: { id: provider + '-' + Date.now(), email },
+                cliente: { nome, email, telefone },
+                provider
+            });
+
+            mostrarAuthMessage(`${provider === 'google' ? 'Google' : 'Facebook'} conectado com sucesso!`, 'success');
+            setTimeout(() => {
+                fecharAuthModal();
+                abrirModal();
+            }, 500);
+        });
+    });
+
+    if (authModal) {
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && authModal.classList.contains('active')) {
+                fecharAuthModal();
+            }
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                fecharModal();
+            }
+        });
+    }
+}
+
+function salvarClienteSession(session) {
+    localStorage.setItem('cliente_session', JSON.stringify(session));
+}
+
+function isClienteLogado() {
+    const storage = localStorage.getItem('cliente_session');
+    return Boolean(storage && storage !== 'null');
+}
+
+function mostrarAuthMessage(message, type = '') {
+    const messageEl = document.getElementById('auth-message');
+    if (!messageEl) return;
+
+    if (!message) {
+        messageEl.style.display = 'none';
+        messageEl.textContent = '';
+        messageEl.className = 'auth-message';
+        return;
+    }
+
+    messageEl.textContent = message;
+    messageEl.className = `auth-message ${type}`;
+    messageEl.style.display = 'block';
+}
+
+function abrirAuthModal() {
+    const authModal = document.getElementById('modal-auth');
+    if (!authModal) return;
+    authModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    mostrarAuthMessage('', '');
+}
+
+function fecharAuthModal() {
+    const authModal = document.getElementById('modal-auth');
+    if (!authModal) return;
+    authModal.classList.remove('active');
+    if (!document.getElementById('modal-agendamento')?.classList.contains('active')) {
+        document.body.style.overflow = '';
+    }
 }
 
 function abrirModal() {
     const modal = document.getElementById('modal-agendamento');
+    if (!modal) return;
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
     resetarFormulario();
+    preencherDadosClienteLogado();
 }
 
 function fecharModal() {
     const modal = document.getElementById('modal-agendamento');
+    if (!modal) return;
     modal.classList.remove('active');
     document.body.style.overflow = '';
     resetarFormulario();
+}
+
+function preencherDadosClienteLogado() {
+    const session = JSON.parse(localStorage.getItem('cliente_session') || 'null');
+    if (!session || !session.cliente) return;
+
+    const nomeInput = document.getElementById('nome');
+    const telefoneInput = document.getElementById('telefone');
+    const emailInput = document.getElementById('email');
+
+    if (nomeInput) nomeInput.value = session.cliente.nome || '';
+    if (telefoneInput) telefoneInput.value = session.cliente.telefone || '';
+    if (emailInput) emailInput.value = session.cliente.email || '';
 }
 
 // ==================== GALERIA ====================

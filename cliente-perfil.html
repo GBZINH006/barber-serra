@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Perfil - BARBER SERRA</title>
+  <link rel="stylesheet" href="css/cliente-dashboard.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-content">
+      <div class="brand"><i class="fas fa-cut"></i> BARBER SERRA</div>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Meu Perfil</h1>
+    <form id="profile-form">
+      <label>Nome</label>
+      <input id="profile-name" type="text" placeholder="Seu nome">
+      <label>WhatsApp</label>
+      <input id="profile-phone" type="tel">
+      <label>E-mail</label>
+      <input id="profile-email" type="email">
+      <button class="btn btn-primary" type="button" onclick="saveProfile()">Salvar</button>
+    </form>
+  </main>
+
+  <script>
+    function saveProfile(){ alert('Salvar perfil (implementar Supabase)'); }
+  </script>
+</body>
+</html>
