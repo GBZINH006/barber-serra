@@ -35,8 +35,8 @@ CREATE TABLE IF NOT EXISTS clientes (
 COMMENT ON TABLE clientes IS 'Cadastro de clientes da barbearia';
 
 -- Índice para busca rápida
-CREATE INDEX idx_clientes_email ON clientes(email);
-CREATE INDEX idx_clientes_telefone ON clientes(telefone);
+CREATE INDEX IF NOT EXISTS idx_clientes_email ON clientes(email);
+CREATE INDEX IF NOT EXISTS idx_clientes_telefone ON clientes(telefone);
 
 -- ==================== TABELA DE AGENDAMENTOS ====================
 CREATE TABLE IF NOT EXISTS agendamentos (
@@ -63,10 +63,10 @@ COMMENT ON TABLE agendamentos IS 'Registro de todos os agendamentos realizados';
 COMMENT ON COLUMN agendamentos.status IS 'Status do agendamento: confirmado, cancelado, concluido ou pendente';
 
 -- Índices para melhor performance
-CREATE INDEX idx_agendamentos_barbeiro ON agendamentos(barbeiro_id);
-CREATE INDEX idx_agendamentos_data ON agendamentos(data);
-CREATE INDEX idx_agendamentos_telefone ON agendamentos(cliente_telefone);
-CREATE INDEX idx_agendamentos_status ON agendamentos(status);
+CREATE INDEX IF NOT EXISTS idx_agendamentos_barbeiro ON agendamentos(barbeiro_id);
+CREATE INDEX IF NOT EXISTS idx_agendamentos_data ON agendamentos(data);
+CREATE INDEX IF NOT EXISTS idx_agendamentos_telefone ON agendamentos(cliente_telefone);
+CREATE INDEX IF NOT EXISTS idx_agendamentos_status ON agendamentos(status);
 
 -- ==================== FUNÇÃO PARA ATUALIZAR TIMESTAMP ====================
 CREATE OR REPLACE FUNCTION atualizar_timestamp()
