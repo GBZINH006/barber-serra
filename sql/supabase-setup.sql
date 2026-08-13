@@ -136,10 +136,21 @@ BEGIN
 END
 $$;
 
--- Políticas públicas/seguras (exemplos)
-CREATE POLICY IF NOT EXISTS "barbeiros_public" ON barbeiros FOR SELECT USING (ativo = true);
-
-CREATE POLICY IF NOT EXISTS "agendamentos_public_insert" ON agendamentos FOR INSERT WITH CHECK (true);
+-- Políticas públicas/seguras (exemplos) - idempotent
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policy WHERE polname = 'barbeiros_public' AND polrelid = 'public.barbeiros'::regclass) THEN
+    EXECUTE $create$
+      CREATE POLICY barbeiros_public ON barbeiros FOR SELECT USING (ativo = true);
+    $create$;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policy WHERE polname = 'agendamentos_public_insert' AND polrelid = 'public.agendamentos'::regclass) THEN
+    EXECUTE $create$
+      CREATE POLICY agendamentos_public_insert ON agendamentos FOR INSERT WITH CHECK (true);
+    $create$;
+  END IF;
+END
+$$;
 
 -- VIEW ÚTIL
 CREATE OR REPLACE VIEW vw_agendamentos_completos AS
