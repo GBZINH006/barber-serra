@@ -34,7 +34,7 @@ const SERVICOS = [
 
 // Dados dos barbeiros (serão carregados do Supabase)
 let BARBEIROS = [
-    { id: 1, nome: 'Barbeiro 1', especialidade: 'Cortes Modernos', foto: 'images/barber1-placeholder.jpg' },
-    { id: 2, nome: 'Barbeiro 2', especialidade: 'Especialista em Barba', foto: 'images/barber2-placeholder.jpg' },
-    { id: 3, nome: 'Barbeiro 3', especialidade: 'Cortes Clássicos', foto: 'images/barber3-placeholder.jpg' }
+    { id: 1, nome: 'Mateus Rabelo', especialidade: 'Cortes Modernos', foto: 'images/barber-1.svg' },
+    { id: 2, nome: 'Caio Martins', especialidade: 'Design de Barba e Estilo', foto: 'images/barber-2.svg' },
+    { id: 3, nome: 'Bruno Costa', especialidade: 'Cortes Clássicos e Tradicionais', foto: 'images/barber-3.svg' }
 ];

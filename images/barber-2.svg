@@ -1,0 +1,29 @@
+<svg width="800" height="1000" viewBox="0 0 800 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg2" x1="80" y1="100" x2="740" y2="950" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#EEF3F6"/>
+      <stop offset="1" stop-color="#D6B187"/>
+    </linearGradient>
+    <linearGradient id="shirt2" x1="220" y1="660" x2="620" y2="1000" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1C2026"/>
+      <stop offset="1" stop-color="#101417"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="1000" fill="url(#bg2)"/>
+  <circle cx="402" cy="316" r="184" fill="#F2D6A7" fill-opacity="0.38"/>
+  <path d="M219 856C249 742 286 676 402 676C518 676 554 742 581 856V1000H219V856Z" fill="url(#shirt2)"/>
+  <path d="M305 693L322 1000H482L500 693C464 712 435 720 402 720C369 720 339 712 305 693Z" fill="#0F1317"/>
+  <circle cx="402" cy="330" r="166" fill="#D7AA6F"/>
+  <path d="M235 340C243 214 307 164 402 164C494 164 563 214 571 340C545 293 486 252 402 252C318 252 260 293 235 340Z" fill="#17110F"/>
+  <path d="M270 348C289 247 338 198 402 198C468 198 518 248 535 348C501 318 469 302 402 302C333 302 298 318 270 348Z" fill="#1B1817"/>
+  <path d="M304 285L350 346H454L499 285" stroke="#201B1A" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="350" cy="354" r="18" fill="#271E1D"/>
+  <circle cx="455" cy="354" r="18" fill="#271E1D"/>
+  <path d="M355 430C370 445 387 452 402 452C417 452 434 445 449 430" stroke="#8E4F2A" stroke-width="12" stroke-linecap="round"/>
+  <path d="M284 390C337 430 366 462 402 462C438 462 469 430 521 390" stroke="#EAD9B6" stroke-opacity="0.42" stroke-width="12" stroke-linecap="round"/>
+  <path d="M288 408C298 388 312 374 330 365" stroke="#201B1A" stroke-width="12" stroke-linecap="round"/>
+  <path d="M516 408C506 388 492 374 474 365" stroke="#201B1A" stroke-width="12" stroke-linecap="round"/>
+  <path d="M374 386C384 418 390 448 402 466C414 448 419 418 430 386" stroke="#1E1A1A" stroke-width="16" stroke-linecap="round"/>
+  <rect x="250" y="678" width="300" height="18" rx="9" fill="#E4BC77" fill-opacity="0.8"/>
+</svg>
