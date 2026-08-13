@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meus Agendamentos - BARBER SERRA</title>
+  <link rel="stylesheet" href="css/cliente-dashboard.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-content">
+      <div class="brand"><i class="fas fa-cut"></i> BARBER SERRA</div>
+      <nav>
+        <a href="cliente-dashboard.html">Dashboard</a>
+        <a href="cliente-agendamentos.html" class="active">Meus Agendamentos</a>
+        <a href="cliente-perfil.html">Perfil</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Meus Agendamentos</h1>
+    <p class="muted">Lista com seus agendamentos e status.</p>
+    <table class="admin-table">
+      <thead><tr><th>Data</th><th>Horário</th><th>Serviço</th><th>Barbeiro</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>2026-08-20</td><td>15:00</td><td>Corte Degradê</td><td>Mateus</td><td>Confirmado</td></tr>
+      </tbody>
+    </table>
+  </main>
+
+  <script src="js/supabase.js"></script>
+</body>
+</html>

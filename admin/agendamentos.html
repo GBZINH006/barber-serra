@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendamentos - Admin | BARBER SERRA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body class="admin-page">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="brand"><i class="fas fa-cut"></i> BARBER SERRA</div>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item">Dashboard</a>
+            <a href="agendamentos.html" class="nav-item active">Agendamentos</a>
+            <a href="horarios.html" class="nav-item">Horários</a>
+            <a href="servicos.html" class="nav-item">Serviços</a>
+            <a href="barbeiros.html" class="nav-item">Barbeiros</a>
+            <a href="clientes.html" class="nav-item">Clientes</a>
+            <a href="relatorios.html" class="nav-item">Relatórios</a>
+            <a href="configuracoes.html" class="nav-item">Configurações</a>
+        </nav>
+    </aside>
+
+    <div class="main-content">
+        <header class="topbar">
+            <h1>Agendamentos</h1>
+        </header>
+
+        <div class="page-content container">
+            <section>
+                <p class="muted">Lista de agendamentos (exemplo). Conectar ao Supabase para dados reais.</p>
+                <table class="admin-table" id="agendamentos-table">
+                    <thead>
+                        <tr><th>ID</th><th>Cliente</th><th>Barbeiro</th><th>Serviço</th><th>Data</th><th>Horário</th><th>Status</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1</td><td>Felipe</td><td>Mateus</td><td>Corte Degradê</td><td>2026-08-20</td><td>15:00</td><td>confirmado</td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </div>
+
+    <script src="../js/supabase.js"></script>
+</body>
+</html>

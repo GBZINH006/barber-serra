@@ -500,6 +500,85 @@
         <i class="fas fa-arrow-up"></i>
     </button>
 
+    <!-- Modal de Login/Cadastro para Agendamento -->
+    <div class="modal auth-modal" id="modal-auth">
+        <div class="modal-overlay" id="auth-modal-overlay"></div>
+        <div class="modal-content auth-modal-content">
+            <button class="modal-close" id="auth-modal-close" type="button" aria-label="Fechar login">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div class="modal-header auth-header">
+                <h2><i class="fas fa-user-check"></i> Entrar para agendar</h2>
+                <p>Crie sua conta ou entre para reservar seu horário.</p>
+            </div>
+
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-auth-tab="login" type="button">Entrar</button>
+                <button class="auth-tab" data-auth-tab="register" type="button">Cadastrar</button>
+            </div>
+
+            <div class="auth-message" id="auth-message" role="alert" style="display:none;"></div>
+
+            <div class="auth-panel active" id="auth-login-panel">
+                <form id="auth-login-form" class="auth-form-inline">
+                    <div class="form-group">
+                        <label for="auth-login-email">E-mail</label>
+                        <input type="email" id="auth-login-email" placeholder="seu@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="auth-login-password">Senha</label>
+                        <input type="password" id="auth-login-password" placeholder="Digite sua senha" required>
+                    </div>
+                    <button class="btn btn-primary auth-submit" type="submit">
+                        <i class="fas fa-sign-in-alt"></i> Entrar
+                    </button>
+                </form>
+            </div>
+
+            <div class="auth-panel" id="auth-register-panel">
+                <form id="auth-register-form" class="auth-form-inline">
+                    <div class="form-group">
+                        <label for="auth-register-name">Nome completo</label>
+                        <input type="text" id="auth-register-name" placeholder="Seu nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="auth-register-phone">WhatsApp</label>
+                        <input type="tel" id="auth-register-phone" placeholder="(48) 99999-9999" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="auth-register-email">E-mail</label>
+                        <input type="email" id="auth-register-email" placeholder="seu@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="auth-register-password">Senha</label>
+                        <input type="password" id="auth-register-password" placeholder="Mínimo 6 caracteres" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="auth-register-confirm">Confirmar senha</label>
+                        <input type="password" id="auth-register-confirm" placeholder="Repita a senha" required>
+                    </div>
+                    <button class="btn btn-primary auth-submit" type="submit">
+                        <i class="fas fa-user-plus"></i> Criar conta
+                    </button>
+                </form>
+            </div>
+
+            <div class="auth-divider"><span>ou continue com</span></div>
+
+            <div class="social-auth">
+                <button class="social-auth-btn google" type="button" data-social-auth="google">
+                    <i class="fab fa-google"></i>
+                    <span>Google</span>
+                </button>
+                <button class="social-auth-btn facebook" type="button" data-social-auth="facebook">
+                    <i class="fab fa-facebook-f"></i>
+                    <span>Facebook</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal de Agendamento -->
     <div class="modal" id="modal-agendamento">
         <div class="modal-overlay" id="modal-overlay"></div>
