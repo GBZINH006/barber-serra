@@ -78,15 +78,39 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Triggers para atualizar automaticamente
-CREATE TRIGGER trigger_atualizar_barbeiros
-    BEFORE UPDATE ON barbeiros
-    FOR EACH ROW
-    EXECUTE FUNCTION atualizar_timestamp();
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_trigger
+    WHERE tgname = 'trigger_atualizar_barbeiros'
+      AND tgrelid = 'public.barbeiros'::regclass
+  ) THEN
+    EXECUTE $create$
+      CREATE TRIGGER trigger_atualizar_barbeiros
+      BEFORE UPDATE ON barbeiros
+      FOR EACH ROW
+      EXECUTE FUNCTION atualizar_timestamp();
+    $create$;
+  END IF;
+END
+$$;
 
-CREATE TRIGGER trigger_atualizar_agendamentos
-    BEFORE UPDATE ON agendamentos
-    FOR EACH ROW
-    EXECUTE FUNCTION atualizar_timestamp();
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_trigger
+    WHERE tgname = 'trigger_atualizar_agendamentos'
+      AND tgrelid = 'public.agendamentos'::regclass
+  ) THEN
+    EXECUTE $create$
+      CREATE TRIGGER trigger_atualizar_agendamentos
+      BEFORE UPDATE ON agendamentos
+      FOR EACH ROW
+      EXECUTE FUNCTION atualizar_timestamp();
+    $create$;
+  END IF;
+END
+$$;
 
 -- ==================== DADOS INICIAIS ====================
 -- Inserir barbeiros de exemplo
@@ -223,10 +247,22 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trigger_validar_agendamento
-    BEFORE INSERT OR UPDATE ON agendamentos
-    FOR EACH ROW
-    EXECUTE FUNCTION validar_agendamento();
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_trigger
+    WHERE tgname = 'trigger_validar_agendamento'
+      AND tgrelid = 'public.agendamentos'::regclass
+  ) THEN
+    EXECUTE $create$
+      CREATE TRIGGER trigger_validar_agendamento
+      BEFORE INSERT OR UPDATE ON agendamentos
+      FOR EACH ROW
+      EXECUTE FUNCTION validar_agendamento();
+    $create$;
+  END IF;
+END
+$$;
 
 -- ==================== CONFIGURAÇÃO CONCLUÍDA ====================
 -- Para verificar se tudo foi criado corretamente, execute:
