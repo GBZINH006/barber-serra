@@ -169,11 +169,18 @@ $$;
 -- Admin-only modifications for agendamentos
 DO $$
 BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_policy WHERE polname = 'agendamentos_admin_mod' AND polrelid = 'public.agendamentos'::regclass) THEN
+  IF NOT EXISTS (SELECT 1 FROM pg_policy WHERE polname = 'agendamentos_admin_update' AND polrelid = 'public.agendamentos'::regclass) THEN
     EXECUTE $create$
-      CREATE POLICY agendamentos_admin_mod ON agendamentos FOR UPDATE, DELETE USING (
+      CREATE POLICY agendamentos_admin_update ON agendamentos FOR UPDATE USING (
         EXISTS (SELECT 1 FROM public.admins a WHERE a.user_id = auth.uid())
       ) WITH CHECK (
+        EXISTS (SELECT 1 FROM public.admins a WHERE a.user_id = auth.uid())
+      );
+    $create$;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policy WHERE polname = 'agendamentos_admin_delete' AND polrelid = 'public.agendamentos'::regclass) THEN
+    EXECUTE $create$
+      CREATE POLICY agendamentos_admin_delete ON agendamentos FOR DELETE USING (
         EXISTS (SELECT 1 FROM public.admins a WHERE a.user_id = auth.uid())
       );
     $create$;
