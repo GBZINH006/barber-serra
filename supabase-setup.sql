@@ -172,11 +172,18 @@ $$;
 -- Admin-only modifications (UPDATE/DELETE/INSERT) for management tables
 DO $$
 BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_policy WHERE polname = 'admin_only_mod_agendamentos' AND polrelid = 'public.agendamentos'::regclass) THEN
+  IF NOT EXISTS (SELECT 1 FROM pg_policy WHERE polname = 'agendamentos_admin_update' AND polrelid = 'public.agendamentos'::regclass) THEN
     EXECUTE $create$
-      CREATE POLICY admin_only_mod_agendamentos ON agendamentos FOR UPDATE, DELETE USING (
+      CREATE POLICY agendamentos_admin_update ON agendamentos FOR UPDATE USING (
         EXISTS (SELECT 1 FROM public.admins a WHERE a.user_id = auth.uid())
       ) WITH CHECK (
+        EXISTS (SELECT 1 FROM public.admins a WHERE a.user_id = auth.uid())
+      );
+    $create$;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policy WHERE polname = 'agendamentos_admin_delete' AND polrelid = 'public.agendamentos'::regclass) THEN
+    EXECUTE $create$
+      CREATE POLICY agendamentos_admin_delete ON agendamentos FOR DELETE USING (
         EXISTS (SELECT 1 FROM public.admins a WHERE a.user_id = auth.uid())
       );
     $create$;
@@ -186,11 +193,27 @@ $$;
 
 DO $$
 BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_policy WHERE polname = 'admin_only_mod_barbeiros' AND polrelid = 'public.barbeiros'::regclass) THEN
+  IF NOT EXISTS (SELECT 1 FROM pg_policy WHERE polname = 'barbeiros_admin_insert' AND polrelid = 'public.barbeiros'::regclass) THEN
     EXECUTE $create$
-      CREATE POLICY admin_only_mod_barbeiros ON barbeiros FOR INSERT, UPDATE, DELETE USING (
+      CREATE POLICY barbeiros_admin_insert ON barbeiros FOR INSERT USING (
         EXISTS (SELECT 1 FROM public.admins a WHERE a.user_id = auth.uid())
       ) WITH CHECK (
+        EXISTS (SELECT 1 FROM public.admins a WHERE a.user_id = auth.uid())
+      );
+    $create$;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policy WHERE polname = 'barbeiros_admin_update' AND polrelid = 'public.barbeiros'::regclass) THEN
+    EXECUTE $create$
+      CREATE POLICY barbeiros_admin_update ON barbeiros FOR UPDATE USING (
+        EXISTS (SELECT 1 FROM public.admins a WHERE a.user_id = auth.uid())
+      ) WITH CHECK (
+        EXISTS (SELECT 1 FROM public.admins a WHERE a.user_id = auth.uid())
+      );
+    $create$;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policy WHERE polname = 'barbeiros_admin_delete' AND polrelid = 'public.barbeiros'::regclass) THEN
+    EXECUTE $create$
+      CREATE POLICY barbeiros_admin_delete ON barbeiros FOR DELETE USING (
         EXISTS (SELECT 1 FROM public.admins a WHERE a.user_id = auth.uid())
       );
     $create$;
@@ -200,11 +223,27 @@ $$;
 
 DO $$
 BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_policy WHERE polname = 'admin_only_mod_servicos' AND polrelid = 'public.servicos'::regclass) THEN
+  IF NOT EXISTS (SELECT 1 FROM pg_policy WHERE polname = 'servicos_admin_insert' AND polrelid = 'public.servicos'::regclass) THEN
     EXECUTE $create$
-      CREATE POLICY admin_only_mod_servicos ON servicos FOR INSERT, UPDATE, DELETE USING (
+      CREATE POLICY servicos_admin_insert ON servicos FOR INSERT USING (
         EXISTS (SELECT 1 FROM public.admins a WHERE a.user_id = auth.uid())
       ) WITH CHECK (
+        EXISTS (SELECT 1 FROM public.admins a WHERE a.user_id = auth.uid())
+      );
+    $create$;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policy WHERE polname = 'servicos_admin_update' AND polrelid = 'public.servicos'::regclass) THEN
+    EXECUTE $create$
+      CREATE POLICY servicos_admin_update ON servicos FOR UPDATE USING (
+        EXISTS (SELECT 1 FROM public.admins a WHERE a.user_id = auth.uid())
+      ) WITH CHECK (
+        EXISTS (SELECT 1 FROM public.admins a WHERE a.user_id = auth.uid())
+      );
+    $create$;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policy WHERE polname = 'servicos_admin_delete' AND polrelid = 'public.servicos'::regclass) THEN
+    EXECUTE $create$
+      CREATE POLICY servicos_admin_delete ON servicos FOR DELETE USING (
         EXISTS (SELECT 1 FROM public.admins a WHERE a.user_id = auth.uid())
       );
     $create$;
