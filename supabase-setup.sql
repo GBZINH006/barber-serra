@@ -1,90 +1,103 @@
--- ==================== BARBER SERRA - CONFIGURAÇÃO DO BANCO DE DADOS ====================
--- Execute este script no SQL Editor do Supabase para criar as tabelas necessárias
+-- ==================== BARBER SERRA - SUPABASE SETUP (clean + idempotent) ====================
+-- Drop possibly conflicting legacy tables (safe to run multiple times)
+DROP TABLE IF EXISTS old_agendamentos CASCADE;
+DROP TABLE IF EXISTS old_clientes CASCADE;
+DROP TABLE IF EXISTS old_barbeiros CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
 
--- ==================== TABELA DE BARBEIROS ====================
+-- Ensure a clean slate for canonical tables
+DROP TABLE IF EXISTS agendamentos CASCADE;
+DROP TABLE IF EXISTS servicos CASCADE;
+DROP TABLE IF EXISTS clientes CASCADE;
+DROP TABLE IF EXISTS barbeiros CASCADE;
+DROP TABLE IF EXISTS admins CASCADE;
+
+-- Create core tables
 CREATE TABLE IF NOT EXISTS barbeiros (
-    id BIGSERIAL PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL,
-    email VARCHAR(100) UNIQUE,
-    especialidade VARCHAR(200),
-    foto TEXT,
-    telefone VARCHAR(20),
-    instagram VARCHAR(100),
-    ativo BOOLEAN DEFAULT true,
-    ordem INTEGER DEFAULT 0,
-    criado_em TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    atualizado_em TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  id BIGSERIAL PRIMARY KEY,
+  nome VARCHAR(120) NOT NULL,
+  email VARCHAR(150),
+  especialidade VARCHAR(255),
+  foto TEXT,
+  telefone VARCHAR(30),
+  instagram VARCHAR(120),
+  ativo BOOLEAN DEFAULT true,
+  ordem INTEGER DEFAULT 0,
+  criado_em TIMESTAMPTZ DEFAULT NOW(),
+  atualizado_em TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Comentários na tabela
 COMMENT ON TABLE barbeiros IS 'Cadastro dos barbeiros da barbearia';
 COMMENT ON COLUMN barbeiros.ordem IS 'Ordem de exibição no site (menor valor aparece primeiro)';
 
--- ==================== TABELA DE CLIENTES ====================
 CREATE TABLE IF NOT EXISTS clientes (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    nome VARCHAR(100) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    telefone VARCHAR(20),
-    pontos_fidelidade INTEGER DEFAULT 0,
-    ativo BOOLEAN DEFAULT true,
-    criado_em TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    atualizado_em TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  nome VARCHAR(150) NOT NULL,
+  email VARCHAR(150),
+  telefone VARCHAR(30),
+  pontos_fidelidade INTEGER DEFAULT 0,
+  ativo BOOLEAN DEFAULT true,
+  criado_em TIMESTAMPTZ DEFAULT NOW(),
+  atualizado_em TIMESTAMPTZ DEFAULT NOW()
 );
 
 COMMENT ON TABLE clientes IS 'Cadastro de clientes da barbearia';
 
--- Índice para busca rápida
-CREATE INDEX IF NOT EXISTS idx_clientes_email ON clientes(email);
-CREATE INDEX IF NOT EXISTS idx_clientes_telefone ON clientes(telefone);
-
--- ==================== TABELA DE AGENDAMENTOS ====================
-CREATE TABLE IF NOT EXISTS agendamentos (
-    id BIGSERIAL PRIMARY KEY,
-    barbeiro_id BIGINT NOT NULL REFERENCES barbeiros(id) ON DELETE CASCADE,
-    cliente_id UUID REFERENCES clientes(id) ON DELETE SET NULL,
-    servico VARCHAR(100) NOT NULL,
-    data DATE NOT NULL,
-    horario TIME NOT NULL,
-    cliente_nome VARCHAR(100) NOT NULL,
-    cliente_telefone VARCHAR(20) NOT NULL,
-    cliente_email VARCHAR(100),
-    status VARCHAR(20) DEFAULT 'confirmado' CHECK (status IN ('confirmado', 'cancelado', 'concluido', 'pendente')),
-    observacoes TEXT,
-    criado_em TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    atualizado_em TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    
-    -- Constraint para evitar agendamentos duplicados no mesmo horário
-    UNIQUE(barbeiro_id, data, horario)
+CREATE TABLE IF NOT EXISTS servicos (
+  id TEXT PRIMARY KEY,
+  nome VARCHAR(200) NOT NULL,
+  preco NUMERIC(10,2) NOT NULL,
+  duracao INTEGER NOT NULL,
+  categoria TEXT,
+  destaque BOOLEAN DEFAULT false
 );
 
--- Comentários na tabela
-COMMENT ON TABLE agendamentos IS 'Registro de todos os agendamentos realizados';
-COMMENT ON COLUMN agendamentos.status IS 'Status do agendamento: confirmado, cancelado, concluido ou pendente';
+CREATE TABLE IF NOT EXISTS agendamentos (
+  id BIGSERIAL PRIMARY KEY,
+  barbeiro_id BIGINT NOT NULL REFERENCES barbeiros(id) ON DELETE CASCADE,
+  cliente_id UUID REFERENCES clientes(id) ON DELETE SET NULL,
+  servico TEXT NOT NULL REFERENCES servicos(id),
+  data DATE NOT NULL,
+  horario TIME NOT NULL,
+  cliente_nome VARCHAR(150) NOT NULL,
+  cliente_telefone VARCHAR(30) NOT NULL,
+  cliente_email VARCHAR(150),
+  status VARCHAR(20) DEFAULT 'confirmado' CHECK (status IN ('confirmado','cancelado','concluido','pendente')),
+  observacoes TEXT,
+  criado_em TIMESTAMPTZ DEFAULT NOW(),
+  atualizado_em TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(barbeiro_id, data, horario)
+);
 
--- Índices para melhor performance
+-- Admins table referencing Supabase Auth users
+CREATE TABLE IF NOT EXISTS admins (
+  id BIGSERIAL PRIMARY KEY,
+  user_id UUID NOT NULL,
+  role TEXT DEFAULT 'admin',
+  criado_em TIMESTAMPTZ DEFAULT NOW(),
+  CONSTRAINT fk_admin_user FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE,
+  UNIQUE(user_id)
+);
+
+-- Indexes
+CREATE INDEX IF NOT EXISTS idx_clientes_email ON clientes(email);
+CREATE INDEX IF NOT EXISTS idx_clientes_telefone ON clientes(telefone);
 CREATE INDEX IF NOT EXISTS idx_agendamentos_barbeiro ON agendamentos(barbeiro_id);
 CREATE INDEX IF NOT EXISTS idx_agendamentos_data ON agendamentos(data);
 CREATE INDEX IF NOT EXISTS idx_agendamentos_telefone ON agendamentos(cliente_telefone);
 CREATE INDEX IF NOT EXISTS idx_agendamentos_status ON agendamentos(status);
 
--- ==================== FUNÇÃO PARA ATUALIZAR TIMESTAMP ====================
-CREATE OR REPLACE FUNCTION atualizar_timestamp()
-RETURNS TRIGGER AS $$
+-- Timestamp function and idempotent triggers
+CREATE OR REPLACE FUNCTION atualizar_timestamp() RETURNS TRIGGER AS $$
 BEGIN
-    NEW.atualizado_em = NOW();
-    RETURN NEW;
+  NEW.atualizado_em = NOW();
+  RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
--- Triggers para atualizar automaticamente
 DO $$
 BEGIN
-  IF NOT EXISTS (
-    SELECT 1 FROM pg_trigger
-    WHERE tgname = 'trigger_atualizar_barbeiros'
-      AND tgrelid = 'public.barbeiros'::regclass
-  ) THEN
+  IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'trigger_atualizar_barbeiros' AND tgrelid = 'public.barbeiros'::regclass) THEN
     EXECUTE $create$
       CREATE TRIGGER trigger_atualizar_barbeiros
       BEFORE UPDATE ON barbeiros
@@ -97,11 +110,7 @@ $$;
 
 DO $$
 BEGIN
-  IF NOT EXISTS (
-    SELECT 1 FROM pg_trigger
-    WHERE tgname = 'trigger_atualizar_agendamentos'
-      AND tgrelid = 'public.agendamentos'::regclass
-  ) THEN
+  IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'trigger_atualizar_agendamentos' AND tgrelid = 'public.agendamentos'::regclass) THEN
     EXECUTE $create$
       CREATE TRIGGER trigger_atualizar_agendamentos
       BEFORE UPDATE ON agendamentos
@@ -112,92 +121,133 @@ BEGIN
 END
 $$;
 
--- ==================== DADOS INICIAIS ====================
--- Inserir barbeiros de exemplo
-INSERT INTO barbeiros (nome, especialidade, foto, ordem, ativo) VALUES
-('Mateus Rabelo', 'Especialista em Cortes Modernos', 'images/barber-1.svg', 1, true),
-('Caio Martins', 'Design de Barba e Estilo', 'images/barber-2.svg', 2, true),
-('Bruno Costa', 'Cortes Clássicos e Tradicionais', 'images/barber-3.svg', 3, true)
+-- Data seeds (non-destructive)
+INSERT INTO barbeiros (nome, especialidade, foto, ordem, ativo)
+VALUES
+  ('Felipe Costa', 'Cortes clássicos e degradê', '/images/barber-1.svg', 1, true),
+  ('Claudinha Silva', 'Barba e design de sobrancelhas', '/images/barber-2.svg', 2, true),
+  ('Marcelo Ramos', 'Cortes modernos e descolados', '/images/barber-3.svg', 3, true)
 ON CONFLICT DO NOTHING;
 
--- ==================== POLÍTICAS RLS (Row Level Security) ====================
--- Habilitar RLS nas tabelas
-ALTER TABLE barbeiros ENABLE ROW LEVEL SECURITY;
-ALTER TABLE agendamentos ENABLE ROW LEVEL SECURITY;
-
--- Política para leitura pública dos barbeiros (idempotente)
+-- RLS: enable only when table exists
 DO $$
 BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_policy WHERE polname = 'Barbeiros visíveis publicamente' AND polrelid = 'public.barbeiros'::regclass) THEN
+  IF to_regclass('public.barbeiros') IS NOT NULL THEN
+    EXECUTE 'ALTER TABLE public.barbeiros ENABLE ROW LEVEL SECURITY';
+  END IF;
+  IF to_regclass('public.clientes') IS NOT NULL THEN
+    EXECUTE 'ALTER TABLE public.clientes ENABLE ROW LEVEL SECURITY';
+  END IF;
+  IF to_regclass('public.agendamentos') IS NOT NULL THEN
+    EXECUTE 'ALTER TABLE public.agendamentos ENABLE ROW LEVEL SECURITY';
+  END IF;
+  IF to_regclass('public.admins') IS NOT NULL THEN
+    EXECUTE 'ALTER TABLE public.admins ENABLE ROW LEVEL SECURITY';
+  END IF;
+END
+$$;
+
+-- Policies (idempotent) -- public read for active barbers
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policy WHERE polname = 'barbeiros_public' AND polrelid = 'public.barbeiros'::regclass) THEN
     EXECUTE $create$
-      CREATE POLICY "Barbeiros visíveis publicamente"
-        ON barbeiros FOR SELECT
-        USING (ativo = true);
+      CREATE POLICY barbeiros_public ON barbeiros FOR SELECT USING (ativo = true);
     $create$;
   END IF;
 END
 $$;
 
--- Política para leitura de agendamentos (idempotente)
+-- Allow public to create bookings
 DO $$
 BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_policy WHERE polname = 'Agendamentos visíveis publicamente' AND polrelid = 'public.agendamentos'::regclass) THEN
+  IF NOT EXISTS (SELECT 1 FROM pg_policy WHERE polname = 'agendamentos_public_insert' AND polrelid = 'public.agendamentos'::regclass) THEN
     EXECUTE $create$
-      CREATE POLICY "Agendamentos visíveis publicamente"
-        ON agendamentos FOR SELECT
-        USING (true);
+      CREATE POLICY agendamentos_public_insert ON agendamentos FOR INSERT WITH CHECK (true);
     $create$;
   END IF;
 END
 $$;
 
--- Política para inserção de agendamentos (idempotente)
+-- Admin-only modifications (UPDATE/DELETE/INSERT) for management tables
 DO $$
 BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_policy WHERE polname = 'Qualquer um pode criar agendamentos' AND polrelid = 'public.agendamentos'::regclass) THEN
+  IF NOT EXISTS (SELECT 1 FROM pg_policy WHERE polname = 'admin_only_mod_agendamentos' AND polrelid = 'public.agendamentos'::regclass) THEN
     EXECUTE $create$
-      CREATE POLICY "Qualquer um pode criar agendamentos"
-        ON agendamentos FOR INSERT
-        WITH CHECK (true);
+      CREATE POLICY admin_only_mod_agendamentos ON agendamentos FOR UPDATE, DELETE USING (
+        EXISTS (SELECT 1 FROM public.admins a WHERE a.user_id = auth.uid())
+      ) WITH CHECK (
+        EXISTS (SELECT 1 FROM public.admins a WHERE a.user_id = auth.uid())
+      );
     $create$;
   END IF;
 END
 $$;
 
--- Política para atualização de agendamentos (idempotente)
 DO $$
 BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_policy WHERE polname = 'Apenas autenticados podem atualizar agendamentos' AND polrelid = 'public.agendamentos'::regclass) THEN
+  IF NOT EXISTS (SELECT 1 FROM pg_policy WHERE polname = 'admin_only_mod_barbeiros' AND polrelid = 'public.barbeiros'::regclass) THEN
     EXECUTE $create$
-      CREATE POLICY "Apenas autenticados podem atualizar agendamentos"
-        ON agendamentos FOR UPDATE
-        USING (auth.role() = 'authenticated')
-        WITH CHECK (auth.role() = 'authenticated');
+      CREATE POLICY admin_only_mod_barbeiros ON barbeiros FOR INSERT, UPDATE, DELETE USING (
+        EXISTS (SELECT 1 FROM public.admins a WHERE a.user_id = auth.uid())
+      ) WITH CHECK (
+        EXISTS (SELECT 1 FROM public.admins a WHERE a.user_id = auth.uid())
+      );
     $create$;
   END IF;
 END
 $$;
 
--- ==================== VIEWS ÚTEIS ====================
--- View para agendamentos com informações do barbeiro
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policy WHERE polname = 'admin_only_mod_servicos' AND polrelid = 'public.servicos'::regclass) THEN
+    EXECUTE $create$
+      CREATE POLICY admin_only_mod_servicos ON servicos FOR INSERT, UPDATE, DELETE USING (
+        EXISTS (SELECT 1 FROM public.admins a WHERE a.user_id = auth.uid())
+      ) WITH CHECK (
+        EXISTS (SELECT 1 FROM public.admins a WHERE a.user_id = auth.uid())
+      );
+    $create$;
+  END IF;
+END
+$$;
+
+-- Views
 CREATE OR REPLACE VIEW vw_agendamentos_completos AS
-SELECT 
-    a.id,
-    a.data,
-    a.horario,
-    a.servico,
-    a.cliente_nome,
-    a.cliente_telefone,
-    a.cliente_email,
-    a.status,
-    a.observacoes,
-    a.criado_em,
-    b.nome as barbeiro_nome,
-    b.foto as barbeiro_foto,
-    b.especialidade as barbeiro_especialidade
+SELECT a.id, a.data, a.horario, a.servico, a.cliente_nome, a.cliente_telefone, a.cliente_email, a.status, a.observacoes, a.criado_em,
+       b.nome as barbeiro_nome, b.foto as barbeiro_foto, b.especialidade as barbeiro_especialidade
 FROM agendamentos a
 INNER JOIN barbeiros b ON a.barbeiro_id = b.id
 ORDER BY a.data DESC, a.horario DESC;
+
+-- Validation trigger for bookings
+CREATE OR REPLACE FUNCTION validar_agendamento() RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.data < CURRENT_DATE THEN
+    RAISE EXCEPTION 'Não é possível agendar para datas passadas';
+  END IF;
+  IF NEW.horario < '09:00'::TIME OR NEW.horario > '21:00'::TIME THEN
+    RAISE EXCEPTION 'Horário fora do expediente (09:00 - 21:00)';
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM barbeiros WHERE id = NEW.barbeiro_id AND ativo = true) THEN
+    RAISE EXCEPTION 'Barbeiro não encontrado ou inativo';
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'trigger_validar_agendamento' AND tgrelid = 'public.agendamentos'::regclass) THEN
+    EXECUTE $create$
+      CREATE TRIGGER trigger_validar_agendamento BEFORE INSERT OR UPDATE ON agendamentos FOR EACH ROW EXECUTE FUNCTION validar_agendamento();
+    $create$;
+  END IF;
+END
+$$;
+
+-- End of setup
+
 
 -- View para estatísticas diárias
 CREATE OR REPLACE VIEW vw_estatisticas_diarias AS
