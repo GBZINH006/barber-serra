@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS agendamentos (
 DO $$
 BEGIN
   IF to_regclass('auth.users') IS NOT NULL THEN
-    EXECUTE $$
+    EXECUTE $create$
       CREATE TABLE IF NOT EXISTS admins (
         id BIGSERIAL PRIMARY KEY,
         user_id UUID NOT NULL,
@@ -82,9 +82,9 @@ BEGIN
         CONSTRAINT fk_admin_user FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE,
         UNIQUE(user_id)
       );
-    $$;
+    $create$;
   ELSE
-    EXECUTE $$
+    EXECUTE $create$
       CREATE TABLE IF NOT EXISTS admins (
         id BIGSERIAL PRIMARY KEY,
         user_id UUID NOT NULL,
@@ -92,7 +92,7 @@ BEGIN
         criado_em TIMESTAMPTZ DEFAULT NOW(),
         UNIQUE(user_id)
       );
-    $$;
+    $create$;
   END IF;
 END
 $$;
