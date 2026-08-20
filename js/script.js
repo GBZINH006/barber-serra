@@ -18,11 +18,96 @@ let wizardState = {
 document.addEventListener('DOMContentLoaded', async () => {
     initHeaderAndDrawer();
     initScrollSpy();
+    initScrollAnimations();
+    initParallaxEffects();
     renderServicesCatalog('todos');
     initCategoryTabs();
     await renderTeam();
     initBookingWizard();
+    
+    // Performance: Preload critical assets
+    preloadCriticalAssets();
+    
+    // Add smooth reveal for page load
+    document.body.classList.add('page-loaded');
 });
+
+// Preload critical assets
+function preloadCriticalAssets() {
+    const criticalImages = [
+        'images/about-shop.svg',
+        'images/barber-1.svg',
+        'images/barber-2.svg',
+        'images/barber-3.svg'
+    ];
+    
+    criticalImages.forEach(src => {
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.as = 'image';
+        link.href = src;
+        document.head.appendChild(link);
+    });
+}
+
+/* ==========================================================================
+   ANIMAÇÕES DE SCROLL E PARALLAX
+   ========================================================================== */
+
+function initScrollAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    // Observa cards e elementos animáveis
+    const animateElements = document.querySelectorAll('.differential-card, .service-item-card, .barber-team-card, .review-card');
+    animateElements.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(el);
+    });
+}
+
+function initParallaxEffects() {
+    let ticking = false;
+    
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                const scrolled = window.pageYOffset;
+                
+                // Parallax no hero
+                const heroVisual = document.querySelector('.hero-visual');
+                if (heroVisual && scrolled < 800) {
+                    heroVisual.style.transform = `translateY(${scrolled * 0.3}px)`;
+                }
+                
+                // Parallax no glow
+                const heroGlow = document.querySelector('.hero-bg-glow');
+                if (heroGlow && scrolled < 800) {
+                    heroGlow.style.transform = `translateX(-50%) translateY(${scrolled * 0.2}px)`;
+                }
+                
+                ticking = false;
+            });
+            
+            ticking = true;
+        }
+    });
+}
+
 
 /* ==========================================================================
    HEADER & MOBILE DRAWER
@@ -106,13 +191,13 @@ function renderServicesCatalog(categoria = 'todos') {
         : SERVICOS.filter(s => s.categoria === categoria);
 
     grid.innerHTML = filtered.map(servico => `
-        <div class="service-item-card ${servico.destaque ? 'destaque' : ''}">
+        <div class="service-item-card card-hover-lift stagger-item ${servico.destaque ? 'destaque' : ''}">
             <div>
                 <div class="service-card-top">
                     <div class="service-icon-wrap">
                         <i class="fas ${servico.icone || 'fa-cut'}"></i>
                     </div>
-                    ${servico.destaque ? '<span class="badge badge-gold"><i class="fas fa-crown"></i> Destaque</span>' : ''}
+                    ${servico.destaque ? '<span class="badge badge-gold shimmer"><i class="fas fa-crown"></i> Destaque</span>' : ''}
                 </div>
                 <h3 class="service-card-title">${servico.nome}</h3>
                 <p class="service-card-desc">${servico.descricao || ''}</p>
@@ -129,12 +214,17 @@ function renderServicesCatalog(categoria = 'todos') {
                         <span>${servico.duracao} min</span>
                     </div>
                 </div>
-                <button type="button" class="btn btn-primary" style="width: 100%; margin-top: 1.25rem;" onclick="selecionarServicoDireto('${servico.id}')">
-                    <i class="fas fa-calendar-check"></i> Agendar este serviço
+                <button type="button" class="btn btn-primary btn-shine" style="width: 100%; margin-top: 1.25rem;" onclick="selecionarServicoDireto('${servico.id}')">
+                    <i class="fas fa-calendar-check"></i> Agendar
                 </button>
             </div>
         </div>
     `).join('');
+
+    // Re-observar novos elementos para animação
+    if (typeof CinematicMotion !== 'undefined') {
+        setTimeout(() => CinematicMotion.observeRevealElements(), 100);
+    }
 }
 
 function initCategoryTabs() {
@@ -159,11 +249,11 @@ async function renderTeam() {
     const barbeiros = await carregarBarbeiros();
 
     grid.innerHTML = barbeiros.map(b => `
-        <div class="barber-team-card card-hover">
-            <div class="barber-photo-box">
-                <img src="${b.foto}" alt="${b.nome}">
+        <div class="barber-team-card card-hover-lift stagger-item">
+            <div class="barber-photo-box image-zoom-container">
+                <img src="${b.foto}" alt="${b.nome}" class="image-zoom">
                 <div class="barber-rating-badge">
-                    ★ ${b.avaliacao || '5.0'} (${b.atendimentos || '300+'}+)
+                    ★ ${b.avaliacao || '5.0'} (${b.atendimentos || '300'}+)
                 </div>
             </div>
             <div class="barber-info-box">
@@ -178,6 +268,11 @@ async function renderTeam() {
             </div>
         </div>
     `).join('');
+
+    // Re-observar para animação
+    if (typeof CinematicMotion !== 'undefined') {
+        setTimeout(() => CinematicMotion.observeRevealElements(), 100);
+    }
 }
 
 /* ==========================================================================

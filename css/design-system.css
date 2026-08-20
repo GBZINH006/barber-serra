@@ -108,6 +108,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
   overflow-x: hidden;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+body.page-loaded {
+  opacity: 1;
 }
 
 img, svg, video {
@@ -172,13 +178,27 @@ ul, ol {
   line-height: 1;
   padding: 0.75rem 1.35rem;
   border-radius: var(--radius-md);
-  transition: var(--transition);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   user-select: none;
   text-decoration: none;
   white-space: nowrap;
   position: relative;
   overflow: hidden;
   border: 1px solid transparent;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.2), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.btn:hover::before {
+  opacity: 1;
 }
 
 .btn:disabled, .btn.disabled {
@@ -198,12 +218,12 @@ ul, ol {
 
 .btn-primary:hover {
   background: linear-gradient(135deg, #f0ca4d 0%, #dfb83b 50%, #bf9a2e 100%);
-  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
-  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+  transform: translateY(-2px) scale(1.02);
 }
 
 .btn-primary:active {
-  transform: translateY(0);
+  transform: translateY(0) scale(0.98);
   box-shadow: 0 2px 8px rgba(212, 175, 55, 0.2);
 }
 
@@ -218,7 +238,8 @@ ul, ol {
   background-color: var(--surface-hover);
   border-color: var(--border-hover);
   color: var(--text-primary);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 /* Outline Accent Button */
@@ -232,7 +253,8 @@ ul, ol {
   background: var(--accent-subtle);
   border-color: var(--accent-hover);
   color: var(--accent-hover);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
 }
 
 /* Ghost Button */
@@ -244,6 +266,7 @@ ul, ol {
 .btn-ghost:hover {
   background-color: var(--surface-hover);
   color: var(--text-primary);
+  transform: translateY(-1px);
 }
 
 /* Danger Button */

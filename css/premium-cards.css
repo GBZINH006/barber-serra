@@ -1,0 +1,425 @@
+/**
+ * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ * BARBER SERRA — PREMIUM INTERACTIVE CARDS
+ * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ * Sistema sofisticado de cards com microinterações e hover states premium
+ */
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   CARD BASE WITH GLASSMORPHISM
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.card-premium {
+  background: rgba(23, 27, 35, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Subtle gradient overlay on hover */
+.card-premium::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(212, 175, 55, 0.08) 0%,
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.card-premium:hover::before {
+  opacity: 1;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   CARD VARIANTS
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* Elevated card with strong shadow */
+.card-elevated {
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.card-elevated:hover {
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  transform: translateY(-6px);
+}
+
+/* Bordered card with accent highlight */
+.card-bordered {
+  border: 2px solid var(--border);
+  position: relative;
+}
+
+.card-bordered::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: var(--accent-gradient);
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.card-bordered:hover::after {
+  opacity: 0.2;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SERVICE CARDS - ENHANCED
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.service-item-card {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Accent line animation */
+.service-item-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--accent-gradient);
+  transform: translateX(-100%);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.service-item-card:hover::after {
+  transform: translateX(0);
+}
+
+/* Icon animation */
+.service-icon-wrap {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.service-item-card:hover .service-icon-wrap {
+  transform: translateY(-4px) rotate(5deg) scale(1.1);
+  background: var(--accent-subtle);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.service-icon-wrap i {
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.service-item-card:hover .service-icon-wrap i {
+  transform: scale(1.1);
+}
+
+/* Price highlight */
+.service-price-box .price-val {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.service-item-card:hover .service-price-box .price-val {
+  transform: scale(1.05);
+  text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   BARBER CARDS - ENHANCED
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.barber-team-card {
+  overflow: hidden;
+  position: relative;
+}
+
+/* Overlay gradient on hover */
+.barber-photo-box::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 1;
+}
+
+.barber-team-card:hover .barber-photo-box::before {
+  opacity: 1;
+}
+
+/* Rating badge pulse */
+.barber-rating-badge {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.barber-team-card:hover .barber-rating-badge {
+  transform: scale(1.05);
+  background: rgba(212, 175, 55, 0.95);
+  color: #090a0d;
+}
+
+/* Info reveal */
+.barber-info-box {
+  transition: all 0.3s ease;
+}
+
+.barber-team-card:hover .barber-info-box {
+  background: rgba(212, 175, 55, 0.03);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   REVIEW CARDS - ENHANCED
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.review-card {
+  position: relative;
+}
+
+/* Quote decoration */
+.review-card::before {
+  content: '"';
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  font-size: 5rem;
+  font-weight: 900;
+  color: var(--accent);
+  opacity: 0.08;
+  line-height: 1;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.review-card:hover::before {
+  opacity: 0.15;
+  transform: scale(1.1);
+}
+
+/* Stars animation */
+.review-stars {
+  transition: all 0.3s ease;
+}
+
+.review-card:hover .review-stars {
+  transform: scale(1.05);
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+/* Author avatar glow */
+.author-avatar {
+  transition: all 0.3s ease;
+}
+
+.review-card:hover .author-avatar {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+  background: var(--accent-subtle);
+  border-color: var(--accent);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   DIFFERENTIAL CARDS - ENHANCED
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.differential-card {
+  position: relative;
+}
+
+/* Icon background pulse */
+.diff-icon-box::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  background: var(--accent);
+  border-radius: inherit;
+  opacity: 0;
+  filter: blur(8px);
+  transition: opacity 0.3s ease;
+}
+
+.differential-card:hover .diff-icon-box::before {
+  opacity: 0.2;
+}
+
+/* Content shift */
+.differential-card:hover .diff-title {
+  transform: translateX(4px);
+  color: var(--accent);
+}
+
+.diff-title {
+  transition: all 0.3s ease;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   CARD OVERLAYS & REVEALS
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* Hidden content reveal */
+.card-reveal-content {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover .card-reveal-content,
+.service-item-card:hover .card-reveal-content,
+.barber-team-card:hover .card-reveal-content {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Overlay with action */
+.card-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(9, 10, 13, 0.95);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 10;
+}
+
+.card:hover .card-overlay {
+  opacity: 1;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   INTERACTIVE STATES
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* Focus state for accessibility */
+.card:focus-within,
+.service-item-card:focus-within,
+.barber-team-card:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+/* Active/pressed state */
+.card:active,
+.service-item-card:active,
+.barber-team-card:active {
+  transform: scale(0.98);
+}
+
+/* Loading state */
+.card.is-loading {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.card.is-loading::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(212, 175, 55, 0.1) 50%,
+    transparent 100%
+  );
+  animation: shimmerLoading 1.5s infinite;
+}
+
+@keyframes shimmerLoading {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   CARD GROUPS & LAYOUTS
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* Featured card highlight */
+.card-featured,
+.service-item-card.destaque {
+  border: 1px solid var(--border-accent);
+  box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.1),
+              0 10px 40px rgba(212, 175, 55, 0.1);
+}
+
+.card-featured::before,
+.service-item-card.destaque::before {
+  opacity: 0.05;
+}
+
+/* Card with badge */
+.card-badge-wrapper {
+  position: relative;
+}
+
+.card-badge-top-right {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 2;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   MOBILE OPTIMIZATIONS
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+@media (max-width: 768px) {
+  /* Reduce motion on mobile for performance */
+  .card-premium::before,
+  .service-item-card::after,
+  .barber-photo-box::before {
+    display: none;
+  }
+
+  /* Simpler hover states */
+  .service-item-card:hover,
+  .barber-team-card:hover,
+  .review-card:hover {
+    transform: translateY(-4px);
+  }
+
+  /* Disable complex animations on touch */
+  @media (hover: none) and (pointer: coarse) {
+    .card-hover-lift:hover {
+      transform: none;
+    }
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   PERFORMANCE OPTIMIZATIONS
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* GPU acceleration */
+.card,
+.service-item-card,
+.barber-team-card,
+.review-card,
+.differential-card {
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Remove will-change after interaction */
+.card:not(:hover),
+.service-item-card:not(:hover),
+.barber-team-card:not(:hover) {
+  will-change: auto;
+}

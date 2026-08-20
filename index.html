@@ -21,7 +21,13 @@
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="css/design-system.css">
+    <link rel="stylesheet" href="css/premium-typography.css">
+    <link rel="stylesheet" href="css/premium-header.css">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/premium-cards.css">
+    <link rel="stylesheet" href="css/premium-wizard.css">
+    <link rel="stylesheet" href="css/cinematic-animations.css">
+    <link rel="stylesheet" href="css/premium-final.css">
 
     <!-- Schema.org -->
     <script type="application/ld+json">
@@ -117,23 +123,37 @@
         </div>
     </aside>
 
-    <!-- ==================== HERO SECTION (RESPIRAÇÃO & ALTO IMPACTO) ==================== -->
+    <!-- ==================== HERO SECTION CINEMATOGRÁFICO ==================== -->
     <section class="hero-section" id="home">
-        <div class="hero-bg-glow"></div>
+        <!-- Decorative gradient orbs -->
+        <div class="gradient-orb" style="top: -10%; left: -5%;"></div>
+        <div class="gradient-orb glow-pulse" style="top: 20%; right: -8%; animation-delay: 2s;"></div>
+        
+        <div class="hero-bg-glow glow-pulse"></div>
+        
         <div class="container hero-container">
             <div class="hero-content">
-                <div class="badge badge-gold hero-badge">
-                    <i class="fas fa-gem"></i> Barbearia Premium • Bela Vista
+                <!-- Badge com animação de entrada -->
+                <div class="badge badge-gold hero-badge shimmer">
+                    <i class="fas fa-gem"></i> Barbearia Premium
                 </div>
+                
+                <!-- Título com gradiente animado -->
                 <h1 class="hero-title">
-                    Seu próximo corte <span class="gradient-text">começa aqui.</span>
+                    Seu próximo corte <span class="gradient-text gradient-shift">começa aqui.</span>
                 </h1>
+                
+                <!-- Linha decorativa -->
+                <div style="width: 60px; height: 3px; background: var(--accent-gradient); margin: 1.5rem 0; border-radius: 2px;"></div>
+                
+                <!-- Descrição -->
                 <p class="hero-description">
-                    A precisão do corte clássico unida à tecnologia de agendamento em tempo real. Desfrute de barboterapia com vapor de ozônio, toalha quente e atendimento pontual sem filas de espera.
+                    A precisão do corte clássico unida à tecnologia de agendamento em tempo real. Desfrute de barboterapia com vapor de ozônio e atendimento pontual.
                 </p>
 
+                <!-- CTAs com shine effect -->
                 <div class="hero-cta-group">
-                    <button type="button" class="btn btn-primary btn-lg" onclick="abrirModalAgendamentoSite()">
+                    <button type="button" class="btn btn-primary btn-lg btn-shine btn-magnetic" onclick="abrirModalAgendamentoSite()">
                         <i class="fas fa-calendar-check"></i>
                         <span>Agendar Horário</span>
                     </button>
@@ -143,41 +163,46 @@
                     </a>
                 </div>
 
+                <!-- Trust bar com reveal -->
                 <div class="hero-trust-bar">
-                    <div class="trust-item">
+                    <div class="trust-item reveal-scale">
                         <div class="trust-rating">
                             <span class="stars-gold">★★★★★</span>
                             <strong>5.0</strong>
                         </div>
-                        <span class="trust-label">48+ Avaliações no Google</span>
+                        <span class="trust-label">48+ Avaliações</span>
                     </div>
                     <div class="trust-divider"></div>
-                    <div class="trust-item">
-                        <span class="trust-number">1.200+</span>
+                    <div class="trust-item reveal-scale" style="animation-delay: 0.1s;">
+                        <span class="trust-number counter" data-count="1200" data-suffix="+">0</span>
                         <span class="trust-label">Cortes Realizados</span>
                     </div>
                     <div class="trust-divider"></div>
-                    <div class="trust-item">
-                        <span class="trust-number">100%</span>
-                        <span class="trust-label">Pontualidade Britânica</span>
+                    <div class="trust-item reveal-scale" style="animation-delay: 0.2s;">
+                        <span class="trust-number counter" data-count="100" data-suffix="%">0</span>
+                        <span class="trust-label">Pontualidade</span>
                     </div>
                 </div>
             </div>
 
-            <div class="hero-visual">
-                <div class="hero-card-preview glass-card">
+            <!-- Visual card com parallax e float -->
+            <div class="hero-visual" data-parallax="0.2">
+                <div class="hero-card-preview glass-card float-element card-hover-lift">
                     <div class="preview-header">
-                        <div class="preview-badge"><i class="fas fa-circle" style="color: var(--success); font-size: 8px;"></i> Aberto Hoje até 21h</div>
+                        <div class="preview-badge">
+                            <i class="fas fa-circle" style="color: var(--success); font-size: 8px;"></i> 
+                            Aberto Hoje
+                        </div>
                         <span class="preview-city">Palhoça, SC</span>
                     </div>
-                    <div class="preview-image-box">
-                        <img src="images/about-shop.svg" alt="Interior Barber Serra" class="preview-img">
+                    <div class="preview-image-box image-zoom-container">
+                        <img src="images/about-shop.svg" alt="Interior Barber Serra" class="preview-img image-zoom">
                     </div>
                     <div class="preview-footer">
                         <div class="preview-barber">
                             <img src="images/barber-1.svg" alt="Mateus Rabelo" class="barber-micro-thumb">
                             <div>
-                                <small>Barbeiro em plantão</small>
+                                <small>Barbeiro disponível</small>
                                 <strong>Mateus Rabelo</strong>
                             </div>
                         </div>
@@ -188,111 +213,131 @@
                 </div>
             </div>
         </div>
+
+        <!-- Scroll indicator -->
+        <div class="scroll-indicator">
+            <div class="scroll-indicator-line"></div>
+            <span>Scroll</span>
+        </div>
     </section>
 
     <!-- ==================== DIFERENCIAIS ==================== -->
-    <section class="section" id="diferenciais" style="padding-top: 3.5rem;">
+    <section class="section section-reveal" id="diferenciais">
         <div class="container">
-            <div class="section-header text-center">
-                <span class="badge badge-gold">Excelência em Cada Detalhe</span>
-                <h2 class="section-title">A Experiência Barber Serra</h2>
+            <div class="section-header text-center reveal">
+                <span class="badge badge-gold">Por que escolher a Barber Serra</span>
+                <h2 class="section-title decorative-line">Experiência Premium</h2>
+                <p class="section-subtitle">Cada detalhe pensado para sua satisfação</p>
             </div>
 
-            <div class="differentials-grid">
-                <div class="card differential-card card-hover">
-                    <div class="diff-icon-box"><i class="fas fa-clock"></i></div>
+            <div class="differentials-grid stagger-container">
+                <div class="card differential-card card-hover-lift stagger-item">
+                    <div class="diff-icon-box">
+                        <i class="fas fa-clock"></i>
+                    </div>
                     <h3 class="diff-title">Pontualidade Rigorosa</h3>
-                    <p class="diff-desc">Horário marcado e respeitado. Chegue e seja atendido sem esperas cansativas.</p>
+                    <p class="diff-desc">Horário marcado e respeitado. Chegue e seja atendido sem esperas.</p>
                 </div>
 
-                <div class="card differential-card card-hover">
-                    <div class="diff-icon-box"><i class="fas fa-spa"></i></div>
+                <div class="card differential-card card-hover-lift stagger-item">
+                    <div class="diff-icon-box">
+                        <i class="fas fa-spa"></i>
+                    </div>
                     <h3 class="diff-title">Barboterapia com Ozônio</h3>
-                    <p class="diff-desc">Vapor de ozônio e toalha quente aromática para um barbear impecável sem irritações.</p>
+                    <p class="diff-desc">Vapor de ozônio e toalha quente para um barbear impecável.</p>
                 </div>
 
-                <div class="card differential-card card-hover">
-                    <div class="diff-icon-box"><i class="fas fa-user-check"></i></div>
+                <div class="card differential-card card-hover-lift stagger-item">
+                    <div class="diff-icon-box">
+                        <i class="fas fa-user-check"></i>
+                    </div>
                     <h3 class="diff-title">Visagismo Personalizado</h3>
-                    <p class="diff-desc">Análise dos traços faciais para indicar o corte que mais valoriza seu estilo.</p>
+                    <p class="diff-desc">Análise facial para indicar o corte que valoriza seu estilo.</p>
                 </div>
 
-                <div class="card differential-card card-hover">
-                    <div class="diff-icon-box"><i class="fas fa-couch"></i></div>
-                    <h3 class="diff-title">Lounge & Bebidas</h3>
-                    <p class="diff-desc">Ambiente climatizado com café especial, cerveja gelada cortesia e Wi-Fi veloz.</p>
+                <div class="card differential-card card-hover-lift stagger-item">
+                    <div class="diff-icon-box">
+                        <i class="fas fa-couch"></i>
+                    </div>
+                    <h3 class="diff-title">Ambiente Premium</h3>
+                    <p class="diff-desc">Lounge climatizado com café especial e Wi-Fi veloz.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- ==================== SERVIÇOS & PREÇOS ==================== -->
-    <section class="section" id="servicos">
+    <section class="section section-reveal" id="servicos" style="background: linear-gradient(180deg, transparent 0%, rgba(212, 175, 55, 0.03) 50%, transparent 100%);">
         <div class="container">
-            <div class="section-header-flex">
+            <div class="section-header-flex reveal">
                 <div>
-                    <span class="badge badge-gold">Valores Transparentes</span>
-                    <h2 class="section-title">Serviços & Combos</h2>
+                    <span class="badge badge-gold">Transparência Total</span>
+                    <h2 class="section-title decorative-line">Serviços & Combos</h2>
+                    <p class="section-subtitle" style="margin-top: 0.5rem;">Investimento justo, resultado impecável</p>
                 </div>
                 <div class="service-category-tabs" id="service-category-tabs">
                     <button type="button" class="tab-pill active" data-category="todos">Todos</button>
                     <button type="button" class="tab-pill" data-category="cortes">Cortes</button>
                     <button type="button" class="tab-pill" data-category="barba">Barba</button>
-                    <button type="button" class="tab-pill" data-category="combos">Combos VIP</button>
+                    <button type="button" class="tab-pill" data-category="combos">Combos</button>
                 </div>
             </div>
 
-            <div class="services-grid" id="landing-services-grid">
+            <div class="services-grid stagger-container" id="landing-services-grid">
                 <!-- Preenchido dinamicamente via script.js -->
             </div>
         </div>
+
+        <!-- Decorative gradient orb -->
+        <div class="gradient-orb" style="bottom: -15%; right: -10%; opacity: 0.5;"></div>
     </section>
 
     <!-- ==================== EQUIPE / BARBEIROS ==================== -->
-    <section class="section" id="barbeiros">
+    <section class="section section-reveal" id="barbeiros">
         <div class="container">
-            <div class="section-header text-center">
+            <div class="section-header text-center reveal">
                 <span class="badge badge-gold">Especialistas</span>
-                <h2 class="section-title">Nossa Equipe</h2>
-                <p class="section-subtitle">Profissionais certificados com técnica apurada em cortes modernos e clássicos.</p>
+                <h2 class="section-title decorative-line">Nossa Equipe</h2>
+                <p class="section-subtitle">Profissionais certificados com técnica apurada.</p>
             </div>
 
-            <div class="team-grid" id="landing-team-grid">
+            <div class="team-grid stagger-container" id="landing-team-grid">
                 <!-- Preenchido dinamicamente via script.js -->
             </div>
         </div>
     </section>
 
     <!-- ==================== AVALIAÇÕES ==================== -->
-    <section class="section" id="avaliacoes">
+    <section class="section section-reveal" id="avaliacoes" style="background: linear-gradient(180deg, transparent 0%, rgba(212, 175, 55, 0.03) 50%, transparent 100%);">
         <div class="container">
-            <div class="section-header text-center">
+            <div class="section-header text-center reveal">
                 <span class="badge badge-gold">Prova Social</span>
-                <h2 class="section-title">O que dizem nossos clientes</h2>
+                <h2 class="section-title decorative-line">O que dizem nossos clientes</h2>
+                <p class="section-subtitle">Experiências reais de quem confia no nosso trabalho</p>
             </div>
 
-            <div class="reviews-grid">
-                <div class="card review-card card-hover">
+            <div class="reviews-grid stagger-container">
+                <div class="card review-card card-hover-lift stagger-item">
                     <div class="review-stars">★★★★★</div>
-                    <p class="review-text">"Melhor barbearia de Palhoça! O degradê navalhado do Mateus é milimétrico e a pontualidade é impressionante."</p>
+                    <p class="review-text">"Melhor barbearia de Palhoça! O degradê é milimétrico e a pontualidade impressionante."</p>
                     <div class="review-author">
                         <div class="author-avatar"><i class="fas fa-user"></i></div>
                         <div><strong>Rodrigo Silveira</strong><small>Palhoça / SC</small></div>
                     </div>
                 </div>
 
-                <div class="card review-card card-hover">
+                <div class="card review-card card-hover-lift stagger-item">
                     <div class="review-stars">★★★★★</div>
-                    <p class="review-text">"A barboterapia com vapor de ozônio e toalha quente é uma experiência relaxante única. Recomendo o combo VIP!"</p>
+                    <p class="review-text">"A barboterapia com vapor de ozônio é uma experiência única. Recomendo o combo VIP!"</p>
                     <div class="review-author">
                         <div class="author-avatar"><i class="fas fa-user"></i></div>
                         <div><strong>Lucas Martins</strong><small>Bela Vista / SC</small></div>
                     </div>
                 </div>
 
-                <div class="card review-card card-hover">
+                <div class="card review-card card-hover-lift stagger-item">
                     <div class="review-stars">★★★★★</div>
-                    <p class="review-text">"O agendamento online é rápido e sem complicação. Chego no horário e sou atendido na hora. Nota 10!"</p>
+                    <p class="review-text">"O agendamento online é rápido e sem complicação. Atendimento pontual!"</p>
                     <div class="review-author">
                         <div class="author-avatar"><i class="fas fa-user"></i></div>
                         <div><strong>Guilherme Fonseca</strong><small>Palhoça / SC</small></div>
@@ -303,21 +348,21 @@
     </section>
 
     <!-- ==================== LOCALIZAÇÃO & HORÁRIOS ==================== -->
-    <section class="section" id="localizacao">
+    <section class="section section-reveal" id="localizacao">
         <div class="container">
             <div class="location-grid">
-                <div class="location-info card">
+                <div class="location-info card reveal-left">
                     <div>
                         <span class="badge badge-gold"><i class="fas fa-map-pin"></i> Bela Vista, Palhoça</span>
-                        <h2 class="section-title" style="margin-top: 0.5rem;">Onde Estamos</h2>
-                        <p class="location-desc">Ambiente climatizado, som ambiente e estacionamento facilitado em frente à barbearia.</p>
+                        <h2 class="section-title decorative-line" style="margin-top: 0.5rem;">Onde Estamos</h2>
+                        <p class="location-desc">Ambiente climatizado com estacionamento facilitado.</p>
 
                         <div class="info-contact-list">
                             <div class="info-contact-item">
                                 <i class="fas fa-map-marker-alt text-accent"></i>
                                 <div>
                                     <strong>Endereço:</strong>
-                                    <span>Rua José Cosme da Silva, 1021 - Bela Vista, Palhoça - SC</span>
+                                    <span>Rua José Cosme da Silva, 1021 - Palhoça - SC</span>
                                 </div>
                             </div>
 
@@ -332,30 +377,30 @@
                             <div class="info-contact-item">
                                 <i class="fas fa-clock text-accent"></i>
                                 <div>
-                                    <strong>Horários de Atendimento:</strong>
-                                    <span>Segunda a Sexta: 09h às 21h<br>Sábado: 09h às 20h</span>
+                                    <strong>Horários:</strong>
+                                    <span>Seg-Sex: 09h-21h • Sáb: 09h-20h</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="location-actions">
-                        <a href="https://maps.google.com/?q=Rua+Jose+Cosme+da+Silva+1021+Bela+Vista+Palhoca" target="_blank" class="btn btn-primary btn-sm">
+                        <a href="https://maps.google.com/?q=Rua+Jose+Cosme+da+Silva+1021+Bela+Vista+Palhoca" target="_blank" class="btn btn-primary btn-sm btn-shine">
                             <i class="fas fa-directions"></i> Google Maps
                         </a>
                         <a href="https://wa.me/5548988139261" target="_blank" class="btn btn-secondary btn-sm">
-                            <i class="fab fa-whatsapp"></i> Falar no WhatsApp
+                            <i class="fab fa-whatsapp"></i> WhatsApp
                         </a>
                     </div>
                 </div>
 
-                <div class="location-map card" style="padding: 0; overflow: hidden;">
+                <div class="location-map card reveal-right" style="padding: 0; overflow: hidden;" data-parallax="0.1">
                     <iframe 
                         title="Localização Barber Serra no Google Maps" 
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3535.47464731812!2d-48.6698!3d-27.6477!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjfCsDM4JzUxLjciUyA0OMKwNDAnMTEuMyJX!5e0!3m2!1spt-BR!2sbr!4v1680000000000!5m2!1spt-BR!2sbr" 
                         width="100%" 
                         height="100%" 
-                        style="border:0; min-height: 340px;" 
+                        style="border:0; min-height: 380px;" 
                         allowfullscreen="" 
                         loading="lazy" 
                         referrerpolicy="no-referrer-when-downgrade">
@@ -367,14 +412,14 @@
 
     <!-- ==================== FOOTER COMPACTO ==================== -->
     <footer class="site-footer">
-        <div class="container footer-container" style="grid-template-columns: 1.5fr 1fr 1.2fr; gap: 2rem;">
+        <div class="container footer-container">
             <div class="footer-col brand-col">
                 <div class="brand-logo">
                     <div class="logo-icon-wrapper"><i class="fas fa-cut"></i></div>
                     <div class="logo-text"><span class="logo-name">BARBER SERRA</span></div>
                 </div>
                 <p class="footer-desc">
-                    Tradição, precisão e estilo. O ambiente certo para quem valoriza a excelência do visual.
+                    Tradição, precisão e estilo. O ambiente certo para quem valoriza a excelência.
                 </p>
                 <div class="social-links">
                     <a href="https://instagram.com" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
@@ -387,15 +432,15 @@
                 <h4 class="footer-heading">Portais</h4>
                 <ul class="footer-links">
                     <li><a href="cliente-login.html"><i class="fas fa-user"></i> Área do Cliente</a></li>
-                    <li><a href="admin/login.html"><i class="fas fa-lock"></i> Painel do Barbeiro (Admin)</a></li>
+                    <li><a href="admin/login.html"><i class="fas fa-lock"></i> Painel Admin</a></li>
                 </ul>
             </div>
 
             <div class="footer-col">
-                <h4 class="footer-heading">Contato & Endereço</h4>
+                <h4 class="footer-heading">Contato</h4>
                 <p class="footer-contact-text">
                     Rua José Cosme da Silva, 1021<br>
-                    Bela Vista, Palhoça - SC<br>
+                    Palhoça - SC<br>
                     WhatsApp: (48) 98813-9261
                 </p>
             </div>
@@ -404,7 +449,7 @@
         <div class="footer-bottom">
             <div class="container bottom-content">
                 <p>&copy; 2026 BARBER SERRA. Todos os direitos reservados.</p>
-                <p class="credits">Design Dark Premium.</p>
+                <p class="credits">Design Premium.</p>
             </div>
         </div>
     </footer>
@@ -546,6 +591,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/config.js"></script>
     <script src="js/ui-core.js"></script>
+    <script src="js/cinematic-motion.js"></script>
     <script src="js/supabase.js"></script>
     <script src="js/script.js"></script>
 </body>

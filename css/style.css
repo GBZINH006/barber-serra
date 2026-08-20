@@ -2,25 +2,83 @@
    BARBER SERRA — LANDING PAGE STYLES (DARK SAAS / LUXURY BARBER)
    ========================================================================== */
 
-/* --- Site Header & Navigation --- */
-.site-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: var(--header-height);
-  background: rgba(9, 10, 13, 0.82);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border);
-  z-index: 990;
-  transition: background var(--transition), border-color var(--transition);
+/* ==========================================================================
+   ANIMAÇÕES GLOBAIS & UTILITIES
+   ========================================================================== */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-.site-header.scrolled {
-  background: rgba(9, 10, 13, 0.95);
-  box-shadow: var(--shadow-md);
-  border-bottom-color: var(--border-hover);
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Classe utility para animações */
+.animate-on-scroll {
+  opacity: 0;
+  animation: slideUp 0.6s ease forwards;
+}
+
+.animate-delay-1 { animation-delay: 0.1s; }
+.animate-delay-2 { animation-delay: 0.2s; }
+.animate-delay-3 { animation-delay: 0.3s; }
+.animate-delay-4 { animation-delay: 0.4s; }
+
+/* --- Site Header & Navigation --- */
+.site-header {
+  /* Estilos movidos para premium-header.css */
 }
 
 .header-container {
@@ -218,10 +276,59 @@
 
 .hero-section {
   position: relative;
-  padding-top: calc(var(--header-height) + 4rem);
-  padding-bottom: 5rem;
+  padding-top: calc(var(--header-height) + 6rem);
+  padding-bottom: 8rem;
   overflow: hidden;
   background: radial-gradient(circle at 50% 20%, rgba(212, 175, 55, 0.08) 0%, transparent 60%);
+  min-height: 95vh;
+  display: flex;
+  align-items: center;
+}
+
+/* Scroll Indicator */
+.scroll-indicator {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0;
+  animation: fadeIn 1s ease 2s forwards;
+}
+
+.scroll-indicator span {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.scroll-indicator-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(180deg, var(--accent) 0%, transparent 100%);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+
+@keyframes scrollPulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(10px);
+  }
+}
+
+@media (max-width: 768px) {
+  .scroll-indicator {
+    display: none;
+  }
 }
 
 .hero-bg-glow {
@@ -240,7 +347,7 @@
 .hero-container {
   display: grid;
   grid-template-columns: 1.2fr 0.9fr;
-  gap: 3.5rem;
+  gap: 4rem;
   align-items: center;
   position: relative;
   z-index: 1;
@@ -339,6 +446,12 @@
   padding: 1.25rem;
   box-shadow: var(--shadow-lg);
   position: relative;
+  transition: transform 0.3s ease;
+}
+
+.hero-card-preview:hover {
+  transform: translateY(-8px) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
 .preview-header {
@@ -440,12 +553,13 @@
    ========================================================================== */
 
 .section {
-  padding: 5.5rem 0;
+  padding: 7rem 0;
   position: relative;
 }
 
 .section-header {
-  margin-bottom: 3rem;
+  margin-bottom: 4rem;
+  animation: slideUp 0.6s ease;
 }
 
 .section-header.text-center {
@@ -483,28 +597,36 @@
 
 .differentials-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
 }
 
 .differential-card {
-  padding: 2rem 1.75rem;
+  padding: 2.5rem 2rem;
   display: flex;
   flex-direction: column;
 }
 
 .diff-icon-box {
-  width: 52px;
-  height: 52px;
+  width: 56px;
+  height: 56px;
   border-radius: var(--radius-md);
   background: var(--surface-hover);
   border: 1px solid var(--border-accent);
   color: var(--accent);
-  font-size: 1.35rem;
+  font-size: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.differential-card:hover .diff-icon-box {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+  background: var(--accent);
+  color: #090a0d;
 }
 
 .diff-title {
@@ -556,25 +678,36 @@
 .services-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 1.75rem;
+  gap: 2rem;
 }
 
 .service-item-card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: 1.75rem;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: var(--transition);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
 }
 
-.service-item-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--border-hover);
-  box-shadow: var(--shadow-md);
+.service-item-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--accent-gradient);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.service-item-card:hover::before {
+  opacity: 1;
 }
 
 .service-item-card.destaque {
@@ -653,7 +786,7 @@
 .team-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.75rem;
+  gap: 2.5rem;
 }
 
 .barber-team-card {
@@ -661,33 +794,16 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  transition: var(--transition);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
 }
 
-.barber-team-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--border-hover);
-  box-shadow: var(--shadow-md);
-}
-
 .barber-photo-box {
-  height: 260px;
+  height: 280px;
   background: var(--bg-tertiary);
   overflow: hidden;
   position: relative;
-}
-
-.barber-photo-box img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.4s ease;
-}
-
-.barber-team-card:hover .barber-photo-box img {
-  transform: scale(1.04);
 }
 
 .barber-rating-badge {
@@ -1118,14 +1234,15 @@
 .reviews-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.75rem;
+  gap: 2.5rem;
 }
 
 .review-card {
-  padding: 2rem 1.75rem;
+  padding: 2.5rem 2rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .review-stars {
@@ -1181,14 +1298,23 @@
 .location-grid {
   display: grid;
   grid-template-columns: 1fr 1.2fr;
-  gap: 2rem;
+  gap: 2.5rem;
 }
 
 .location-info {
-  padding: 2.5rem;
+  padding: 3rem 2.5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+.location-map {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.location-map:hover {
+  transform: scale(1.02);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
 }
 
 .location-desc {
@@ -1327,11 +1453,12 @@ details[open] .faq-icon {
   background-color: var(--bg-secondary);
   border-top: 1px solid var(--border);
   padding-top: 4.5rem;
+  animation: fadeIn 0.6s ease;
 }
 
 .footer-container {
   display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+  grid-template-columns: 1.5fr 1fr 1.2fr;
   gap: 3rem;
   padding-bottom: 3.5rem;
 }
