@@ -3,47 +3,385 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agendamentos - Admin | BARBER SERRA</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/admin.css">
+    <title>Agenda & Agendamentos — Admin BARBER SERRA</title>
+    <meta name="theme-color" content="#090a0d">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet" href="../css/design-system.css">
+    <link rel="stylesheet" href="css/admin.css">
 </head>
-<body class="admin-page">
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <div class="brand"><i class="fas fa-cut"></i> BARBER SERRA</div>
-        </div>
+<body class="admin-body">
+
+    <div class="mobile-drawer-backdrop" id="admin-sidebar-backdrop"></div>
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="admin-sidebar">
+        <a href="dashboard.html" class="sidebar-brand">
+            <div class="logo-icon-wrapper" style="width: 36px; height: 36px; font-size: 1.1rem;">
+                <i class="fas fa-cut"></i>
+            </div>
+            <div class="logo-text">
+                <span class="logo-name" style="font-size: 1rem;">BARBER SERRA</span>
+                <span class="logo-sub">PAINEL SAAS</span>
+            </div>
+        </a>
+
         <nav class="sidebar-nav">
-            <a href="dashboard.html" class="nav-item">Dashboard</a>
-            <a href="agendamentos.html" class="nav-item active">Agendamentos</a>
-            <a href="horarios.html" class="nav-item">Horários</a>
-            <a href="servicos.html" class="nav-item">Serviços</a>
-            <a href="barbeiros.html" class="nav-item">Barbeiros</a>
-            <a href="clientes.html" class="nav-item">Clientes</a>
-            <a href="relatorios.html" class="nav-item">Relatórios</a>
-            <a href="configuracoes.html" class="nav-item">Configurações</a>
+            <a href="dashboard.html" class="sidebar-item"><i class="fas fa-chart-pie"></i><span>Dashboard</span></a>
+            <a href="agendamentos.html" class="sidebar-item active"><i class="fas fa-calendar-alt"></i><span>Agendamentos</span></a>
+            <a href="clientes.html" class="sidebar-item"><i class="fas fa-users"></i><span>Clientes CRM</span></a>
+            <a href="barbeiros.html" class="sidebar-item"><i class="fas fa-user-tie"></i><span>Barbeiros</span></a>
+            <a href="servicos.html" class="sidebar-item"><i class="fas fa-scissors"></i><span>Serviços</span></a>
+            <a href="horarios.html" class="sidebar-item"><i class="fas fa-clock"></i><span>Horários & Grade</span></a>
+            <a href="relatorios.html" class="sidebar-item"><i class="fas fa-file-invoice-dollar"></i><span>Relatórios</span></a>
+            <a href="configuracoes.html" class="sidebar-item"><i class="fas fa-cog"></i><span>Configurações</span></a>
         </nav>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-user">
+                <img src="../images/barber-1.svg" alt="Admin Avatar" id="admin-user-avatar">
+                <div class="sidebar-user-details">
+                    <span class="sidebar-user-name" id="admin-user-name">Mateus Rabelo</span>
+                    <span class="sidebar-user-role">Master Barber • Admin</span>
+                </div>
+            </div>
+            <button type="button" class="btn-sidebar-logout" onclick="logoutAdmin()" title="Sair do Painel">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
     </aside>
 
-    <div class="main-content">
-        <header class="topbar">
-            <h1>Agendamentos</h1>
+    <div class="admin-main-wrapper">
+        <header class="admin-topbar">
+            <div class="topbar-left">
+                <button type="button" class="mobile-toggle" id="sidebar-mobile-toggle"><i class="fas fa-bars"></i></button>
+                <h1 class="topbar-title">Gestão de Agendamentos</h1>
+            </div>
+            <div class="topbar-right">
+                <button type="button" class="btn btn-primary btn-sm" onclick="abrirModalNovoAgendamentoManual()">
+                    <i class="fas fa-plus"></i> Novo Agendamento
+                </button>
+            </div>
         </header>
 
-        <div class="page-content container">
-            <section>
-                <p class="muted">Lista de agendamentos (exemplo). Conectar ao Supabase para dados reais.</p>
-                <table class="admin-table" id="agendamentos-table">
-                    <thead>
-                        <tr><th>ID</th><th>Cliente</th><th>Barbeiro</th><th>Serviço</th><th>Data</th><th>Horário</th><th>Status</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>1</td><td>Felipe</td><td>Mateus</td><td>Corte Degradê</td><td>2026-08-20</td><td>15:00</td><td>confirmado</td></tr>
-                    </tbody>
-                </table>
-            </section>
+        <main class="admin-content">
+            <!-- Schedule Controls & View Modes -->
+            <div class="schedule-view-controls">
+                <div class="service-category-tabs" id="schedule-mode-tabs">
+                    <button type="button" class="tab-pill active" data-view="hoje"><i class="fas fa-sun"></i> Hoje</button>
+                    <button type="button" class="tab-pill" data-view="amanha"><i class="fas fa-calendar-day"></i> Amanhã</button>
+                    <button type="button" class="tab-pill" data-view="semana"><i class="fas fa-calendar-week"></i> Semana</button>
+                    <button type="button" class="tab-pill" data-view="lista"><i class="fas fa-list"></i> Todos (Lista)</button>
+                </div>
+
+                <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                    <select id="filter-admin-barbeiro" class="form-control" style="width: auto; padding: 0.5rem 0.75rem;" onchange="filtrarAgendaAdmin()">
+                        <option value="todos">Todos os Barbeiros</option>
+                        <option value="1">Mateus Rabelo</option>
+                        <option value="2">Caio Martins</option>
+                        <option value="3">Bruno Costa</option>
+                    </select>
+
+                    <select id="filter-admin-status" class="form-control" style="width: auto; padding: 0.5rem 0.75rem;" onchange="filtrarAgendaAdmin()">
+                        <option value="todos">Todos os Status</option>
+                        <option value="confirmado">Confirmados</option>
+                        <option value="concluido">Concluídos</option>
+                        <option value="cancelado">Cancelados</option>
+                    </select>
+
+                    <input type="text" id="admin-search-input" class="form-control" placeholder="Buscar cliente..." style="width: 200px; padding: 0.5rem 0.75rem;" oninput="filtrarAgendaAdmin()">
+                </div>
+            </div>
+
+            <!-- Visual Cards Container -->
+            <div class="schedule-grid-cards" id="schedule-cards-grid" style="margin-bottom: 2rem;">
+                <!-- Cards renderizados dinamicamente -->
+            </div>
+
+            <!-- Full List Table (Shown when list mode or below) -->
+            <div class="card" id="schedule-table-card" style="padding: 1.5rem;">
+                <div class="section-client-title">
+                    <span><i class="fas fa-table text-accent"></i> Registro Detalhado de Agendamentos</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>#ID</th>
+                                <th>Data & Hora</th>
+                                <th>Cliente</th>
+                                <th>WhatsApp</th>
+                                <th>Serviço</th>
+                                <th>Barbeiro</th>
+                                <th>Valor</th>
+                                <th>Status</th>
+                                <th style="text-align: right;">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-schedule-table-body">
+                            <!-- Inserido dinamicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal: Novo Agendamento Manual -->
+    <div class="modal-backdrop" id="modal-novo-agendamento-admin">
+        <div class="modal-panel" style="max-width: 540px;">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-calendar-plus text-accent"></i> Agendamento Manual</h3>
+                <button type="button" class="modal-close-btn" onclick="UICore.closeModal('modal-novo-agendamento-admin')"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="form-novo-agendamento-admin" onsubmit="salvarAgendamentoManual(event)">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label" for="manual-nome"><i class="fas fa-user"></i> Nome do Cliente *</label>
+                        <input type="text" id="manual-nome" class="form-control" placeholder="Nome completo" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="manual-telefone"><i class="fab fa-whatsapp"></i> Telefone / WhatsApp *</label>
+                        <input type="tel" id="manual-telefone" class="form-control" placeholder="(48) 99999-9999" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="manual-servico"><i class="fas fa-scissors"></i> Serviço *</label>
+                        <select id="manual-servico" class="form-control" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="manual-barbeiro"><i class="fas fa-user-tie"></i> Barbeiro *</label>
+                        <select id="manual-barbeiro" class="form-control" required></select>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label" for="manual-data"><i class="fas fa-calendar-day"></i> Data</label>
+                            <input type="date" id="manual-data" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="manual-horario"><i class="fas fa-clock"></i> Horário</label>
+                            <select id="manual-horario" class="form-control" required>
+                                <option value="09:00">09:00</option>
+                                <option value="09:30">09:30</option>
+                                <option value="10:00">10:00</option>
+                                <option value="10:30">10:30</option>
+                                <option value="11:00">11:00</option>
+                                <option value="14:00">14:00</option>
+                                <option value="14:30">14:30</option>
+                                <option value="15:00">15:00</option>
+                                <option value="15:30">15:30</option>
+                                <option value="16:00">16:00</option>
+                                <option value="17:00">17:00</option>
+                                <option value="18:00">18:00</option>
+                                <option value="19:00">19:00</option>
+                                <option value="20:00">20:00</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="UICore.closeModal('modal-novo-agendamento-admin')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Salvar Agendamento</button>
+                </div>
+            </form>
         </div>
     </div>
 
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/ui-core.js"></script>
     <script src="../js/supabase.js"></script>
+    <script src="js/admin-core.js"></script>
+    <script>
+        let todosAgendamentosAdmin = [];
+        let viewMode = 'hoje';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            initScheduleTabs();
+            await carregarAgendaAdmin();
+            popularSelectsModal();
+        });
+
+        function initScheduleTabs() {
+            document.querySelectorAll('#schedule-mode-tabs .tab-pill').forEach(pill => {
+                pill.addEventListener('click', () => {
+                    document.querySelectorAll('#schedule-mode-tabs .tab-pill').forEach(p => p.classList.remove('active'));
+                    pill.classList.add('active');
+                    viewMode = pill.dataset.view;
+                    filtrarAgendaAdmin();
+                });
+            });
+        }
+
+        async function carregarAgendaAdmin() {
+            todosAgendamentosAdmin = await obterListaAgendamentosAdmin();
+            filtrarAgendaAdmin();
+        }
+
+        function filtrarAgendaAdmin() {
+            const hojeStr = new Date().toISOString().split('T')[0];
+            const amanhaStr = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+            const barbeiroId = document.getElementById('filter-admin-barbeiro')?.value || 'todos';
+            const status = document.getElementById('filter-admin-status')?.value || 'todos';
+            const query = document.getElementById('admin-search-input')?.value.toLowerCase().trim() || '';
+
+            let filtrados = todosAgendamentosAdmin;
+
+            // View Mode
+            if (viewMode === 'hoje') {
+                filtrados = filtrados.filter(a => a.data === hojeStr);
+            } else if (viewMode === 'amanha') {
+                filtrados = filtrados.filter(a => a.data === amanhaStr);
+            } else if (viewMode === 'semana') {
+                const seteDias = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0];
+                filtrados = filtrados.filter(a => a.data >= hojeStr && a.data <= seteDias);
+            }
+
+            // Barbeiro filter
+            if (barbeiroId !== 'todos') {
+                filtrados = filtrados.filter(a => String(a.barbeiro_id) === String(barbeiroId));
+            }
+
+            // Status filter
+            if (status !== 'todos') {
+                filtrados = filtrados.filter(a => a.status === status);
+            }
+
+            // Query
+            if (query) {
+                filtrados = filtrados.filter(a => 
+                    a.cliente_nome.toLowerCase().includes(query) || 
+                    a.servico_nome.toLowerCase().includes(query) ||
+                    (a.cliente_telefone && a.cliente_telefone.includes(query))
+                );
+            }
+
+            renderizarCardsAgenda(filtrados);
+            renderizarTabelaAgenda(filtrados);
+        }
+
+        function renderizarCardsAgenda(lista) {
+            const container = document.getElementById('schedule-cards-grid');
+            if (!container) return;
+
+            if (!lista || lista.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 2.5rem; background: var(--surface); border: 1px dashed var(--border); border-radius: var(--radius-lg);">
+                        <i class="fas fa-calendar-times" style="font-size: 2rem; color: var(--text-muted); margin-bottom: 0.5rem; display: block;"></i>
+                        <strong style="color: var(--text-primary); display: block;">Nenhum agendamento para este filtro</strong>
+                        <small style="color: var(--text-secondary);">Tente alterar as abas de período ou criar um novo agendamento.</small>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = lista.map(a => `
+                <div class="schedule-card">
+                    <div>
+                        <div class="schedule-card-header">
+                            <span class="schedule-time-tag"><i class="fas fa-clock"></i> ${a.horario}</span>
+                            <span class="badge ${a.status === 'concluido' ? 'badge-success' : a.status === 'cancelado' ? 'badge-danger' : 'badge-gold'}">
+                                ${(a.status || 'confirmado').toUpperCase()}
+                            </span>
+                        </div>
+                        <h4 class="schedule-client-name">${a.cliente_nome}</h4>
+                        <div class="schedule-service-name"><i class="fas fa-scissors text-accent"></i> ${a.servico_nome}</div>
+                        <div style="font-size: 0.8125rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+                            <i class="fas fa-user-tie"></i> ${a.barbeiro_nome} • <strong>R$ ${a.preco},00</strong>
+                        </div>
+                    </div>
+                    <div class="schedule-footer">
+                        <a href="https://wa.me/55${(a.cliente_telefone || '').replace(/\D/g, '')}?text=Olá%20${encodeURIComponent(a.cliente_nome)},%20confirmamos%20seu%20horário%20na%20Barber%20Serra!" target="_blank" class="btn btn-ghost btn-sm" style="color: #25d366;" title="WhatsApp">
+                            <i class="fab fa-whatsapp"></i> Lembrar
+                        </a>
+                        <div style="display: flex; gap: 0.25rem;">
+                            <button type="button" class="btn btn-ghost btn-sm" style="color: var(--success);" title="Concluir" onclick="alterarStatusAdmin(${a.id}, 'concluido')">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button type="button" class="btn btn-ghost btn-sm" style="color: var(--danger);" title="Cancelar" onclick="alterarStatusAdmin(${a.id}, 'cancelado')">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderizarTabelaAgenda(lista) {
+            const tbody = document.getElementById('admin-schedule-table-body');
+            if (!tbody) return;
+
+            tbody.innerHTML = lista.map(a => `
+                <tr>
+                    <td><span class="badge badge-gold">#${a.id}</span></td>
+                    <td><strong>${a.data} às ${a.horario}</strong></td>
+                    <td><strong>${a.cliente_nome}</strong></td>
+                    <td>${a.cliente_telefone || '--'}</td>
+                    <td>${a.servico_nome}</td>
+                    <td><i class="fas fa-user-tie text-accent"></i> ${a.barbeiro_nome}</td>
+                    <td><strong>R$ ${a.preco},00</strong></td>
+                    <td>
+                        <span class="badge ${a.status === 'concluido' ? 'badge-success' : a.status === 'cancelado' ? 'badge-danger' : 'badge-gold'}">
+                            ${(a.status || 'confirmado').toUpperCase()}
+                        </span>
+                    </td>
+                    <td style="text-align: right;">
+                        <button type="button" class="btn btn-ghost btn-sm" style="color: var(--success);" onclick="alterarStatusAdmin(${a.id}, 'concluido')"><i class="fas fa-check"></i></button>
+                        <button type="button" class="btn btn-ghost btn-sm" style="color: var(--danger);" onclick="alterarStatusAdmin(${a.id}, 'cancelado')"><i class="fas fa-times"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function alterarStatusAdmin(id, status) {
+            await atualizarStatusAgendamento(id, status);
+            UICore.toast('Status Atualizado', `Agendamento marcado como ${status}.`, 'info');
+            await carregarAgendaAdmin();
+        }
+
+        function abrirModalNovoAgendamentoManual() {
+            document.getElementById('manual-data').value = new Date().toISOString().split('T')[0];
+            UICore.openModal('modal-novo-agendamento-admin');
+        }
+
+        function popularSelectsModal() {
+            const servSelect = document.getElementById('manual-servico');
+            if (servSelect) {
+                servSelect.innerHTML = SERVICOS.map(s => `<option value="${s.id}">${s.nome} - R$ ${s.preco},00 (${s.duracao} min)</option>`).join('');
+            }
+
+            const barbSelect = document.getElementById('manual-barbeiro');
+            if (barbSelect) {
+                barbSelect.innerHTML = BARBEIROS.map(b => `<option value="${b.id}">${b.nome} (${b.especialidade})</option>`).join('');
+            }
+
+            const telInput = document.getElementById('manual-telefone');
+            if (telInput) UICore.applyPhoneMask(telInput);
+        }
+
+        async function salvarAgendamentoManual(e) {
+            e.preventDefault();
+            const nome = document.getElementById('manual-nome').value.trim();
+            const telefone = document.getElementById('manual-telefone').value.trim();
+            const servicoId = document.getElementById('manual-servico').value;
+            const barbeiroId = Number(document.getElementById('manual-barbeiro').value);
+            const data = document.getElementById('manual-data').value;
+            const horario = document.getElementById('manual-horario').value;
+
+            const servico = SERVICOS.find(s => s.id === servicoId);
+            const barbeiro = BARBEIROS.find(b => b.id === barbeiroId);
+
+            const dados = { servico, barbeiro, data, horario, nome, telefone };
+            await criarAgendamento(dados);
+
+            UICore.closeModal('modal-novo-agendamento-admin');
+            UICore.toast('Criado com Sucesso', 'Novo agendamento registrado na agenda!', 'success');
+            await carregarAgendaAdmin();
+        }
+    </script>
 </body>
 </html>

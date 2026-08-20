@@ -3,718 +3,549 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BARBER SERRA - Barbearia Bela Vista | Palhoça - SC</title>
-    <meta name="description" content="Barbearia premium em Bela Vista, Palhoça. Cortes modernos, barba e tratamentos. Agende seu horário online!">
+    <title>BARBER SERRA — Barbearia Premium em Bela Vista | Palhoça - SC</title>
+    <meta name="description" content="Seu próximo corte começa aqui. Barbearia premium em Bela Vista, Palhoça - SC. Cortes masculinos degradê, barboterapia com ozônio e agendamento online.">
+    <meta name="theme-color" content="#090a0d">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="BARBER SERRA — Seu próximo corte começa aqui">
+    <meta property="og:description" content="A precisão do corte clássico unida à tecnologia de agendamento em tempo real. Experiência premium em Bela Vista, Palhoça.">
+    <meta property="og:image" content="images/about-shop.svg">
+
+    <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/design-system.css">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Elfsight Instagram Feed Widget -->
-    <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
+
+    <!-- Schema.org -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BarberShop",
+      "name": "BARBER SERRA",
+      "telephone": "+5548988139261",
+      "priceRange": "$$",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Rua José Cosme da Silva, 1021",
+        "addressLocality": "Palhoça",
+        "addressRegion": "SC",
+        "postalCode": "88132-700",
+        "addressCountry": "BR"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "5.0",
+        "reviewCount": "48"
+      }
+    }
+    </script>
 </head>
 <body>
-    <!-- Header/Navbar -->
-    <header class="header" id="header">
-        <nav class="nav container">
-            <a href="#home" class="nav-logo">
-                <i class="fas fa-cut"></i>
-                <span>BARBER SERRA</span>
+
+    <!-- ==================== HEADER & NAVBAR ==================== -->
+    <header class="site-header" id="site-header">
+        <div class="container header-container">
+            <a href="#home" class="brand-logo" aria-label="Página inicial BARBER SERRA">
+                <div class="logo-icon-wrapper">
+                    <i class="fas fa-cut"></i>
+                </div>
+                <div class="logo-text">
+                    <span class="logo-name">BARBER SERRA</span>
+                    <span class="logo-sub">PALHOÇA • SC</span>
+                </div>
             </a>
 
-            <div class="nav-menu" id="nav-menu">
-                <ul class="nav-list">
-                    <li class="nav-item">
-                        <a href="#home" class="nav-link active">Início</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#about" class="nav-link">Sobre</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#services" class="nav-link">Serviços</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#barbers" class="nav-link">Barbeiros</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#gallery" class="nav-link">Galeria</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#contact" class="nav-link">Contato</a>
-                    </li>
-                </ul>
-                <div class="nav-close" id="nav-close">
-                    <i class="fas fa-times"></i>
-                </div>
-            </div>
+            <!-- Desktop Nav Menu -->
+            <nav class="desktop-nav" id="desktop-nav" aria-label="Navegação Principal">
+                <a href="#home" class="nav-item active">Início</a>
+                <a href="#diferenciais" class="nav-item">Diferenciais</a>
+                <a href="#servicos" class="nav-item">Serviços</a>
+                <a href="#barbeiros" class="nav-item">Equipe</a>
+                <a href="#avaliacoes" class="nav-item">Depoimentos</a>
+                <a href="#localizacao" class="nav-item">Localização</a>
+            </nav>
 
-            <div class="nav-btns">
-                <button class="btn-agendar" id="btn-agendar-header">
-                    <i class="fas fa-calendar-check"></i> Agendar
+            <!-- Action Buttons -->
+            <div class="header-actions">
+                <a href="cliente-login.html" class="btn btn-secondary btn-sm" title="Acessar Área do Cliente">
+                    <i class="fas fa-user"></i>
+                    <span>Área do Cliente</span>
+                </a>
+                <button type="button" class="btn btn-primary btn-sm" onclick="abrirModalAgendamentoSite()">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Agendar Horário</span>
                 </button>
-                <button class="btn btn-primary" id="btn-registrar">
-                        <i class="fas fa-user-plus"></i> Registrar
-                    </button>
-                <div class="nav-toggle" id="nav-toggle">
+                <button type="button" class="mobile-toggle" id="mobile-toggle" aria-label="Menu mobile">
                     <i class="fas fa-bars"></i>
-                </div>
+                </button>
             </div>
-        </nav>
+        </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="hero-overlay"></div>
-        <div class="hero-content container">
-            <div class="hero-text">
-                <span class="hero-subtitle">Bem-vindo à</span>
-                <h1 class="hero-title">BARBER SERRA</h1>
-                <p class="hero-description">
-                    Estilo, tradição e hospitalidade em Bela Vista. 
-                    Transformamos seu visual com cortes modernos e atendimento excepcional.
-                </p>
-                <div class="hero-rating">
-                    <div class="stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <span>5.0 - 2 avaliações no Google</span>
+    <!-- Mobile Drawer Menu -->
+    <div class="mobile-drawer-backdrop" id="mobile-drawer-backdrop"></div>
+    <aside class="mobile-drawer" id="mobile-drawer">
+        <div class="drawer-header">
+            <div class="brand-logo">
+                <div class="logo-icon-wrapper"><i class="fas fa-cut"></i></div>
+                <div class="logo-text"><span class="logo-name">BARBER SERRA</span></div>
+            </div>
+            <button type="button" class="drawer-close" id="drawer-close" aria-label="Fechar menu"><i class="fas fa-times"></i></button>
+        </div>
+        <nav class="drawer-nav">
+            <a href="#home" class="drawer-link"><i class="fas fa-home"></i> Início</a>
+            <a href="#diferenciais" class="drawer-link"><i class="fas fa-star"></i> Diferenciais</a>
+            <a href="#servicos" class="drawer-link"><i class="fas fa-scissors"></i> Serviços & Preços</a>
+            <a href="#barbeiros" class="drawer-link"><i class="fas fa-users"></i> Barbeiros Especialistas</a>
+            <a href="#avaliacoes" class="drawer-link"><i class="fas fa-comments"></i> Avaliações</a>
+            <a href="#localizacao" class="drawer-link"><i class="fas fa-map-marker-alt"></i> Localização & Horários</a>
+        </nav>
+        <div class="drawer-footer">
+            <a href="cliente-login.html" class="btn btn-secondary" style="width: 100%; margin-bottom: 0.75rem;">
+                <i class="fas fa-user-circle"></i> Área do Cliente
+            </a>
+            <button type="button" class="btn btn-primary" style="width: 100%;" onclick="abrirModalAgendamentoSite()">
+                <i class="fas fa-calendar-check"></i> Agendar Agora
+            </button>
+        </div>
+    </aside>
+
+    <!-- ==================== HERO SECTION (RESPIRAÇÃO & ALTO IMPACTO) ==================== -->
+    <section class="hero-section" id="home">
+        <div class="hero-bg-glow"></div>
+        <div class="container hero-container">
+            <div class="hero-content">
+                <div class="badge badge-gold hero-badge">
+                    <i class="fas fa-gem"></i> Barbearia Premium • Bela Vista
                 </div>
-                <div class="hero-buttons">
-                    <button class="btn btn-primary" id="btn-agendar-hero">
-                        <i class="fas fa-calendar-check"></i> Agendar Horário
+                <h1 class="hero-title">
+                    Seu próximo corte <span class="gradient-text">começa aqui.</span>
+                </h1>
+                <p class="hero-description">
+                    A precisão do corte clássico unida à tecnologia de agendamento em tempo real. Desfrute de barboterapia com vapor de ozônio, toalha quente e atendimento pontual sem filas de espera.
+                </p>
+
+                <div class="hero-cta-group">
+                    <button type="button" class="btn btn-primary btn-lg" onclick="abrirModalAgendamentoSite()">
+                        <i class="fas fa-calendar-check"></i>
+                        <span>Agendar Horário</span>
                     </button>
-                    
-                    
-                    <a href="#about" class="btn btn-secondary">
-                        <i class="fas fa-info-circle"></i> Saiba Mais
+                    <a href="#servicos" class="btn btn-secondary btn-lg">
+                        <i class="fas fa-scissors"></i>
+                        <span>Ver Serviços</span>
                     </a>
                 </div>
-            </div>
-        </div>
-        <div class="hero-scroll">
-            <a href="#about">
-                <i class="fas fa-chevron-down"></i>
-            </a>
-        </div>
-    </section>
 
-    <!-- About Section -->
-    <section class="about section" id="about">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-subtitle">Conheça-nos</span>
-                <h2 class="section-title">Sobre a BARBER SERRA</h2>
-            </div>
-
-            <div class="about-content">
-                <div class="about-img">
-                    <img src="images/about-shop.svg" alt="Interior BARBER SERRA">
-                    <div class="about-badge">
-                        <i class="fas fa-award"></i>
-                        <span>3+ Anos</span>
+                <div class="hero-trust-bar">
+                    <div class="trust-item">
+                        <div class="trust-rating">
+                            <span class="stars-gold">★★★★★</span>
+                            <strong>5.0</strong>
+                        </div>
+                        <span class="trust-label">48+ Avaliações no Google</span>
+                    </div>
+                    <div class="trust-divider"></div>
+                    <div class="trust-item">
+                        <span class="trust-number">1.200+</span>
+                        <span class="trust-label">Cortes Realizados</span>
+                    </div>
+                    <div class="trust-divider"></div>
+                    <div class="trust-item">
+                        <span class="trust-number">100%</span>
+                        <span class="trust-label">Pontualidade Britânica</span>
                     </div>
                 </div>
-                <div class="about-info">
-                    <h3>Local aconchegante com os melhores profissionais</h3>
-                    <p>
-                        Na BARBER SERRA, oferecemos uma experiência única em barbearia. 
-                        Localizada em Bela Vista, Palhoça, nossa missão é proporcionar cortes 
-                        impecáveis com hospitalidade excepcional.
-                    </p>
-                    <p>
-                        Nossos profissionais são especializados em cortes clássicos e modernos, 
-                        garantindo que você saia com a confiança renovada e o visual dos seus sonhos.
-                    </p>
-                    
-                    <div class="about-features">
-                        <div class="feature-item">
-                            <i class="fas fa-check-circle"></i>
+            </div>
+
+            <div class="hero-visual">
+                <div class="hero-card-preview glass-card">
+                    <div class="preview-header">
+                        <div class="preview-badge"><i class="fas fa-circle" style="color: var(--success); font-size: 8px;"></i> Aberto Hoje até 21h</div>
+                        <span class="preview-city">Palhoça, SC</span>
+                    </div>
+                    <div class="preview-image-box">
+                        <img src="images/about-shop.svg" alt="Interior Barber Serra" class="preview-img">
+                    </div>
+                    <div class="preview-footer">
+                        <div class="preview-barber">
+                            <img src="images/barber-1.svg" alt="Mateus Rabelo" class="barber-micro-thumb">
                             <div>
-                                <h4>Profissionais Qualificados</h4>
-                                <p>Barbeiros experientes e atualizados</p>
+                                <small>Barbeiro em plantão</small>
+                                <strong>Mateus Rabelo</strong>
                             </div>
                         </div>
-                        <div class="feature-item">
-                            <i class="fas fa-check-circle"></i>
-                            <div>
-                                <h4>Ambiente Acolhedor</h4>
-                                <p>Espaço confortável e climatizado</p>
-                            </div>
-                        </div>
-                        <div class="feature-item">
-                            <i class="fas fa-check-circle"></i>
-                            <div>
-                                <h4>Produtos Premium</h4>
-                                <p>Utilizamos as melhores marcas</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button class="btn btn-primary" id="btn-agendar-about">
-                        <i class="fas fa-calendar-check"></i> Agendar Agora
-                    </button>
-                    <button class="btn btn-secondary" id="btn-registrar">
-                        <i class="fas fa-user-plus"></i> Registrar
-                    </button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Services Section -->
-    <section class="services section" id="services">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-subtitle">Nossos Serviços</span>
-                <h2 class="section-title">O que oferecemos</h2>
-            </div>
-
-            <div class="services-grid">
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-cut"></i>
-                    </div>
-                    <h3>Corte Degradê</h3>
-                    <p>Degradê moderno e preciso, estilo personalizado</p>
-                    <span class="service-price">R$ 40,00</span>
-                </div>
-
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-scissors"></i>
-                    </div>
-                    <h3>Navalhado ou Tesoura</h3>
-                    <p>Corte clássico com navalha ou tesoura profissional</p>
-                    <span class="service-price">R$ 45,00</span>
-                </div>
-
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-razor"></i>
-                    </div>
-                    <h3>Barba Simples</h3>
-                    <p>Design, aparo e acabamento profissional da barba</p>
-                    <span class="service-price">R$ 35,00</span>
-                </div>
-
-                <div class="service-card featured">
-                    <div class="service-badge">
-                        <i class="fas fa-star"></i> Destaque
-                    </div>
-                    <div class="service-icon">
-                        <i class="fas fa-spa"></i>
-                    </div>
-                    <h3>Barba com Ozônio</h3>
-                    <p>Tratamento premium com vapor de ozônio para hidratação profunda</p>
-                    <span class="service-price">R$ 50,00</span>
-                </div>
-
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <h3>Combo Degradê + Barba</h3>
-                    <p>Corte Degradê + Barba Simples</p>
-                    <span class="service-price">R$ 75,00</span>
-                </div>
-
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-crown"></i>
-                    </div>
-                    <h3>Combo Premium</h3>
-                    <p>Navalhado/Tesoura + Barba com Ozônio</p>
-                    <span class="service-price">R$ 95,00</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Barbers Section -->
-    <section class="barbers section" id="barbers">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-subtitle">Nossa Equipe</span>
-                <h2 class="section-title">Conheça Nossos Barbeiros</h2>
-            </div>
-
-            <div class="barbers-grid" id="barbers-grid">
-                <!-- Espaço para fotos dos barbeiros - será preenchido dinamicamente ou manualmente -->
-                <div class="barber-card">
-                    <div class="barber-img">
-                        <img src="images/barber-1.svg" alt="Mateus Rabelo">
-                        <div class="barber-overlay">
-                            <div class="barber-social">
-                                <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
-                                <a href="#" target="_blank"><i class="fab fa-whatsapp"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="barber-info">
-                        <h3>Mateus Rabelo</h3>
-                        <span>Especialista em Cortes Modernos</span>
-                        <p>Mais de 6 anos de experiência em degradê e acabamento premium.</p>
-                    </div>
-                </div>
-
-                <div class="barber-card">
-                    <div class="barber-img">
-                        <img src="images/barber-2.svg" alt="Caio Martins">
-                        <div class="barber-overlay">
-                            <div class="barber-social">
-                                <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
-                                <a href="#" target="_blank"><i class="fab fa-whatsapp"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="barber-info">
-                        <h3>Caio Martins</h3>
-                        <span>Design de Barba e Estilo</span>
-                        <p>Focado em barba, contorno e visual impecável para o dia a dia.</p>
-                    </div>
-                </div>
-
-                <div class="barber-card">
-                    <div class="barber-img">
-                        <img src="images/barber-3.svg" alt="Bruno Costa">
-                        <div class="barber-overlay">
-                            <div class="barber-social">
-                                <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
-                                <a href="#" target="_blank"><i class="fab fa-whatsapp"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="barber-info">
-                        <h3>Bruno Costa</h3>
-                        <span>Cortes Clássicos e Tradicionais</span>
-                        <p>Tradição, precisão e atenção aos detalhes em cada atendimento.</p>
+                        <button type="button" class="btn btn-outline btn-sm" onclick="abrirModalAgendamentoSite()">
+                            Reservar <i class="fas fa-arrow-right"></i>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Instagram Feed Section -->
-    <section class="instagram-feed section" id="gallery">
+    <!-- ==================== DIFERENCIAIS ==================== -->
+    <section class="section" id="diferenciais" style="padding-top: 3.5rem;">
         <div class="container">
-            <div class="section-header">
-                <span class="section-subtitle">Nossos Trabalhos</span>
-                <h2 class="section-title">Feed do Instagram</h2>
-                <p style="color: var(--text-light); margin-top: 10px;">
-                    Acompanhe nossos trabalhos diariamente no Instagram
-                </p>
+            <div class="section-header text-center">
+                <span class="badge badge-gold">Excelência em Cada Detalhe</span>
+                <h2 class="section-title">A Experiência Barber Serra</h2>
             </div>
 
-            <!-- Elfsight Instagram Feed Widget -->
-            <div class="instagram-widget-wrapper">
-                <div class="elfsight-app-4eaae77c-d16e-4d85-aa4b-1af71f3974fe" data-elfsight-app-lazy></div>
-            </div>
+            <div class="differentials-grid">
+                <div class="card differential-card card-hover">
+                    <div class="diff-icon-box"><i class="fas fa-clock"></i></div>
+                    <h3 class="diff-title">Pontualidade Rigorosa</h3>
+                    <p class="diff-desc">Horário marcado e respeitado. Chegue e seja atendido sem esperas cansativas.</p>
+                </div>
 
-            <!-- Botão CTA Instagram -->
-            <div class="instagram-cta" style="text-align: center; margin-top: 32px;">
-                <a href="https://www.instagram.com/barberserra/" target="_blank" class="btn-instagram">
-                    <i class="fab fa-instagram"></i>
-                    Seguir no Instagram @barberserra
-                </a>
+                <div class="card differential-card card-hover">
+                    <div class="diff-icon-box"><i class="fas fa-spa"></i></div>
+                    <h3 class="diff-title">Barboterapia com Ozônio</h3>
+                    <p class="diff-desc">Vapor de ozônio e toalha quente aromática para um barbear impecável sem irritações.</p>
+                </div>
+
+                <div class="card differential-card card-hover">
+                    <div class="diff-icon-box"><i class="fas fa-user-check"></i></div>
+                    <h3 class="diff-title">Visagismo Personalizado</h3>
+                    <p class="diff-desc">Análise dos traços faciais para indicar o corte que mais valoriza seu estilo.</p>
+                </div>
+
+                <div class="card differential-card card-hover">
+                    <div class="diff-icon-box"><i class="fas fa-couch"></i></div>
+                    <h3 class="diff-title">Lounge & Bebidas</h3>
+                    <p class="diff-desc">Ambiente climatizado com café especial, cerveja gelada cortesia e Wi-Fi veloz.</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Testimonials Section -->
-    <section class="testimonials section">
+    <!-- ==================== SERVIÇOS & PREÇOS ==================== -->
+    <section class="section" id="servicos">
         <div class="container">
-            <div class="section-header">
-                <span class="section-subtitle">Depoimentos</span>
+            <div class="section-header-flex">
+                <div>
+                    <span class="badge badge-gold">Valores Transparentes</span>
+                    <h2 class="section-title">Serviços & Combos</h2>
+                </div>
+                <div class="service-category-tabs" id="service-category-tabs">
+                    <button type="button" class="tab-pill active" data-category="todos">Todos</button>
+                    <button type="button" class="tab-pill" data-category="cortes">Cortes</button>
+                    <button type="button" class="tab-pill" data-category="barba">Barba</button>
+                    <button type="button" class="tab-pill" data-category="combos">Combos VIP</button>
+                </div>
+            </div>
+
+            <div class="services-grid" id="landing-services-grid">
+                <!-- Preenchido dinamicamente via script.js -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== EQUIPE / BARBEIROS ==================== -->
+    <section class="section" id="barbeiros">
+        <div class="container">
+            <div class="section-header text-center">
+                <span class="badge badge-gold">Especialistas</span>
+                <h2 class="section-title">Nossa Equipe</h2>
+                <p class="section-subtitle">Profissionais certificados com técnica apurada em cortes modernos e clássicos.</p>
+            </div>
+
+            <div class="team-grid" id="landing-team-grid">
+                <!-- Preenchido dinamicamente via script.js -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== AVALIAÇÕES ==================== -->
+    <section class="section" id="avaliacoes">
+        <div class="container">
+            <div class="section-header text-center">
+                <span class="badge badge-gold">Prova Social</span>
                 <h2 class="section-title">O que dizem nossos clientes</h2>
             </div>
 
-            <div class="testimonials-grid">
-                <div class="testimonial-card">
-                    <div class="testimonial-rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <p class="testimonial-text">
-                        "Local aconchegante e o mano lá corta super bem e tem ótima hospitalidade !!"
-                    </p>
-                    <div class="testimonial-author">
-                        <img src="images/avatar-felipe.svg" alt="Felipe Gomes">
-                        <div>
-                            <h4>Felipe Gomes</h4>
-                            <span>Cliente Google</span>
-                        </div>
+            <div class="reviews-grid">
+                <div class="card review-card card-hover">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">"Melhor barbearia de Palhoça! O degradê navalhado do Mateus é milimétrico e a pontualidade é impressionante."</p>
+                    <div class="review-author">
+                        <div class="author-avatar"><i class="fas fa-user"></i></div>
+                        <div><strong>Rodrigo Silveira</strong><small>Palhoça / SC</small></div>
                     </div>
                 </div>
 
-                <div class="testimonial-card">
-                    <div class="testimonial-rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
+                <div class="card review-card card-hover">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">"A barboterapia com vapor de ozônio e toalha quente é uma experiência relaxante única. Recomendo o combo VIP!"</p>
+                    <div class="review-author">
+                        <div class="author-avatar"><i class="fas fa-user"></i></div>
+                        <div><strong>Lucas Martins</strong><small>Bela Vista / SC</small></div>
                     </div>
-                    <p class="testimonial-text">
-                        "Atendimento super da hora!! Super indico!!!"
-                    </p>
-                    <div class="testimonial-author">
-                        <img src="images/avatar-claudinha.svg" alt="Claudinha Rocha">
-                        <div>
-                            <h4>Claudinha Rocha</h4>
-                            <span>Cliente Google</span>
-                        </div>
+                </div>
+
+                <div class="card review-card card-hover">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">"O agendamento online é rápido e sem complicação. Chego no horário e sou atendido na hora. Nota 10!"</p>
+                    <div class="review-author">
+                        <div class="author-avatar"><i class="fas fa-user"></i></div>
+                        <div><strong>Guilherme Fonseca</strong><small>Palhoça / SC</small></div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Contact Section -->
-    <section class="contact section" id="contact">
+    <!-- ==================== LOCALIZAÇÃO & HORÁRIOS ==================== -->
+    <section class="section" id="localizacao">
         <div class="container">
-            <div class="section-header">
-                <span class="section-subtitle">Entre em Contato</span>
-                <h2 class="section-title">Visite-nos ou Agende Online</h2>
-            </div>
+            <div class="location-grid">
+                <div class="location-info card">
+                    <div>
+                        <span class="badge badge-gold"><i class="fas fa-map-pin"></i> Bela Vista, Palhoça</span>
+                        <h2 class="section-title" style="margin-top: 0.5rem;">Onde Estamos</h2>
+                        <p class="location-desc">Ambiente climatizado, som ambiente e estacionamento facilitado em frente à barbearia.</p>
 
-            <div class="contact-content">
-                <div class="contact-info">
-                    <div class="info-card">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <div>
-                            <h4>Endereço</h4>
-                            <p>R. Blumenau - Bela Vista<br>Palhoça - SC, 88132-745</p>
-                        </div>
-                    </div>
+                        <div class="info-contact-list">
+                            <div class="info-contact-item">
+                                <i class="fas fa-map-marker-alt text-accent"></i>
+                                <div>
+                                    <strong>Endereço:</strong>
+                                    <span>Rua José Cosme da Silva, 1021 - Bela Vista, Palhoça - SC</span>
+                                </div>
+                            </div>
 
-                    <div class="info-card">
-                        <i class="fas fa-phone"></i>
-                        <div>
-                            <h4>Telefone</h4>
-                            <p>(48) 98813-9261</p>
-                            <a href="https://wa.me/5548988139261" target="_blank" class="btn-whatsapp">
-                                <i class="fab fa-whatsapp"></i> WhatsApp
-                            </a>
-                        </div>
-                    </div>
+                            <div class="info-contact-item">
+                                <i class="fab fa-whatsapp text-accent"></i>
+                                <div>
+                                    <strong>WhatsApp:</strong>
+                                    <span>(48) 98813-9261</span>
+                                </div>
+                            </div>
 
-                    <div class="info-card">
-                        <i class="fas fa-clock"></i>
-                        <div>
-                            <h4>Horário de Funcionamento</h4>
-                            <p>Segunda a Sábado: 9h às 21h<br>Domingo: Fechado</p>
-                        </div>
-                    </div>
-
-                    <div class="info-card">
-                        <i class="fas fa-share-alt"></i>
-                        <div>
-                            <h4>Redes Sociais</h4>
-                            <div class="social-links">
-                                <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
-                                <a href="#" target="_blank"><i class="fab fa-facebook"></i></a>
-                                <a href="https://wa.me/5548988139261" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                            <div class="info-contact-item">
+                                <i class="fas fa-clock text-accent"></i>
+                                <div>
+                                    <strong>Horários de Atendimento:</strong>
+                                    <span>Segunda a Sexta: 09h às 21h<br>Sábado: 09h às 20h</span>
+                                </div>
                             </div>
                         </div>
                     </div>
+
+                    <div class="location-actions">
+                        <a href="https://maps.google.com/?q=Rua+Jose+Cosme+da+Silva+1021+Bela+Vista+Palhoca" target="_blank" class="btn btn-primary btn-sm">
+                            <i class="fas fa-directions"></i> Google Maps
+                        </a>
+                        <a href="https://wa.me/5548988139261" target="_blank" class="btn btn-secondary btn-sm">
+                            <i class="fab fa-whatsapp"></i> Falar no WhatsApp
+                        </a>
+                    </div>
                 </div>
 
-                <div class="contact-map">
-                    <!-- Google Maps Embed - R. Blumenau, Bela Vista, Palhoça - SC -->
+                <div class="location-map card" style="padding: 0; overflow: hidden;">
                     <iframe 
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3536.8247573918744!2d-48.67234908492512!3d-27.653876182793557!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x952739f7d9e02c45%3A0x7e9b8e7e8f3e2b3c!2sR.%20Blumenau%2C%20Bela%20Vista%2C%20Palho%C3%A7a%20-%20SC%2C%2088132-745!5e0!3m2!1spt-BR!2sbr!4v1699999999999!5m2!1spt-BR!2sbr" 
+                        title="Localização Barber Serra no Google Maps" 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3535.47464731812!2d-48.6698!3d-27.6477!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjfCsDM4JzUxLjciUyA0OMKwNDAnMTEuMyJX!5e0!3m2!1spt-BR!2sbr!4v1680000000000!5m2!1spt-BR!2sbr" 
                         width="100%" 
                         height="100%" 
-                        style="border:0;" 
+                        style="border:0; min-height: 340px;" 
                         allowfullscreen="" 
                         loading="lazy" 
-                        referrerpolicy="no-referrer-when-downgrade"
-                        title="Localização BARBER SERRA - R. Blumenau, Bela Vista, Palhoça - SC">
+                        referrerpolicy="no-referrer-when-downgrade">
                     </iframe>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-about">
-                    <h3><i class="fas fa-cut"></i> BARBER SERRA</h3>
-                    <p>Barbearia premium em Bela Vista, Palhoça. Estilo, tradição e hospitalidade desde 2021.</p>
-                    <div class="footer-social">
-                        <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
-                        <a href="#" target="_blank"><i class="fab fa-facebook"></i></a>
-                        <a href="https://wa.me/5548988139261" target="_blank"><i class="fab fa-whatsapp"></i></a>
-                    </div>
+    <!-- ==================== FOOTER COMPACTO ==================== -->
+    <footer class="site-footer">
+        <div class="container footer-container" style="grid-template-columns: 1.5fr 1fr 1.2fr; gap: 2rem;">
+            <div class="footer-col brand-col">
+                <div class="brand-logo">
+                    <div class="logo-icon-wrapper"><i class="fas fa-cut"></i></div>
+                    <div class="logo-text"><span class="logo-name">BARBER SERRA</span></div>
                 </div>
-
-                <div class="footer-links">
-                    <h4>Links Rápidos</h4>
-                    <ul>
-                        <li><a href="#home">Início</a></li>
-                        <li><a href="#about">Sobre</a></li>
-                        <li><a href="#services">Serviços</a></li>
-                        <li><a href="#barbers">Barbeiros</a></li>
-                        <li><a href="#gallery">Galeria</a></li>
-                        <li><a href="#contact">Contato</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-hours">
-                    <h4>Horário</h4>
-                    <ul>
-                        <li>Segunda a Sexta: 9h - 21h</li>
-                        <li>Sábado: 9h - 21h</li>
-                        <li>Domingo: Fechado</li>
-                    </ul>
-                </div>
-
-                <div class="footer-contact">
-                    <h4>Contato</h4>
-                    <ul>
-                        <li><i class="fas fa-phone"></i> (48) 98813-9261</li>
-                        <li><i class="fas fa-map-marker-alt"></i> R. Blumenau - Bela Vista</li>
-                        <li>Palhoça - SC, 88132-745</li>
-                    </ul>
+                <p class="footer-desc">
+                    Tradição, precisão e estilo. O ambiente certo para quem valoriza a excelência do visual.
+                </p>
+                <div class="social-links">
+                    <a href="https://instagram.com" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://wa.me/5548988139261" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://maps.google.com" target="_blank" aria-label="Google Maps"><i class="fas fa-map-marker-alt"></i></a>
                 </div>
             </div>
 
-            <div class="footer-bottom">
-                <p>&copy; 2024 BARBER SERRA. Todos os direitos reservados.</p>
+            <div class="footer-col">
+                <h4 class="footer-heading">Portais</h4>
+                <ul class="footer-links">
+                    <li><a href="cliente-login.html"><i class="fas fa-user"></i> Área do Cliente</a></li>
+                    <li><a href="admin/login.html"><i class="fas fa-lock"></i> Painel do Barbeiro (Admin)</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4 class="footer-heading">Contato & Endereço</h4>
+                <p class="footer-contact-text">
+                    Rua José Cosme da Silva, 1021<br>
+                    Bela Vista, Palhoça - SC<br>
+                    WhatsApp: (48) 98813-9261
+                </p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="container bottom-content">
+                <p>&copy; 2026 BARBER SERRA. Todos os direitos reservados.</p>
+                <p class="credits">Design Dark Premium.</p>
             </div>
         </div>
     </footer>
 
-    <!-- Scroll to Top Button -->
-    <button class="scroll-top" id="scroll-top">
-        <i class="fas fa-arrow-up"></i>
-    </button>
-
-    <!-- Modal de Login/Cadastro para Agendamento -->
-    <div class="modal auth-modal" id="modal-auth">
-        <div class="modal-overlay" id="auth-modal-overlay"></div>
-        <div class="modal-content auth-modal-content">
-            <button class="modal-close" id="auth-modal-close" type="button" aria-label="Fechar login">
-                <i class="fas fa-times"></i>
-            </button>
-
-            <div class="modal-header auth-header">
-                <h2><i class="fas fa-user-check"></i> Entrar para agendar</h2>
-                <p>Crie sua conta ou entre para reservar seu horário.</p>
-            </div>
-
-            <div class="auth-tabs">
-                <button class="auth-tab active" data-auth-tab="login" type="button">Entrar</button>
-                <button class="auth-tab" data-auth-tab="register" type="button">Cadastrar</button>
-            </div>
-
-            <div class="auth-message" id="auth-message" role="alert" style="display:none;"></div>
-
-            <div class="auth-panel active" id="auth-login-panel">
-                <form id="auth-login-form" class="auth-form-inline">
-                    <div class="form-group">
-                        <label for="auth-login-email">E-mail</label>
-                        <input type="email" id="auth-login-email" placeholder="seu@email.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="auth-login-password">Senha</label>
-                        <input type="password" id="auth-login-password" placeholder="Digite sua senha" required>
-                    </div>
-                    <button class="btn btn-primary auth-submit" type="submit">
-                        <i class="fas fa-sign-in-alt"></i> Entrar
-                    </button>
-                </form>
-            </div>
-
-            <div class="auth-panel" id="auth-register-panel">
-                <form id="auth-register-form" class="auth-form-inline">
-                    <div class="form-group">
-                        <label for="auth-register-name">Nome completo</label>
-                        <input type="text" id="auth-register-name" placeholder="Seu nome" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="auth-register-phone">WhatsApp</label>
-                        <input type="tel" id="auth-register-phone" placeholder="(48) 99999-9999" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="auth-register-email">E-mail</label>
-                        <input type="email" id="auth-register-email" placeholder="seu@email.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="auth-register-password">Senha</label>
-                        <input type="password" id="auth-register-password" placeholder="Mínimo 6 caracteres" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="auth-register-confirm">Confirmar senha</label>
-                        <input type="password" id="auth-register-confirm" placeholder="Repita a senha" required>
-                    </div>
-                    <button class="btn btn-primary auth-submit" type="submit">
-                        <i class="fas fa-user-plus"></i> Criar conta
-                    </button>
-                </form>
-            </div>
-
-            <div class="auth-divider"><span>ou continue com</span></div>
-
-            <div class="social-auth">
-                <button class="social-auth-btn google" type="button" data-social-auth="google">
-                    <i class="fab fa-google"></i>
-                    <span>Google</span>
-                </button>
-                <button class="social-auth-btn facebook" type="button" data-social-auth="facebook">
-                    <i class="fab fa-facebook-f"></i>
-                    <span>Facebook</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal de Agendamento -->
-    <div class="modal" id="modal-agendamento">
-        <div class="modal-overlay" id="modal-overlay"></div>
-        <div class="modal-content">
-            <button class="modal-close" id="modal-close">
-                <i class="fas fa-times"></i>
-            </button>
-            
+    <!-- ==================== MODAL DE AGENDAMENTO (WIZARD DEDICADO) ==================== -->
+    <div class="modal-backdrop" id="modal-agendamento-site">
+        <div class="modal-panel" style="max-width: 680px;">
             <div class="modal-header">
-                <h2><i class="fas fa-calendar-check"></i> Agendar Horário</h2>
-                <p>Preencha os dados abaixo para agendar seu horário</p>
+                <div>
+                    <span class="badge badge-gold" style="font-size: 0.7rem;"><i class="fas fa-bolt"></i> Agendamento Online</span>
+                    <h3 class="modal-title" style="margin-top: 4px;">Reservar Horário</h3>
+                </div>
+                <button type="button" class="modal-close-btn" onclick="UICore.closeModal('modal-agendamento-site')">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
 
-            <form class="agendamento-form" id="agendamento-form">
-                <div class="form-step active" data-step="1">
-                    <h3>1. Escolha o Serviço</h3>
-                    <div class="form-group">
-                        <select id="servico" name="servico" required>
-                            <option value="">Selecione um serviço</option>
-                            <optgroup label="Cortes">
-                                <option value="corte-degrade" data-preco="40">Corte Degradê - R$ 40,00</option>
-                                <option value="navalhado-tesoura" data-preco="45">Navalhado ou Tesoura - R$ 45,00</option>
-                            </optgroup>
-                            <optgroup label="Barba e Tratamento">
-                                <option value="barba-simples" data-preco="35">Barba Simples - R$ 35,00</option>
-                                <option value="barba-ozonio" data-preco="50">Barba com Ozônio - R$ 50,00 ⭐</option>
-                            </optgroup>
-                            <optgroup label="Combos">
-                                <option value="combo-degrade-barba" data-preco="75">Combo Degradê + Barba - R$ 75,00</option>
-                                <option value="combo-premium" data-preco="95">Combo Premium (Navalhado + Ozônio) - R$ 95,00</option>
-                            </optgroup>
-                        </select>
-                    </div>
-                    <button type="button" class="btn btn-primary btn-next" onclick="nextStep(2)">
-                        Próximo <i class="fas fa-arrow-right"></i>
-                    </button>
+            <div class="modal-body" style="padding: 1.75rem;">
+                <!-- Wizard Steps Indicator -->
+                <div class="wizard-steps-indicator" style="margin-bottom: 1.5rem;">
+                    <div class="step-dot active" data-step-indicator="1"><span>1</span><small>Serviço</small></div>
+                    <div class="step-line"></div>
+                    <div class="step-dot" data-step-indicator="2"><span>2</span><small>Barbeiro</small></div>
+                    <div class="step-line"></div>
+                    <div class="step-dot" data-step-indicator="3"><span>3</span><small>Data/Hora</small></div>
+                    <div class="step-line"></div>
+                    <div class="step-dot" data-step-indicator="4"><span>4</span><small>Dados</small></div>
                 </div>
 
-                <div class="form-step" data-step="2">
-                    <h3>2. Escolha o Barbeiro</h3>
-                    <div class="form-group" id="barbeiros-container">
-                        <!-- Será preenchido dinamicamente -->
-                    </div>
-                    <div class="form-buttons">
-                        <button type="button" class="btn btn-secondary" onclick="prevStep(1)">
-                            <i class="fas fa-arrow-left"></i> Voltar
-                        </button>
-                        <button type="button" class="btn btn-primary btn-next" onclick="nextStep(3)">
-                            Próximo <i class="fas fa-arrow-right"></i>
+                <!-- PASSO 1: SERVIÇO -->
+                <div class="wizard-pane active" id="wizard-pane-1">
+                    <h4 style="font-size: 1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1rem;">1. Escolha o serviço</h4>
+                    <div class="wizard-cards-grid" id="wizard-services-grid" style="grid-template-columns: 1fr 1fr; gap: 0.75rem;"></div>
+                    <div class="wizard-nav-btns">
+                        <span></span>
+                        <button type="button" class="btn btn-primary" id="btn-step1-next" disabled onclick="wizardAvancar(2)">
+                            Continuar <i class="fas fa-arrow-right"></i>
                         </button>
                     </div>
                 </div>
 
-                <div class="form-step" data-step="3">
-                    <h3>3. Data e Horário</h3>
-                    <div class="form-group">
-                        <label for="data">Data</label>
-                        <input type="date" id="data" name="data" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="horario">Horário Disponível</label>
-                        <select id="horario" name="horario" required>
-                            <option value="">Selecione um horário</option>
-                        </select>
-                    </div>
-                    <div class="form-buttons">
-                        <button type="button" class="btn btn-secondary" onclick="prevStep(2)">
-                            <i class="fas fa-arrow-left"></i> Voltar
-                        </button>
-                        <button type="button" class="btn btn-primary btn-next" onclick="nextStep(4)">
-                            Próximo <i class="fas fa-arrow-right"></i>
+                <!-- PASSO 2: BARBEIRO -->
+                <div class="wizard-pane" id="wizard-pane-2">
+                    <h4 style="font-size: 1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1rem;">2. Escolha o profissional</h4>
+                    <div class="wizard-cards-grid" id="wizard-barbers-grid" style="grid-template-columns: 1fr; gap: 0.75rem;"></div>
+                    <div class="wizard-nav-btns">
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="wizardVoltar(1)"><i class="fas fa-arrow-left"></i> Voltar</button>
+                        <button type="button" class="btn btn-primary" id="btn-step2-next" disabled onclick="wizardAvancar(3)">
+                            Continuar <i class="fas fa-arrow-right"></i>
                         </button>
                     </div>
                 </div>
 
-                <div class="form-step" data-step="4">
-                    <h3>4. Seus Dados</h3>
-                    <div class="form-group">
-                        <label for="nome">Nome Completo</label>
-                        <input type="text" id="nome" name="nome" required>
+                <!-- PASSO 3: DATA & HORA -->
+                <div class="wizard-pane" id="wizard-pane-3">
+                    <h4 style="font-size: 1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1rem;">3. Data e Horário</h4>
+                    <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem;">
+                        <div>
+                            <label class="form-label" for="wizard-date-input">Data Desejada</label>
+                            <input type="date" id="wizard-date-input" class="form-control">
+                            <div class="date-quick-chips" style="margin-top: 0.5rem;">
+                                <button type="button" class="chip-date active" id="chip-hoje">Hoje</button>
+                                <button type="button" class="chip-date" id="chip-amanha">Amanhã</button>
+                                <button type="button" class="chip-date" id="chip-depois">Depois de amanhã</button>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="form-label">Horários Disponíveis</label>
+                            <div class="slots-grid" id="wizard-slots-grid" style="max-height: 180px;"></div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="telefone">Telefone/WhatsApp</label>
-                        <input type="tel" id="telefone" name="telefone" placeholder="(48) 99999-9999" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">E-mail (opcional)</label>
-                        <input type="email" id="email" name="email">
-                    </div>
-                    <div class="form-buttons">
-                        <button type="button" class="btn btn-secondary" onclick="prevStep(3)">
-                            <i class="fas fa-arrow-left"></i> Voltar
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-check"></i> Confirmar Agendamento
+                    <div class="wizard-nav-btns">
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="wizardVoltar(2)"><i class="fas fa-arrow-left"></i> Voltar</button>
+                        <button type="button" class="btn btn-primary" id="btn-step3-next" disabled onclick="wizardAvancar(4)">
+                            Continuar <i class="fas fa-arrow-right"></i>
                         </button>
                     </div>
                 </div>
 
-                <div class="form-step" data-step="5">
-                    <div class="success-message">
-                        <i class="fas fa-check-circle"></i>
-                        <h3>Agendamento Confirmado!</h3>
-                        <p>Seu horário foi reservado com sucesso.</p>
-                        <div class="agendamento-details" id="agendamento-details"></div>
-                        <p class="success-note">Você receberá uma confirmação via WhatsApp.</p>
-                        <button type="button" class="btn btn-primary" onclick="fecharModal()">
-                            Fechar
+                <!-- PASSO 4: DADOS & RESUMO -->
+                <div class="wizard-pane" id="wizard-pane-4">
+                    <h4 style="font-size: 1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1rem;">4. Seus Dados e Confirmação</h4>
+                    <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 1.25rem; margin-bottom: 1.5rem;">
+                        <div>
+                            <div class="form-group">
+                                <label class="form-label" for="wizard-nome"><i class="fas fa-user"></i> Nome Completo *</label>
+                                <input type="text" id="wizard-nome" class="form-control" placeholder="Seu nome" required>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label" for="wizard-telefone"><i class="fab fa-whatsapp"></i> WhatsApp *</label>
+                                <input type="tel" id="wizard-telefone" class="form-control" placeholder="(48) 98813-9261" required>
+                            </div>
+                        </div>
+                        <div class="booking-summary-invoice card">
+                            <div class="invoice-items" id="wizard-invoice-items"></div>
+                            <div class="invoice-total">
+                                <span>Total:</span>
+                                <strong class="total-price" id="wizard-total-price">R$ 0,00</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wizard-nav-btns">
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="wizardVoltar(3)"><i class="fas fa-arrow-left"></i> Voltar</button>
+                        <button type="button" class="btn btn-primary btn-lg" id="btn-final-confirm" onclick="confirmarAgendamentoWizard()">
+                            <i class="fas fa-check-circle"></i> Confirmar Horário
                         </button>
                     </div>
                 </div>
-            </form>
+
+                <!-- PASSO 5: SUCESSO -->
+                <div class="wizard-pane" id="wizard-pane-5">
+                    <div class="booking-success-box text-center" style="padding: 1rem 0;">
+                        <div class="success-icon-animated" style="width: 56px; height: 56px; font-size: 1.5rem; margin-bottom: 1rem;">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--text-primary); margin-bottom: 0.25rem;">Horário Agendado!</h3>
+                        <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1.25rem;">Seu horário está confirmado na Barber Serra.</p>
+
+                        <div class="success-ticket card" id="wizard-success-ticket" style="margin-bottom: 1.5rem;"></div>
+
+                        <div class="success-actions">
+                            <a href="#" id="btn-whatsapp-confirmation" target="_blank" class="btn btn-primary btn-sm">
+                                <i class="fab fa-whatsapp"></i> Notificar no WhatsApp
+                            </a>
+                            <a href="cliente-login.html" class="btn btn-secondary btn-sm">
+                                <i class="fas fa-user"></i> Acessar Painel
+                            </a>
+                            <button type="button" class="btn btn-ghost btn-sm" onclick="reiniciarWizard()">
+                                Novo Agendamento
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Modal de Galeria (Lightbox) -->
-    <div class="lightbox" id="lightbox">
-        <button class="lightbox-close" id="lightbox-close">
-            <i class="fas fa-times"></i>
-        </button>
-        <button class="lightbox-prev" id="lightbox-prev">
-            <i class="fas fa-chevron-left"></i>
-        </button>
-        <button class="lightbox-next" id="lightbox-next">
-            <i class="fas fa-chevron-right"></i>
-        </button>
-        <img src="" alt="" id="lightbox-img">
-    </div>
-
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loading-overlay">
-        <div class="spinner"></div>
-    </div>
-
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/config.js"></script>
+    <script src="js/ui-core.js"></script>
     <script src="js/supabase.js"></script>
     <script src="js/script.js"></script>
 </body>

@@ -1,33 +1,153 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Perfil - BARBER SERRA</title>
-  <link rel="stylesheet" href="css/cliente-dashboard.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil — BARBER SERRA</title>
+    <meta name="theme-color" content="#090a0d">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet" href="css/design-system.css">
+    <link rel="stylesheet" href="css/cliente-dashboard.css">
 </head>
-<body>
-  <header class="header">
-    <div class="container header-content">
-      <div class="brand"><i class="fas fa-cut"></i> BARBER SERRA</div>
-    </div>
-  </header>
+<body class="client-app">
 
-  <main class="container">
-    <h1>Meu Perfil</h1>
-    <form id="profile-form">
-      <label>Nome</label>
-      <input id="profile-name" type="text" placeholder="Seu nome">
-      <label>WhatsApp</label>
-      <input id="profile-phone" type="tel">
-      <label>E-mail</label>
-      <input id="profile-email" type="email">
-      <button class="btn btn-primary" type="button" onclick="saveProfile()">Salvar</button>
-    </form>
-  </main>
+    <!-- Header -->
+    <header class="client-header">
+        <div class="container client-header-container">
+            <a href="cliente-dashboard.html" class="brand-logo" aria-label="BARBER SERRA Dashboard">
+                <div class="logo-icon-wrapper">
+                    <i class="fas fa-cut"></i>
+                </div>
+                <div class="logo-text">
+                    <span class="logo-name">BARBER SERRA</span>
+                    <span class="logo-sub">PERFIL DO CLIENTE</span>
+                </div>
+            </a>
 
-  <script>
-    function saveProfile(){ alert('Salvar perfil (implementar Supabase)'); }
-  </script>
+            <!-- Nav Links -->
+            <nav class="client-nav">
+                <a href="cliente-dashboard.html" class="client-nav-link"><i class="fas fa-home"></i> Visão Geral</a>
+                <a href="cliente-agendamentos.html" class="client-nav-link"><i class="fas fa-calendar-alt"></i> Meus Agendamentos</a>
+                <a href="cliente-perfil.html" class="client-nav-link active"><i class="fas fa-user-circle"></i> Meu Perfil</a>
+                <a href="index.html" class="client-nav-link"><i class="fas fa-external-link-alt"></i> Ver Site</a>
+            </nav>
+
+            <!-- User Menu -->
+            <div class="user-profile-menu">
+                <button type="button" class="user-avatar-btn" id="btn-profile-menu" onclick="toggleProfileDropdown()">
+                    <img src="images/avatar-felipe.svg" alt="Avatar" class="user-avatar-img" id="client-avatar-top">
+                    <span class="user-avatar-name" id="client-name-top">Cliente</span>
+                    <i class="fas fa-chevron-down" style="font-size: 0.75rem; color: var(--text-muted);"></i>
+                </button>
+
+                <div class="profile-dropdown" id="profile-dropdown">
+                    <a href="cliente-dashboard.html" class="dropdown-item"><i class="fas fa-home"></i> Painel Geral</a>
+                    <a href="cliente-agendamentos.html" class="dropdown-item"><i class="fas fa-calendar-check"></i> Agendamentos</a>
+                    <div style="height: 1px; background: var(--border); margin: 0.25rem 0;"></div>
+                    <button type="button" class="dropdown-item danger" onclick="logoutCliente()"><i class="fas fa-sign-out-alt"></i> Sair da Conta</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="client-main">
+        <div class="container">
+            <div class="page-greeting-header">
+                <div>
+                    <h1 class="greeting-title"><i class="fas fa-user-shield text-accent"></i> Meu Perfil & Preferências</h1>
+                    <p class="greeting-subtitle">Mantenha seus dados atualizados e personalize sua experiência na barbearia.</p>
+                </div>
+            </div>
+
+            <div class="profile-layout-grid">
+                <!-- Left Column: Avatar & Summary -->
+                <div class="card profile-avatar-card">
+                    <img src="images/avatar-felipe.svg" alt="Foto do Perfil" class="profile-big-avatar" id="profile-display-avatar">
+                    <h3 id="profile-display-name" style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary);">Gabriel Santos</h3>
+                    <p id="profile-display-email" style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem;">gabriel@exemplo.com</p>
+                    <span class="badge badge-gold"><i class="fas fa-crown"></i> Membro VIP</span>
+
+                    <div style="margin-top: 2rem; text-align: left; padding-top: 1.5rem; border-top: 1px solid var(--border);">
+                        <label class="form-label" style="margin-bottom: 0.75rem;"><i class="fas fa-palette"></i> Escolha seu Avatar:</label>
+                        <div class="avatar-selector-grid">
+                            <img src="images/avatar-felipe.svg" alt="Avatar 1" class="avatar-option-thumb selected" onclick="selecionarAvatar('images/avatar-felipe.svg')">
+                            <img src="images/avatar-claudinha.svg" alt="Avatar 2" class="avatar-option-thumb" onclick="selecionarAvatar('images/avatar-claudinha.svg')">
+                            <img src="images/barber-1.svg" alt="Avatar 3" class="avatar-option-thumb" onclick="selecionarAvatar('images/barber-1.svg')">
+                            <img src="images/barber-2.svg" alt="Avatar 4" class="avatar-option-thumb" onclick="selecionarAvatar('images/barber-2.svg')">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Profile Edit Form -->
+                <div class="card" style="padding: 2rem;">
+                    <form id="client-profile-form" onsubmit="salvarPerfilCliente(event)">
+                        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-id-card text-accent"></i> Dados Pessoais
+                        </h3>
+
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label" for="profile-name"><i class="fas fa-user"></i> Nome Completo</label>
+                                <input type="text" id="profile-name" class="form-control" required value="Gabriel Santos">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="profile-phone"><i class="fab fa-whatsapp"></i> WhatsApp / Telefone</label>
+                                <input type="tel" id="profile-phone" class="form-control" required value="(48) 98813-9261">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="profile-email"><i class="fas fa-envelope"></i> E-mail</label>
+                            <input type="email" id="profile-email" class="form-control" required value="gabriel@exemplo.com">
+                        </div>
+
+                        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-top: 2rem; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">
+                            <i class="fas fa-cut text-accent"></i> Preferências de Corte & Barba
+                        </h3>
+
+                        <div class="form-group">
+                            <label class="form-label" for="profile-preferences">Notas para os Barbeiros (Ex: tipo de degradê, produtos favoritos)</label>
+                            <textarea id="profile-preferences" class="form-control" rows="3" placeholder="Ex: Gosto do degradê navalhado médio, máquina zero e acabamento quadrado na barba..."></textarea>
+                        </div>
+
+                        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-top: 2rem; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">
+                            <i class="fas fa-lock text-accent"></i> Alterar Senha
+                        </h3>
+
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label" for="profile-new-password">Nova Senha</label>
+                                <input type="password" id="profile-new-password" class="form-control" placeholder="Deixe em branco para manter">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="profile-confirm-password">Confirmar Nova Senha</label>
+                                <input type="password" id="profile-confirm-password" class="form-control" placeholder="Repita a nova senha">
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem;">
+                            <button type="submit" class="btn btn-primary btn-lg" id="btn-save-profile">
+                                <i class="fas fa-save"></i> Salvar Alterações
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/ui-core.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/cliente-dashboard.js"></script>
 </body>
 </html>

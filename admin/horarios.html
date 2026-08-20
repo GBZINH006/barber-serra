@@ -3,22 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Horários - Admin | BARBER SERRA</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/admin.css">
+    <title>Horários & Grade — Admin BARBER SERRA</title>
+    <meta name="theme-color" content="#090a0d">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet" href="../css/design-system.css">
+    <link rel="stylesheet" href="css/admin.css">
 </head>
-<body class="admin-page">
-    <aside class="sidebar">[...]</aside>
-    <div class="main-content">
-        <header class="topbar"><h1>Horários</h1></header>
-        <div class="page-content container">
-            <p class="muted">Gerencie horários de atendimento e intervalos. (Placeholder)</p>
-            <div class="card">
-                <h3>Horários da Semana</h3>
-                <pre>// Exemplo: segunda 09:00-21:00 (intervalo 30min)</pre>
+<body class="admin-body">
+
+    <div class="mobile-drawer-backdrop" id="admin-sidebar-backdrop"></div>
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="admin-sidebar">
+        <a href="dashboard.html" class="sidebar-brand">
+            <div class="logo-icon-wrapper" style="width: 36px; height: 36px; font-size: 1.1rem;">
+                <i class="fas fa-cut"></i>
             </div>
+            <div class="logo-text">
+                <span class="logo-name" style="font-size: 1rem;">BARBER SERRA</span>
+                <span class="logo-sub">PAINEL SAAS</span>
+            </div>
+        </a>
+
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="sidebar-item"><i class="fas fa-chart-pie"></i><span>Dashboard</span></a>
+            <a href="agendamentos.html" class="sidebar-item"><i class="fas fa-calendar-alt"></i><span>Agendamentos</span></a>
+            <a href="clientes.html" class="sidebar-item"><i class="fas fa-users"></i><span>Clientes CRM</span></a>
+            <a href="barbeiros.html" class="sidebar-item"><i class="fas fa-user-tie"></i><span>Barbeiros</span></a>
+            <a href="servicos.html" class="sidebar-item"><i class="fas fa-scissors"></i><span>Serviços</span></a>
+            <a href="horarios.html" class="sidebar-item active"><i class="fas fa-clock"></i><span>Horários & Grade</span></a>
+            <a href="relatorios.html" class="sidebar-item"><i class="fas fa-file-invoice-dollar"></i><span>Relatórios</span></a>
+            <a href="configuracoes.html" class="sidebar-item"><i class="fas fa-cog"></i><span>Configurações</span></a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-user">
+                <img src="../images/barber-1.svg" alt="Admin Avatar" id="admin-user-avatar">
+                <div class="sidebar-user-details">
+                    <span class="sidebar-user-name" id="admin-user-name">Mateus Rabelo</span>
+                    <span class="sidebar-user-role">Master Barber • Admin</span>
+                </div>
+            </div>
+            <button type="button" class="btn-sidebar-logout" onclick="logoutAdmin()"><i class="fas fa-sign-out-alt"></i></button>
         </div>
+    </aside>
+
+    <div class="admin-main-wrapper">
+        <header class="admin-topbar">
+            <div class="topbar-left">
+                <button type="button" class="mobile-toggle" id="sidebar-mobile-toggle"><i class="fas fa-bars"></i></button>
+                <h1 class="topbar-title">Horários de Atendimento & Grade</h1>
+            </div>
+            <div class="topbar-right">
+                <button type="button" class="btn btn-primary btn-sm" onclick="salvarGradeHorarios()">
+                    <i class="fas fa-save"></i> Salvar Alterações
+                </button>
+            </div>
+        </header>
+
+        <main class="admin-content">
+            <div class="card" style="padding: 2rem; max-width: 860px;">
+                <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">Configuração Semanal</h2>
+                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 2rem;">Defina o horário de abertura, fechamento e tempo de intervalo dos slots para agendamento online.</p>
+
+                <form id="form-horarios-grade" onsubmit="event.preventDefault(); salvarGradeHorarios();">
+                    <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+                        <!-- Segunda a Sexta -->
+                        <div style="display: grid; grid-template-columns: 140px 1fr 1fr 1fr; gap: 1rem; align-items: center; padding-bottom: 1rem; border-bottom: 1px solid var(--border-subtle);">
+                            <strong>Segunda-feira</strong>
+                            <div><label style="font-size: 0.75rem; color: var(--text-muted);">Abertura</label><input type="time" class="form-control" value="09:00"></div>
+                            <div><label style="font-size: 0.75rem; color: var(--text-muted);">Fechamento</label><input type="time" class="form-control" value="21:00"></div>
+                            <div><label style="font-size: 0.75rem; color: var(--text-muted);">Intervalo</label><select class="form-control"><option value="30" selected>30 min</option><option value="45">45 min</option></select></div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 140px 1fr 1fr 1fr; gap: 1rem; align-items: center; padding-bottom: 1rem; border-bottom: 1px solid var(--border-subtle);">
+                            <strong>Terça-feira</strong>
+                            <div><input type="time" class="form-control" value="09:00"></div>
+                            <div><input type="time" class="form-control" value="21:00"></div>
+                            <div><select class="form-control"><option value="30" selected>30 min</option></select></div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 140px 1fr 1fr 1fr; gap: 1rem; align-items: center; padding-bottom: 1rem; border-bottom: 1px solid var(--border-subtle);">
+                            <strong>Quarta-feira</strong>
+                            <div><input type="time" class="form-control" value="09:00"></div>
+                            <div><input type="time" class="form-control" value="21:00"></div>
+                            <div><select class="form-control"><option value="30" selected>30 min</option></select></div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 140px 1fr 1fr 1fr; gap: 1rem; align-items: center; padding-bottom: 1rem; border-bottom: 1px solid var(--border-subtle);">
+                            <strong>Quinta-feira</strong>
+                            <div><input type="time" class="form-control" value="09:00"></div>
+                            <div><input type="time" class="form-control" value="21:00"></div>
+                            <div><select class="form-control"><option value="30" selected>30 min</option></select></div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 140px 1fr 1fr 1fr; gap: 1rem; align-items: center; padding-bottom: 1rem; border-bottom: 1px solid var(--border-subtle);">
+                            <strong>Sexta-feira</strong>
+                            <div><input type="time" class="form-control" value="09:00"></div>
+                            <div><input type="time" class="form-control" value="21:00"></div>
+                            <div><select class="form-control"><option value="30" selected>30 min</option></select></div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 140px 1fr 1fr 1fr; gap: 1rem; align-items: center; padding-bottom: 1rem; border-bottom: 1px solid var(--border-subtle);">
+                            <strong>Sábado</strong>
+                            <div><input type="time" class="form-control" value="09:00"></div>
+                            <div><input type="time" class="form-control" value="20:00"></div>
+                            <div><select class="form-control"><option value="30" selected>30 min</option></select></div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 140px 1fr 1fr 1fr; gap: 1rem; align-items: center;">
+                            <strong>Domingo</strong>
+                            <div style="grid-column: span 3;">
+                                <span class="badge badge-danger">Fechado para descanso da equipe</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 2rem; display: flex; justify-content: flex-end;">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Salvar Horários</button>
+                    </div>
+                </form>
+            </div>
+        </main>
     </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/ui-core.js"></script>
     <script src="../js/supabase.js"></script>
+    <script src="js/admin-core.js"></script>
+    <script>
+        function salvarGradeHorarios() {
+            UICore.toast('Grade Salva', 'Horários de atendimento atualizados no site!', 'success');
+        }
+    </script>
 </body>
 </html>

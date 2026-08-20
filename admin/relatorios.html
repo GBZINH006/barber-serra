@@ -1,22 +1,217 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Relatórios - Admin | BARBER SERRA</title>
-  <link rel="stylesheet" href="../css/admin.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios & Finanças — Admin BARBER SERRA</title>
+    <meta name="theme-color" content="#090a0d">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet" href="../css/design-system.css">
+    <link rel="stylesheet" href="css/admin.css">
 </head>
-<body class="admin-page">
-  <aside class="sidebar">[...]</aside>
-  <div class="main-content">
-    <header class="topbar"><h1>Relatórios</h1></header>
-    <div class="page-content container">
-      <p class="muted">Relatórios de faturamento, agendamentos e desempenho.</p>
-      <div class="card">
-        <p>Indicadores e charts (conectar a Supabase/analytics ou export CSV).</p>
-      </div>
+<body class="admin-body">
+
+    <div class="mobile-drawer-backdrop" id="admin-sidebar-backdrop"></div>
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="admin-sidebar">
+        <a href="dashboard.html" class="sidebar-brand">
+            <div class="logo-icon-wrapper" style="width: 36px; height: 36px; font-size: 1.1rem;">
+                <i class="fas fa-cut"></i>
+            </div>
+            <div class="logo-text">
+                <span class="logo-name" style="font-size: 1rem;">BARBER SERRA</span>
+                <span class="logo-sub">PAINEL SAAS</span>
+            </div>
+        </a>
+
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="sidebar-item"><i class="fas fa-chart-pie"></i><span>Dashboard</span></a>
+            <a href="agendamentos.html" class="sidebar-item"><i class="fas fa-calendar-alt"></i><span>Agendamentos</span></a>
+            <a href="clientes.html" class="sidebar-item"><i class="fas fa-users"></i><span>Clientes CRM</span></a>
+            <a href="barbeiros.html" class="sidebar-item"><i class="fas fa-user-tie"></i><span>Barbeiros</span></a>
+            <a href="servicos.html" class="sidebar-item"><i class="fas fa-scissors"></i><span>Serviços</span></a>
+            <a href="horarios.html" class="sidebar-item"><i class="fas fa-clock"></i><span>Horários & Grade</span></a>
+            <a href="relatorios.html" class="sidebar-item active"><i class="fas fa-file-invoice-dollar"></i><span>Relatórios</span></a>
+            <a href="configuracoes.html" class="sidebar-item"><i class="fas fa-cog"></i><span>Configurações</span></a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-user">
+                <img src="../images/barber-1.svg" alt="Admin Avatar" id="admin-user-avatar">
+                <div class="sidebar-user-details">
+                    <span class="sidebar-user-name" id="admin-user-name">Mateus Rabelo</span>
+                    <span class="sidebar-user-role">Master Barber • Admin</span>
+                </div>
+            </div>
+            <button type="button" class="btn-sidebar-logout" onclick="logoutAdmin()"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+    </aside>
+
+    <div class="admin-main-wrapper">
+        <header class="admin-topbar">
+            <div class="topbar-left">
+                <button type="button" class="mobile-toggle" id="sidebar-mobile-toggle"><i class="fas fa-bars"></i></button>
+                <h1 class="topbar-title">Relatórios & Demonstração Financeira</h1>
+            </div>
+            <div class="topbar-right">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="window.print()">
+                    <i class="fas fa-print"></i> Imprimir
+                </button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="exportarRelatorioCSV()">
+                    <i class="fas fa-file-csv"></i> Exportar CSV
+                </button>
+            </div>
+        </header>
+
+        <main class="admin-content">
+            <!-- Period Selector -->
+            <div class="schedule-view-controls">
+                <div class="service-category-tabs" id="report-period-tabs">
+                    <button type="button" class="tab-pill active" onclick="filtrarPeriodoRelatorio('7d')">Últimos 7 dias</button>
+                    <button type="button" class="tab-pill" onclick="filtrarPeriodoRelatorio('30d')">Últimos 30 dias</button>
+                    <button type="button" class="tab-pill" onclick="filtrarPeriodoRelatorio('90d')">Últimos 90 dias</button>
+                    <button type="button" class="tab-pill" onclick="filtrarPeriodoRelatorio('ano')">Este Ano</button>
+                </div>
+            </div>
+
+            <!-- KPIs -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-header"><span class="kpi-title">Faturamento Líquido</span><div class="kpi-icon"><i class="fas fa-dollar-sign"></i></div></div>
+                    <div class="kpi-value" id="rep-faturamento">R$ 14.850,00</div>
+                    <div class="kpi-trend positive"><i class="fas fa-arrow-up"></i> +24% vs período anterior</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header"><span class="kpi-title">Atendimentos Concluídos</span><div class="kpi-icon"><i class="fas fa-check-double"></i></div></div>
+                    <div class="kpi-value" id="rep-atendimentos">284</div>
+                    <div class="kpi-trend positive"><i class="fas fa-user-check"></i> 96.5% taxa de sucesso</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header"><span class="kpi-title">Cancelamentos</span><div class="kpi-icon"><i class="fas fa-times-circle"></i></div></div>
+                    <div class="kpi-value" id="rep-cancelamentos">10</div>
+                    <div class="kpi-trend neutral">3.5% taxa de no-show</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header"><span class="kpi-title">Ticket Médio</span><div class="kpi-icon"><i class="fas fa-receipt"></i></div></div>
+                    <div class="kpi-value" id="rep-ticket">R$ 52,28</div>
+                    <div class="kpi-trend positive"><i class="fas fa-arrow-up"></i> +R$ 4,10</div>
+                </div>
+            </div>
+
+            <!-- Breakdown Grids -->
+            <div class="analytics-grid">
+                <div class="chart-box">
+                    <div class="chart-header">
+                        <h3 class="chart-title"><i class="fas fa-user-tie text-accent"></i> Produtividade por Barbeiro</h3>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 6px;">
+                                <strong>Mateus Rabelo (Master Barber)</strong>
+                                <span style="color: var(--accent); font-weight: 700;">128 atendimentos • R$ 6.840,00</span>
+                            </div>
+                            <div style="height: 10px; background: var(--surface-hover); border-radius: 5px; overflow: hidden;">
+                                <div style="width: 45%; height: 100%; background: var(--accent);"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 6px;">
+                                <strong>Caio Martins (Barboterapia)</strong>
+                                <span style="color: #38bdf8; font-weight: 700;">94 atendimentos • R$ 4.950,00</span>
+                            </div>
+                            <div style="height: 10px; background: var(--surface-hover); border-radius: 5px; overflow: hidden;">
+                                <div style="width: 33%; height: 100%; background: #38bdf8;"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 6px;">
+                                <strong>Bruno Costa (Clássicos)</strong>
+                                <span style="color: #10b981; font-weight: 700;">62 atendimentos • R$ 3.060,00</span>
+                            </div>
+                            <div style="height: 10px; background: var(--surface-hover); border-radius: 5px; overflow: hidden;">
+                                <div style="width: 22%; height: 100%; background: #10b981;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-box">
+                    <div class="chart-header">
+                        <h3 class="chart-title"><i class="fas fa-wallet text-accent"></i> Resumo de Formas de Pagamento</h3>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 0.9rem;">
+                        <div style="display: flex; justify-content: space-between; padding: 0.65rem 0; border-bottom: 1px solid var(--border-subtle);">
+                            <span><i class="fas fa-qrcode text-accent"></i> PIX Instantâneo</span>
+                            <strong>58% (R$ 8.613,00)</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 0.65rem 0; border-bottom: 1px solid var(--border-subtle);">
+                            <span><i class="fas fa-credit-card text-accent"></i> Cartão de Crédito/Débito</span>
+                            <strong>34% (R$ 5.049,00)</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 0.65rem 0;">
+                            <span><i class="fas fa-money-bill-wave text-accent"></i> Dinheiro em Espécie</span>
+                            <strong>8% (R$ 1.188,00)</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
-  </div>
-  <script src="../js/supabase.js"></script>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/ui-core.js"></script>
+    <script src="../js/supabase.js"></script>
+    <script src="js/admin-core.js"></script>
+    <script>
+        function filtrarPeriodoRelatorio(periodo) {
+            document.querySelectorAll('#report-period-tabs .tab-pill').forEach(p => p.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (periodo === '7d') {
+                document.getElementById('rep-faturamento').textContent = 'R$ 5.480,00';
+                document.getElementById('rep-atendimentos').textContent = '98';
+            } else if (periodo === '30d') {
+                document.getElementById('rep-faturamento').textContent = 'R$ 14.850,00';
+                document.getElementById('rep-atendimentos').textContent = '284';
+            } else if (periodo === '90d') {
+                document.getElementById('rep-faturamento').textContent = 'R$ 42.100,00';
+                document.getElementById('rep-atendimentos').textContent = '812';
+            } else {
+                document.getElementById('rep-faturamento').textContent = 'R$ 168.400,00';
+                document.getElementById('rep-atendimentos').textContent = '3.240';
+            }
+            UICore.toast('Relatório Atualizado', `Dados filtrados para o período selecionado.`, 'info');
+        }
+
+        function exportarRelatorioCSV() {
+            const csvContent = "data:text/csv;charset=utf-8," 
+                + "Data,Cliente,Servico,Barbeiro,Valor,Status\n"
+                + "2026-08-20,Gabriel Santos,Corte Degrade,Mateus Rabelo,40.00,confirmado\n"
+                + "2026-08-20,Lucas Mendes,Barba com Ozonio,Caio Martins,50.00,concluido\n"
+                + "2026-08-20,Rodrigo Alves,Combo Premium,Mateus Rabelo,95.00,concluido\n";
+            
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `relatorio_barber_serra_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            UICore.toast('CSV Gerado', 'Download do relatório concluído!', 'success');
+        }
+    </script>
 </body>
 </html>

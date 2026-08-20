@@ -1,285 +1,124 @@
-// ==================== AUTENTICAÇÃO ====================
-let supabaseClient = null;
+/**
+ * BARBER SERRA — ADMIN AUTHENTICATION
+ */
 
-// Inicializar Supabase
-function initSupabase() {
-    try {
-        if (typeof supabase !== 'undefined' && SUPABASE_CONFIG.url && SUPABASE_CONFIG.anonKey) {
-            if (SUPABASE_CONFIG.url.includes('SEU_PROJETO')) {
-                showAlert('Configure suas credenciais do Supabase em js/config.js', 'error');
-                return null;
-            }
-            
-            supabaseClient = supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
-            console.log('✅ Supabase inicializado');
-            return supabaseClient;
-        } else {
-            showAlert('Supabase não está configurado', 'error');
-            return null;
-        }
-    } catch (error) {
-        console.error('Erro ao inicializar Supabase:', error);
-        showAlert('Erro ao conectar com o servidor', 'error');
-        return null;
-    }
-}
-
-// ==================== LOGIN ====================
-document.getElementById('login-form')?.addEventListener('submit', async (e) => {
+async function handleAdminLogin(e) {
     e.preventDefault();
-    
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const rememberMe = document.getElementById('remember-me').checked;
-    
-    // Validação básica
+    const email = document.getElementById('admin-email').value.trim();
+    const password = document.getElementById('admin-password').value;
+    const remember = document.getElementById('admin-remember-me')?.checked;
+    const btn = document.getElementById('btn-submit-admin-login');
+
     if (!email || !password) {
-        showAlert('Preencha todos os campos', 'error');
+        UICore.toast('Atenção', 'Informe seu e-mail e senha de administrador.', 'warning');
         return;
     }
-    
-    // Mostrar loading
-    setLoading(true);
-    
+
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Autenticando...';
+    }
+
     try {
         if (!supabaseClient) {
-            // Modo demo (sem Supabase)
-            console.log('🔓 Login em modo demo');
-            await simulateLogin(email, password);
+            // Sessão Admin Demo
+            const session = {
+                user: { id: 'admin-1', email, role: 'barbeiro' },
+                barbeiro: {
+                    id: 1,
+                    nome: 'Mateus Rabelo',
+                    email: email,
+                    especialidade: 'Master Barber • Fade & Degradê',
+                    foto: 'images/barber-1.svg',
+                    role: 'admin'
+                }
+            };
+            salvarSessaoAdmin(session, remember);
+            UICore.toast('Bem-vindo!', 'Acesso administrativo autorizado.', 'success');
+            setTimeout(() => window.location.href = 'dashboard.html', 700);
             return;
         }
-        
-        // Login real com Supabase
-        const { data, error } = await supabaseClient.auth.signInWithPassword({
-            email: email,
-            password: password,
-        });
-        
+
+        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        
-        // Verificar se é barbeiro
-        const { data: barbeiro, error: barbeiroError } = await supabaseClient
+
+        // Verificar registro de barbeiro
+        const { data: barbeiro } = await supabaseClient
             .from('barbeiros')
             .select('*')
             .eq('email', email)
-            .eq('ativo', true)
             .single();
-        
-        if (barbeiroError || !barbeiro) {
-            await supabaseClient.auth.signOut();
-            throw new Error('Acesso negado. Apenas barbeiros cadastrados podem acessar.');
-        }
-        
-        // Salvar sessão
-        if (rememberMe) {
-            localStorage.setItem('barber_session', JSON.stringify({
-                user: data.user,
-                barbeiro: barbeiro
-            }));
-        } else {
-            sessionStorage.setItem('barber_session', JSON.stringify({
-                user: data.user,
-                barbeiro: barbeiro
-            }));
-        }
-        
-        showAlert('Login realizado com sucesso!', 'success');
-        
-        // Redirecionar para dashboard
-        setTimeout(() => {
-            window.location.href = 'dashboard.html';
-        }, 1000);
-        
-    } catch (error) {
-        console.error('Erro no login:', error);
-        showAlert(error.message || 'E-mail ou senha incorretos', 'error');
-    } finally {
-        setLoading(false);
-    }
-});
 
-// Simular login para demo
-async function simulateLogin(email, password) {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            // Demo: aceitar qualquer e-mail/senha para teste
-            if (password.length >= 6) {
-                const demoSession = {
-                    user: {
-                        id: 'demo-' + Date.now(),
-                        email: email,
-                        role: 'demo'
-                    },
-                    barbeiro: {
-                        id: 1,
-                        nome: 'Demo Barbeiro',
-                        email: email,
-                        ativo: true
-                    }
-                };
-                
-                sessionStorage.setItem('barber_session', JSON.stringify(demoSession));
-                showAlert('Login demo realizado!', 'success');
-                
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1000);
-                
-                resolve();
-            } else {
-                showAlert('Senha deve ter no mínimo 6 caracteres', 'error');
-                reject();
+        const session = {
+            user: data.user,
+            barbeiro: barbeiro || {
+                id: 1,
+                nome: email.split('@')[0],
+                email: email,
+                foto: 'images/barber-1.svg'
             }
-        }, 1000);
-    });
+        };
+
+        salvarSessaoAdmin(session, remember);
+        UICore.toast('Autenticado', 'Bem-vindo ao painel!', 'success');
+        setTimeout(() => window.location.href = 'dashboard.html', 700);
+
+    } catch (err) {
+        UICore.toast('Erro', err.message || 'Credenciais inválidas.', 'error');
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Acessar Painel Executivo';
+        }
+    }
 }
 
-// ==================== RECUPERAR SENHA ====================
-document.getElementById('forgot-password-form')?.addEventListener('submit', async (e) => {
+function acessarAdminComoDemo() {
+    const session = {
+        user: { id: 'admin-1', email: 'mateus@barberserra.com', role: 'barbeiro' },
+        barbeiro: {
+            id: 1,
+            nome: 'Mateus Rabelo',
+            email: 'mateus@barberserra.com',
+            especialidade: 'Master Barber • Fade & Degradê',
+            foto: 'images/barber-1.svg',
+            role: 'admin'
+        }
+    };
+    salvarSessaoAdmin(session, true);
+    UICore.toast('Modo Demo', 'Acessando como Mateus Rabelo...', 'info');
+    setTimeout(() => window.location.href = 'dashboard.html', 500);
+}
+
+function openAdminResetModal(e) {
     e.preventDefault();
-    
-    const email = document.getElementById('reset-email').value;
-    
-    if (!supabaseClient) {
-        showAlert('Configure o Supabase para recuperação de senha', 'info');
-        return;
-    }
-    
-    try {
-        const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-            redirectTo: window.location.origin + '/admin/reset-password.html',
-        });
-        
-        if (error) throw error;
-        
-        showAlert('Instruções enviadas para seu e-mail!', 'success');
-        closeForgotPassword();
-        
-    } catch (error) {
-        console.error('Erro ao recuperar senha:', error);
-        showAlert('Erro ao enviar e-mail de recuperação', 'error');
-    }
-});
-
-// ==================== VERIFICAR SESSÃO ====================
-function checkSession() {
-    const session = localStorage.getItem('barber_session') || sessionStorage.getItem('barber_session');
-    
-    if (session) {
-        try {
-            const data = JSON.parse(session);
-            return data;
-        } catch (error) {
-            console.error('Erro ao ler sessão:', error);
-            return null;
-        }
-    }
-    
-    return null;
+    UICore.toast('Recuperação de Senha', 'Entre em contato com o suporte ou use o acesso de demonstração.', 'info');
 }
 
-// Verificar se já está logado
-function checkAuth() {
-    const session = checkSession();
-    
-    if (session) {
-        // Se está na página de login, redirecionar para dashboard
-        if (window.location.pathname.includes('login.html')) {
-            window.location.href = 'dashboard.html';
-        }
-        return session;
-    } else {
-        // Se não está logado e não está na página de login, redirecionar
-        if (!window.location.pathname.includes('login.html')) {
-            window.location.href = 'login.html';
-        }
-        return null;
-    }
-}
-
-// Fazer logout
-function logout() {
-    localStorage.removeItem('barber_session');
-    sessionStorage.removeItem('barber_session');
-    
-    if (supabaseClient) {
-        supabaseClient.auth.signOut();
-    }
-    
-    window.location.href = 'login.html';
-}
-
-// ==================== UI HELPERS ====================
-function setLoading(loading) {
-    const btn = document.querySelector('.btn-login');
-    const btnText = btn.querySelector('.btn-text');
-    const btnLoader = btn.querySelector('.btn-loader');
-    
-    if (loading) {
-        btn.disabled = true;
-        btnText.style.display = 'none';
-        btnLoader.style.display = 'block';
-    } else {
-        btn.disabled = false;
-        btnText.style.display = 'block';
-        btnLoader.style.display = 'none';
-    }
-}
-
-function showAlert(message, type = 'info') {
-    const alertDiv = document.getElementById('alert-message');
-    alertDiv.textContent = message;
-    alertDiv.className = `alert-message ${type}`;
-    alertDiv.style.display = 'flex';
-    
-    setTimeout(() => {
-        alertDiv.style.display = 'none';
-    }, 5000);
-}
-
-function togglePassword() {
-    const input = document.getElementById('password');
-    const icon = document.querySelector('.toggle-password i');
-    
+function togglePasswordVisibility(inputId) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    const icon = input.parentElement.querySelector('.btn-toggle-password i');
     if (input.type === 'password') {
         input.type = 'text';
-        icon.classList.remove('fa-eye');
-        icon.classList.add('fa-eye-slash');
+        if (icon) {
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        }
     } else {
         input.type = 'password';
-        icon.classList.remove('fa-eye-slash');
-        icon.classList.add('fa-eye');
-    }
-}
-
-function showForgotPassword(e) {
-    e.preventDefault();
-    document.getElementById('forgot-password-modal').classList.add('active');
-}
-
-function closeForgotPassword() {
-    document.getElementById('forgot-password-modal').classList.remove('active');
-}
-
-// ==================== INICIALIZAÇÃO ====================
-document.addEventListener('DOMContentLoaded', () => {
-    initSupabase();
-    
-    // Se está na página de login, verificar se já está logado
-    if (window.location.pathname.includes('login.html')) {
-        const session = checkSession();
-        if (session) {
-            window.location.href = 'dashboard.html';
+        if (icon) {
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
         }
     }
-});
+}
 
-// Fechar modal ao clicar no overlay
-document.querySelector('.modal-overlay')?.addEventListener('click', closeForgotPassword);
-
-// Fechar modal com ESC
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        closeForgotPassword();
+function salvarSessaoAdmin(session, persistir) {
+    const str = JSON.stringify(session);
+    if (persistir) {
+        localStorage.setItem('barber_session', str);
+    } else {
+        sessionStorage.setItem('barber_session', str);
     }
-});
+}

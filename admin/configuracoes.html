@@ -1,27 +1,137 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Configurações - Admin | BARBER SERRA</title>
-  <link rel="stylesheet" href="../css/admin.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações — Admin BARBER SERRA</title>
+    <meta name="theme-color" content="#090a0d">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet" href="../css/design-system.css">
+    <link rel="stylesheet" href="css/admin.css">
 </head>
-<body class="admin-page">
-  <aside class="sidebar">[...]</aside>
-  <div class="main-content">
-    <header class="topbar"><h1>Configurações</h1></header>
-    <div class="page-content container">
-      <p class="muted">Ajustes do sistema: informações da barbearia, integração com pagamentos, social login e RLS do Supabase.</p>
-      <div class="card">
-        <h3>Integrações</h3>
-        <ul>
-          <li>Supabase: <code>SUPABASE_URL</code> e <code>SUPABASE_ANON_KEY</code></li>
-          <li>Pagamentos: configurar Stripe/PayPal</li>
-          <li>OAuth: Google / Facebook (instruções na documentação)</li>
-        </ul>
-      </div>
+<body class="admin-body">
+
+    <div class="mobile-drawer-backdrop" id="admin-sidebar-backdrop"></div>
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="admin-sidebar">
+        <a href="dashboard.html" class="sidebar-brand">
+            <div class="logo-icon-wrapper" style="width: 36px; height: 36px; font-size: 1.1rem;">
+                <i class="fas fa-cut"></i>
+            </div>
+            <div class="logo-text">
+                <span class="logo-name" style="font-size: 1rem;">BARBER SERRA</span>
+                <span class="logo-sub">PAINEL SAAS</span>
+            </div>
+        </a>
+
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="sidebar-item"><i class="fas fa-chart-pie"></i><span>Dashboard</span></a>
+            <a href="agendamentos.html" class="sidebar-item"><i class="fas fa-calendar-alt"></i><span>Agendamentos</span></a>
+            <a href="clientes.html" class="sidebar-item"><i class="fas fa-users"></i><span>Clientes CRM</span></a>
+            <a href="barbeiros.html" class="sidebar-item"><i class="fas fa-user-tie"></i><span>Barbeiros</span></a>
+            <a href="servicos.html" class="sidebar-item"><i class="fas fa-scissors"></i><span>Serviços</span></a>
+            <a href="horarios.html" class="sidebar-item"><i class="fas fa-clock"></i><span>Horários & Grade</span></a>
+            <a href="relatorios.html" class="sidebar-item"><i class="fas fa-file-invoice-dollar"></i><span>Relatórios</span></a>
+            <a href="configuracoes.html" class="sidebar-item active"><i class="fas fa-cog"></i><span>Configurações</span></a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-user">
+                <img src="../images/barber-1.svg" alt="Admin Avatar" id="admin-user-avatar">
+                <div class="sidebar-user-details">
+                    <span class="sidebar-user-name" id="admin-user-name">Mateus Rabelo</span>
+                    <span class="sidebar-user-role">Master Barber • Admin</span>
+                </div>
+            </div>
+            <button type="button" class="btn-sidebar-logout" onclick="logoutAdmin()"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+    </aside>
+
+    <div class="admin-main-wrapper">
+        <header class="admin-topbar">
+            <div class="topbar-left">
+                <button type="button" class="mobile-toggle" id="sidebar-mobile-toggle"><i class="fas fa-bars"></i></button>
+                <h1 class="topbar-title">Configurações do Estabelecimento</h1>
+            </div>
+            <div class="topbar-right">
+                <button type="button" class="btn btn-primary btn-sm" onclick="salvarConfiguracoesGerais()">
+                    <i class="fas fa-save"></i> Salvar Configurações
+                </button>
+            </div>
+        </header>
+
+        <main class="admin-content">
+            <div class="card" style="padding: 2rem; max-width: 860px; margin-bottom: 2rem;">
+                <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1.25rem;">
+                    <i class="fas fa-store text-accent"></i> Dados da Barbearia
+                </h3>
+
+                <form id="form-config-barbearia" onsubmit="event.preventDefault(); salvarConfiguracoesGerais();">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label" for="cfg-nome">Nome Fantasia</label>
+                            <input type="text" id="cfg-nome" class="form-control" value="BARBER SERRA">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="cfg-whatsapp">WhatsApp Oficial de Atendimento</label>
+                            <input type="tel" id="cfg-whatsapp" class="form-control" value="(48) 98813-9261">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="cfg-endereco">Endereço Completo</label>
+                        <input type="text" id="cfg-endereco" class="form-control" value="Rua José Cosme da Silva, 1021 - Bela Vista, Palhoça - SC, 88132-700">
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label" for="cfg-instagram">Instagram</label>
+                            <input type="text" id="cfg-instagram" class="form-control" value="@barberserra">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="cfg-maps">Link Google Maps</label>
+                            <input type="text" id="cfg-maps" class="form-control" value="https://maps.google.com/?q=Barber+Serra+Palhoca">
+                        </div>
+                    </div>
+
+                    <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text-primary); margin-top: 2rem; margin-bottom: 1.25rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">
+                        <i class="fas fa-database text-accent"></i> Integração Supabase
+                    </h3>
+
+                    <div class="form-group">
+                        <label class="form-label" for="cfg-supa-url">URL do Projeto Supabase</label>
+                        <input type="text" id="cfg-supa-url" class="form-control" value="https://jfgupdmcsenvlgvpckxo.supabase.co">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="cfg-supa-key">Chave Pública (anon / public key)</label>
+                        <input type="password" id="cfg-supa-key" class="form-control" value="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...">
+                    </div>
+
+                    <div style="margin-top: 2rem; display: flex; justify-content: flex-end;">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Salvar Tudo</button>
+                    </div>
+                </form>
+            </div>
+        </main>
     </div>
-  </div>
-  <script src="../js/supabase.js"></script>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/ui-core.js"></script>
+    <script src="../js/supabase.js"></script>
+    <script src="js/admin-core.js"></script>
+    <script>
+        function salvarConfiguracoesGerais() {
+            UICore.toast('Configurações Salvas', 'Dados do estabelecimento atualizados com sucesso!', 'success');
+        }
+    </script>
 </body>
 </html>

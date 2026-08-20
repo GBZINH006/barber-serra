@@ -1,815 +1,516 @@
-// ==================== VARIÁVEIS GLOBAIS ====================
-let currentStep = 1;
-let agendamentoData = {};
-let galleryImages = [];
-let currentImageIndex = 0;
+/**
+ * BARBER SERRA — LANDING PAGE & BOOKING WIZARD LOGIC
+ */
 
-// ==================== INICIALIZAÇÃO ====================
+let wizardState = {
+    step: 1,
+    servico: null,
+    barbeiro: null,
+    data: new Date().toISOString().split('T')[0],
+    horario: null,
+    cliente: {
+        nome: '',
+        telefone: '',
+        email: ''
+    }
+};
+
 document.addEventListener('DOMContentLoaded', async () => {
-    initNavigation();
-    initScrollEffects();
-    initModals();
-    initGallery();
-    initAgendamento();
-    
-    // Carregar barbeiros
-    await carregarBarbeiros();
-    renderizarBarbeiros();
+    initHeaderAndDrawer();
+    initScrollSpy();
+    renderServicesCatalog('todos');
+    initCategoryTabs();
+    await renderTeam();
+    initBookingWizard();
 });
 
-// ==================== NAVEGAÇÃO ====================
-function initNavigation() {
-    const navToggle = document.getElementById('nav-toggle');
-    const navClose = document.getElementById('nav-close');
-    const navMenu = document.getElementById('nav-menu');
-    const navLinks = document.querySelectorAll('.nav-link');
-    
-    // Toggle menu mobile
-    if (navToggle) {
-        navToggle.addEventListener('click', () => {
-            navMenu.classList.add('show');
-        });
-    }
-    
-    if (navClose) {
-        navClose.addEventListener('click', () => {
-            navMenu.classList.remove('show');
-        });
-    }
-    
-    // Fechar menu ao clicar em link
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            navMenu.classList.remove('show');
-            
-            // Atualizar link ativo
-            navLinks.forEach(l => l.classList.remove('active'));
-            link.classList.add('active');
-        });
-    });
-    
-    // Atualizar link ativo no scroll
+/* ==========================================================================
+   HEADER & MOBILE DRAWER
+   ========================================================================== */
+
+function initHeaderAndDrawer() {
+    const header = document.getElementById('site-header');
+    const toggleBtn = document.getElementById('mobile-toggle');
+    const closeBtn = document.getElementById('drawer-close');
+    const drawer = document.getElementById('mobile-drawer');
+    const backdrop = document.getElementById('mobile-drawer-backdrop');
+
+    // Header scroll background
     window.addEventListener('scroll', () => {
-        const sections = document.querySelectorAll('section[id]');
-        const scrollY = window.pageYOffset;
-        
-        sections.forEach(section => {
-            const sectionHeight = section.offsetHeight;
-            const sectionTop = section.offsetTop - 100;
-            const sectionId = section.getAttribute('id');
-            
-            if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-                document.querySelector(`.nav-link[href*="${sectionId}"]`)?.classList.add('active');
-            } else {
-                document.querySelector(`.nav-link[href*="${sectionId}"]`)?.classList.remove('active');
-            }
-        });
-    });
-}
-
-// ==================== EFEITOS DE SCROLL ====================
-function initScrollEffects() {
-    const header = document.getElementById('header');
-    const scrollTop = document.getElementById('scroll-top');
-    
-    window.addEventListener('scroll', () => {
-        // Header background no scroll
-        if (window.scrollY >= 80) {
-            header.style.boxShadow = '0 2px 20px rgba(0,0,0,0.15)';
+        if (window.scrollY > 40) {
+            header.classList.add('scrolled');
         } else {
-            header.style.boxShadow = '0 2px 20px rgba(0,0,0,0.1)';
-        }
-        
-        // Botão scroll to top
-        if (window.scrollY >= 400) {
-            scrollTop.classList.add('show');
-        } else {
-            scrollTop.classList.remove('show');
-        }
-    });
-    
-    // Scroll to top
-    if (scrollTop) {
-        scrollTop.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
-    }
-    
-    // Smooth scroll para links internos
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
-    });
-}
-
-// ==================== MODAIS ====================
-function initModals() {
-    const modal = document.getElementById('modal-agendamento');
-    const modalOverlay = document.getElementById('modal-overlay');
-    const modalClose = document.getElementById('modal-close');
-    const authModal = document.getElementById('modal-auth');
-    const authModalClose = document.getElementById('auth-modal-close');
-    const authOverlay = document.getElementById('auth-modal-overlay');
-    const btnsAgendar = [
-        document.getElementById('btn-agendar-header'),
-        document.getElementById('btn-agendar-hero'),
-        document.getElementById('btn-agendar-about')
-    ];
-
-    const authTabs = document.querySelectorAll('.auth-tab');
-    const authPanels = document.querySelectorAll('.auth-panel');
-    const socialButtons = document.querySelectorAll('[data-social-auth]');
-    const loginForm = document.getElementById('auth-login-form');
-    const registerForm = document.getElementById('auth-register-form');
-
-    btnsAgendar.forEach(btn => {
-        if (btn) {
-            btn.addEventListener('click', () => {
-                if (!isClienteLogado()) {
-                    abrirAuthModal();
-                    return;
-                }
-                abrirModal();
-            });
+            header.classList.remove('scrolled');
         }
     });
 
-    if (modalClose) {
-        modalClose.addEventListener('click', fecharModal);
-    }
-
-    if (modalOverlay) {
-        modalOverlay.addEventListener('click', fecharModal);
-    }
-
-    if (authModalClose) {
-        authModalClose.addEventListener('click', fecharAuthModal);
-    }
-
-    if (authOverlay) {
-        authOverlay.addEventListener('click', fecharAuthModal);
-    }
-
-    authTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            const target = tab.dataset.authTab;
-            authTabs.forEach(item => item.classList.toggle('active', item === tab));
-            authPanels.forEach(panel => {
-                panel.classList.toggle('active', panel.id === `auth-${target}-panel`);
-            });
-            mostrarAuthMessage('', '');
-        });
-    });
-
-    if (loginForm) {
-        loginForm.addEventListener('submit', (event) => {
-            event.preventDefault();
-            const email = document.getElementById('auth-login-email').value.trim();
-            const password = document.getElementById('auth-login-password').value.trim();
-
-            if (!email || !password) {
-                mostrarAuthMessage('Preencha e-mail e senha para continuar.', 'error');
-                return;
-            }
-
-            const session = {
-                user: { id: 'demo-' + Date.now(), email },
-                cliente: {
-                    nome: email.split('@')[0].replace(/[._-]/g, ' '),
-                    email,
-                    telefone: '(48) 99999-9999'
-                },
-                provider: 'email'
-            };
-
-            salvarClienteSession(session);
-            mostrarAuthMessage('Login realizado com sucesso!', 'success');
-            setTimeout(() => {
-                fecharAuthModal();
-                abrirModal();
-            }, 500);
+    // Drawer Open
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+            drawer.classList.add('active');
+            backdrop.classList.add('active');
+            document.body.style.overflow = 'hidden';
         });
     }
 
-    if (registerForm) {
-        registerForm.addEventListener('submit', (event) => {
-            event.preventDefault();
-            const nome = document.getElementById('auth-register-name').value.trim();
-            const telefone = document.getElementById('auth-register-phone').value.trim();
-            const email = document.getElementById('auth-register-email').value.trim();
-            const password = document.getElementById('auth-register-password').value.trim();
-            const confirmPassword = document.getElementById('auth-register-confirm').value.trim();
-
-            if (!nome || !telefone || !email || !password || !confirmPassword) {
-                mostrarAuthMessage('Preencha todos os campos para criar sua conta.', 'error');
-                return;
-            }
-
-            if (password.length < 6) {
-                mostrarAuthMessage('A senha deve ter pelo menos 6 caracteres.', 'error');
-                return;
-            }
-
-            if (password !== confirmPassword) {
-                mostrarAuthMessage('As senhas não coincidem.', 'error');
-                return;
-            }
-
-            const session = {
-                user: { id: 'demo-' + Date.now(), email },
-                cliente: { nome, email, telefone },
-                provider: 'email'
-            };
-
-            salvarClienteSession(session);
-            mostrarAuthMessage('Cadastro realizado com sucesso!', 'success');
-            setTimeout(() => {
-                fecharAuthModal();
-                abrirModal();
-            }, 500);
-        });
-    }
-
-    socialButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const provider = button.dataset.socialAuth;
-            const nome = provider === 'google' ? 'Cliente Google' : 'Cliente Facebook';
-            const email = provider === 'google' ? 'cliente.google@barberserra.com' : 'cliente.facebook@barberserra.com';
-            const telefone = '(48) 99999-9999';
-
-            salvarClienteSession({
-                user: { id: provider + '-' + Date.now(), email },
-                cliente: { nome, email, telefone },
-                provider
-            });
-
-            mostrarAuthMessage(`${provider === 'google' ? 'Google' : 'Facebook'} conectado com sucesso!`, 'success');
-            setTimeout(() => {
-                fecharAuthModal();
-                abrirModal();
-            }, 500);
-        });
-    });
-
-    if (authModal) {
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && authModal.classList.contains('active')) {
-                fecharAuthModal();
-            }
-            if (e.key === 'Escape' && modal.classList.contains('active')) {
-                fecharModal();
-            }
-        });
-    }
-}
-
-function salvarClienteSession(session) {
-    localStorage.setItem('cliente_session', JSON.stringify(session));
-}
-
-function isClienteLogado() {
-    const storage = localStorage.getItem('cliente_session');
-    return Boolean(storage && storage !== 'null');
-}
-
-function mostrarAuthMessage(message, type = '') {
-    const messageEl = document.getElementById('auth-message');
-    if (!messageEl) return;
-
-    if (!message) {
-        messageEl.style.display = 'none';
-        messageEl.textContent = '';
-        messageEl.className = 'auth-message';
-        return;
-    }
-
-    messageEl.textContent = message;
-    messageEl.className = `auth-message ${type}`;
-    messageEl.style.display = 'block';
-}
-
-function abrirAuthModal() {
-    const authModal = document.getElementById('modal-auth');
-    if (!authModal) return;
-    authModal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-    mostrarAuthMessage('', '');
-}
-
-function fecharAuthModal() {
-    const authModal = document.getElementById('modal-auth');
-    if (!authModal) return;
-    authModal.classList.remove('active');
-    if (!document.getElementById('modal-agendamento')?.classList.contains('active')) {
+    // Drawer Close
+    const closeDrawer = () => {
+        drawer.classList.remove('active');
+        backdrop.classList.remove('active');
         document.body.style.overflow = '';
-    }
-}
+    };
 
-function abrirModal() {
-    const modal = document.getElementById('modal-agendamento');
-    if (!modal) return;
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-    resetarFormulario();
-    preencherDadosClienteLogado();
-}
+    if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+    if (backdrop) backdrop.addEventListener('click', closeDrawer);
 
-function fecharModal() {
-    const modal = document.getElementById('modal-agendamento');
-    if (!modal) return;
-    modal.classList.remove('active');
-    document.body.style.overflow = '';
-    resetarFormulario();
-}
-
-function preencherDadosClienteLogado() {
-    const session = JSON.parse(localStorage.getItem('cliente_session') || 'null');
-    if (!session || !session.cliente) return;
-
-    const nomeInput = document.getElementById('nome');
-    const telefoneInput = document.getElementById('telefone');
-    const emailInput = document.getElementById('email');
-
-    if (nomeInput) nomeInput.value = session.cliente.nome || '';
-    if (telefoneInput) telefoneInput.value = session.cliente.telefone || '';
-    if (emailInput) emailInput.value = session.cliente.email || '';
-}
-
-// ==================== GALERIA ====================
-function initGallery() {
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const galleryItems = document.querySelectorAll('.gallery-item');
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImg = document.getElementById('lightbox-img');
-    const lightboxClose = document.getElementById('lightbox-close');
-    const lightboxPrev = document.getElementById('lightbox-prev');
-    const lightboxNext = document.getElementById('lightbox-next');
-    
-    // Filtros da galeria
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const filter = btn.getAttribute('data-filter');
-            
-            // Atualizar botão ativo
-            filterBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            
-            // Filtrar items
-            galleryItems.forEach(item => {
-                const category = item.getAttribute('data-category');
-                
-                if (filter === 'all' || category === filter) {
-                    item.classList.remove('hide');
-                    setTimeout(() => {
-                        item.style.display = 'block';
-                    }, 10);
-                } else {
-                    item.classList.add('hide');
-                    setTimeout(() => {
-                        item.style.display = 'none';
-                    }, 300);
-                }
-            });
-        });
-    });
-    
-    // Lightbox
-    galleryImages = Array.from(galleryItems).map(item => item.querySelector('img').src);
-    
-    galleryItems.forEach((item, index) => {
-        item.addEventListener('click', () => {
-            currentImageIndex = index;
-            openLightbox(galleryImages[index]);
-        });
-    });
-    
-    if (lightboxClose) {
-        lightboxClose.addEventListener('click', closeLightbox);
-    }
-    
-    if (lightboxPrev) {
-        lightboxPrev.addEventListener('click', () => {
-            currentImageIndex = (currentImageIndex - 1 + galleryImages.length) % galleryImages.length;
-            lightboxImg.src = galleryImages[currentImageIndex];
-        });
-    }
-    
-    if (lightboxNext) {
-        lightboxNext.addEventListener('click', () => {
-            currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
-            lightboxImg.src = galleryImages[currentImageIndex];
-        });
-    }
-    
-    // Fechar lightbox com ESC
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
-            closeLightbox();
-        }
-        if (e.key === 'ArrowLeft' && lightbox.classList.contains('active')) {
-            lightboxPrev.click();
-        }
-        if (e.key === 'ArrowRight' && lightbox.classList.contains('active')) {
-            lightboxNext.click();
-        }
+    document.querySelectorAll('.drawer-link').forEach(link => {
+        link.addEventListener('click', closeDrawer);
     });
 }
 
-function openLightbox(imgSrc) {
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImg = document.getElementById('lightbox-img');
-    lightboxImg.src = imgSrc;
-    lightbox.classList.add('active');
-    document.body.style.overflow = 'hidden';
-}
+function initScrollSpy() {
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.desktop-nav .nav-item');
 
-function closeLightbox() {
-    const lightbox = document.getElementById('lightbox');
-    lightbox.classList.remove('active');
-    document.body.style.overflow = '';
-}
+    window.addEventListener('scroll', () => {
+        let current = '';
+        const scrollPosition = window.pageYOffset + 120;
 
-// ==================== AGENDAMENTO ====================
-function initAgendamento() {
-    const form = document.getElementById('agendamento-form');
-    const dataInput = document.getElementById('data');
-    
-    // Definir data mínima como hoje
-    if (dataInput) {
-        const hoje = new Date().toISOString().split('T')[0];
-        dataInput.min = hoje;
-        
-        // Quando a data mudar, carregar horários
-        dataInput.addEventListener('change', carregarHorarios);
-    }
-    
-    // Submit do formulário
-    if (form) {
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            await finalizarAgendamento();
-        });
-    }
-    
-    // Máscara de telefone
-    const telefoneInput = document.getElementById('telefone');
-    if (telefoneInput) {
-        telefoneInput.addEventListener('input', (e) => {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length <= 11) {
-                value = value.replace(/(\d{2})(\d)/, '($1) $2');
-                value = value.replace(/(\d{5})(\d)/, '$1-$2');
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.offsetHeight;
+            if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                current = section.getAttribute('id');
             }
-            e.target.value = value;
         });
-    }
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${current}`) {
+                link.classList.add('active');
+            }
+        });
+    });
 }
 
-// Renderizar lista de barbeiros
-function renderizarBarbeiros() {
-    const container = document.getElementById('barbeiros-container');
-    if (!container) return;
-    
-    container.innerHTML = '';
-    
-    BARBEIROS.forEach(barbeiro => {
-        const div = document.createElement('div');
-        div.className = 'barber-select-card';
-        div.innerHTML = `
-            <input type="radio" name="barbeiro" id="barbeiro-${barbeiro.id}" value="${barbeiro.id}" required>
-            <label for="barbeiro-${barbeiro.id}" class="barber-select-label">
-                <img src="${barbeiro.foto}" alt="${barbeiro.nome}">
-                <div>
-                    <h4>${barbeiro.nome}</h4>
-                    <span>${barbeiro.especialidade}</span>
+/* ==========================================================================
+   SERVIÇOS & CATÁLOGO
+   ========================================================================== */
+
+function renderServicesCatalog(categoria = 'todos') {
+    const grid = document.getElementById('landing-services-grid');
+    if (!grid) return;
+
+    const filtered = categoria === 'todos' 
+        ? SERVICOS 
+        : SERVICOS.filter(s => s.categoria === categoria);
+
+    grid.innerHTML = filtered.map(servico => `
+        <div class="service-item-card ${servico.destaque ? 'destaque' : ''}">
+            <div>
+                <div class="service-card-top">
+                    <div class="service-icon-wrap">
+                        <i class="fas ${servico.icone || 'fa-cut'}"></i>
+                    </div>
+                    ${servico.destaque ? '<span class="badge badge-gold"><i class="fas fa-crown"></i> Destaque</span>' : ''}
                 </div>
-            </label>
-        `;
-        container.appendChild(div);
-    });
-    
-    // Adicionar estilos inline para os cards de seleção
-    const style = document.createElement('style');
-    style.textContent = `
-        .barber-select-card {
-            margin-bottom: 15px;
-        }
-        .barber-select-card input[type="radio"] {
-            display: none;
-        }
-        .barber-select-label {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 15px;
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .barber-select-label:hover {
-            border-color: var(--primary-color);
-            background: var(--bg-gray);
-        }
-        .barber-select-card input[type="radio"]:checked + .barber-select-label {
-            border-color: var(--primary-color);
-            background: rgba(212, 175, 55, 0.1);
-        }
-        .barber-select-label img {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        .barber-select-label h4 {
-            margin: 0 0 5px 0;
-            color: var(--secondary-color);
-        }
-        .barber-select-label span {
-            font-size: 0.9rem;
-            color: var(--text-light);
-        }
-    `;
-    document.head.appendChild(style);
+                <h3 class="service-card-title">${servico.nome}</h3>
+                <p class="service-card-desc">${servico.descricao || ''}</p>
+            </div>
+            
+            <div>
+                <div class="service-card-meta">
+                    <div class="service-price-box">
+                        <span class="price-label">Investimento</span>
+                        <span class="price-val">R$ ${servico.preco},00</span>
+                    </div>
+                    <div class="service-duration-badge">
+                        <i class="fas fa-clock text-accent"></i>
+                        <span>${servico.duracao} min</span>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary" style="width: 100%; margin-top: 1.25rem;" onclick="selecionarServicoDireto('${servico.id}')">
+                    <i class="fas fa-calendar-check"></i> Agendar este serviço
+                </button>
+            </div>
+        </div>
+    `).join('');
 }
 
-// Navegação entre etapas do formulário
-function nextStep(step) {
-    // Validar etapa atual antes de avançar
-    if (!validarEtapaAtual(currentStep)) {
-        return;
-    }
-    
-    // Salvar dados da etapa atual
-    salvarDadosEtapa(currentStep);
-    
-    // Mudar para próxima etapa
-    document.querySelector(`[data-step="${currentStep}"]`).classList.remove('active');
-    document.querySelector(`[data-step="${step}"]`).classList.add('active');
-    currentStep = step;
-    
-    // Carregar horários se for a etapa 3
-    if (step === 3) {
-        carregarHorarios();
-    }
-}
-
-function prevStep(step) {
-    document.querySelector(`[data-step="${currentStep}"]`).classList.remove('active');
-    document.querySelector(`[data-step="${step}"]`).classList.add('active');
-    currentStep = step;
-}
-
-function validarEtapaAtual(step) {
-    if (step === 1) {
-        const servico = document.getElementById('servico').value;
-        if (!servico) {
-            mostrarAlerta('Por favor, selecione um serviço', 'warning');
-            return false;
-        }
-    }
-    
-    if (step === 2) {
-        const barbeiro = document.querySelector('input[name="barbeiro"]:checked');
-        if (!barbeiro) {
-            mostrarAlerta('Por favor, selecione um barbeiro', 'warning');
-            return false;
-        }
-    }
-    
-    if (step === 3) {
-        const data = document.getElementById('data').value;
-        const horario = document.getElementById('horario').value;
-        if (!data || !horario) {
-            mostrarAlerta('Por favor, selecione data e horário', 'warning');
-            return false;
-        }
-    }
-    
-    return true;
-}
-
-function salvarDadosEtapa(step) {
-    if (step === 1) {
-        const servicoId = document.getElementById('servico').value;
-        const servico = SERVICOS.find(s => s.id === servicoId);
-        agendamentoData.servico = servico;
-    }
-    
-    if (step === 2) {
-        const barbeiroId = parseInt(document.querySelector('input[name="barbeiro"]:checked').value);
-        const barbeiro = BARBEIROS.find(b => b.id === barbeiroId);
-        agendamentoData.barbeiro = barbeiro;
-    }
-    
-    if (step === 3) {
-        agendamentoData.data = document.getElementById('data').value;
-        agendamentoData.horario = document.getElementById('horario').value;
-    }
-}
-
-// Carregar horários disponíveis
-async function carregarHorarios() {
-    const dataInput = document.getElementById('data');
-    const horarioSelect = document.getElementById('horario');
-    const barbeiroInput = document.querySelector('input[name="barbeiro"]:checked');
-    
-    if (!dataInput.value || !barbeiroInput) {
-        return;
-    }
-    
-    mostrarLoading(true);
-    
-    const barbeiroId = parseInt(barbeiroInput.value);
-    const data = dataInput.value;
-    
-    try {
-        const horarios = await carregarHorariosDisponiveis(barbeiroId, data);
-        
-        horarioSelect.innerHTML = '<option value="">Selecione um horário</option>';
-        
-        if (horarios.length === 0) {
-            horarioSelect.innerHTML = '<option value="">Nenhum horário disponível</option>';
-            mostrarAlerta('Não há horários disponíveis para esta data', 'info');
-        } else {
-            horarios.forEach(horario => {
-                const option = document.createElement('option');
-                option.value = horario;
-                option.textContent = horario;
-                horarioSelect.appendChild(option);
-            });
-        }
-    } catch (error) {
-        console.error('Erro ao carregar horários:', error);
-        mostrarAlerta('Erro ao carregar horários disponíveis', 'error');
-    } finally {
-        mostrarLoading(false);
-    }
-}
-
-// Finalizar agendamento
-async function finalizarAgendamento() {
-    // Coletar dados finais
-    agendamentoData.nome = document.getElementById('nome').value;
-    agendamentoData.telefone = document.getElementById('telefone').value;
-    agendamentoData.email = document.getElementById('email').value;
-    
-    mostrarLoading(true);
-    
-    try {
-        const resultado = await criarAgendamento({
-            barbeiroId: agendamentoData.barbeiro.id,
-            servico: agendamentoData.servico.nome,
-            data: agendamentoData.data,
-            horario: agendamentoData.horario,
-            nome: agendamentoData.nome,
-            telefone: agendamentoData.telefone,
-            email: agendamentoData.email
+function initCategoryTabs() {
+    const tabs = document.querySelectorAll('.tab-pill');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            renderServicesCatalog(tab.dataset.category);
         });
-        
-        if (resultado.success) {
-            mostrarSucesso();
-        } else {
-            mostrarAlerta('Erro ao criar agendamento: ' + resultado.error, 'error');
-        }
-    } catch (error) {
-        console.error('Erro ao finalizar agendamento:', error);
-        mostrarAlerta('Erro ao criar agendamento. Tente novamente.', 'error');
-    } finally {
-        mostrarLoading(false);
-    }
-}
-
-function mostrarSucesso() {
-    // Formatar data
-    const dataFormatada = new Date(agendamentoData.data + 'T12:00:00').toLocaleDateString('pt-BR');
-    
-    // Preencher detalhes
-    const detailsDiv = document.getElementById('agendamento-details');
-    detailsDiv.innerHTML = `
-        <p><strong>Serviço:</strong> <span>${agendamentoData.servico.nome}</span></p>
-        <p><strong>Barbeiro:</strong> <span>${agendamentoData.barbeiro.nome}</span></p>
-        <p><strong>Data:</strong> <span>${dataFormatada}</span></p>
-        <p><strong>Horário:</strong> <span>${agendamentoData.horario}</span></p>
-        <p><strong>Valor:</strong> <span>R$ ${agendamentoData.servico.preco},00</span></p>
-    `;
-    
-    // Ir para tela de sucesso
-    document.querySelector(`[data-step="${currentStep}"]`).classList.remove('active');
-    document.querySelector(`[data-step="5"]`).classList.add('active');
-    currentStep = 5;
-}
-
-function resetarFormulario() {
-    currentStep = 1;
-    agendamentoData = {};
-    
-    // Resetar form
-    const form = document.getElementById('agendamento-form');
-    if (form) form.reset();
-    
-    // Voltar para primeira etapa
-    document.querySelectorAll('.form-step').forEach(step => {
-        step.classList.remove('active');
-    });
-    document.querySelector('[data-step="1"]')?.classList.add('active');
-}
-
-// ==================== UTILITÁRIOS ====================
-function mostrarLoading(show) {
-    const loading = document.getElementById('loading-overlay');
-    if (loading) {
-        if (show) {
-            loading.classList.add('active');
-        } else {
-            loading.classList.remove('active');
-        }
-    }
-}
-
-function mostrarAlerta(mensagem, tipo = 'info') {
-    // Criar alerta customizado
-    const alerta = document.createElement('div');
-    alerta.className = `alerta alerta-${tipo}`;
-    alerta.style.cssText = `
-        position: fixed;
-        top: 100px;
-        right: 20px;
-        background: ${tipo === 'error' ? '#f44336' : tipo === 'warning' ? '#ff9800' : tipo === 'success' ? '#4CAF50' : '#2196F3'};
-        color: white;
-        padding: 16px 24px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        z-index: 100000;
-        animation: slideInRight 0.3s ease-out;
-        max-width: 350px;
-    `;
-    alerta.textContent = mensagem;
-    
-    document.body.appendChild(alerta);
-    
-    setTimeout(() => {
-        alerta.style.animation = 'slideOutRight 0.3s ease-out';
-        setTimeout(() => alerta.remove(), 300);
-    }, 4000);
-}
-
-// Adicionar animações para alertas
-const styleSheet = document.createElement('style');
-styleSheet.textContent = `
-    @keyframes slideInRight {
-        from {
-            transform: translateX(400px);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-    
-    @keyframes slideOutRight {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        to {
-            transform: translateX(400px);
-            opacity: 0;
-        }
-    }
-`;
-document.head.appendChild(styleSheet);
-
-// ==================== FORMATADORES ====================
-function formatarTelefone(telefone) {
-    return telefone.replace(/\D/g, '')
-        .replace(/(\d{2})(\d)/, '($1) $2')
-        .replace(/(\d{5})(\d)/, '$1-$2')
-        .replace(/(-\d{4})\d+?$/, '$1');
-}
-
-function formatarData(data) {
-    return new Date(data + 'T12:00:00').toLocaleDateString('pt-BR', {
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric'
     });
 }
 
-// ==================== CONSOLE INFO ====================
-console.log('%c🔷 BARBER SERRA', 'font-size: 20px; font-weight: bold; color: #d4af37;');
-console.log('%c✨ Site desenvolvido com HTML, CSS e JavaScript', 'font-size: 12px; color: #666;');
-console.log('%c📦 Integração com Supabase para agendamentos', 'font-size: 12px; color: #666;');
-console.log('%c⚙️ Configure suas credenciais em js/config.js', 'font-size: 12px; color: #666;');
+/* ==========================================================================
+   EQUIPE / BARBEIROS
+   ========================================================================== */
+
+async function renderTeam() {
+    const grid = document.getElementById('landing-team-grid');
+    if (!grid) return;
+
+    const barbeiros = await carregarBarbeiros();
+
+    grid.innerHTML = barbeiros.map(b => `
+        <div class="barber-team-card card-hover">
+            <div class="barber-photo-box">
+                <img src="${b.foto}" alt="${b.nome}">
+                <div class="barber-rating-badge">
+                    ★ ${b.avaliacao || '5.0'} (${b.atendimentos || '300+'}+)
+                </div>
+            </div>
+            <div class="barber-info-box">
+                <div>
+                    <h3 class="barber-name">${b.nome}</h3>
+                    <p class="barber-specialty">${b.especialidade}</p>
+                    <p class="barber-bio">${b.bio || 'Profissional dedicado ao visagismo e à técnica apurada de barbearia.'}</p>
+                </div>
+                <button type="button" class="btn btn-outline btn-sm" onclick="selecionarBarbeiroDireto(${b.id})">
+                    <i class="fas fa-calendar-alt"></i> Agendar com ${b.nome.split(' ')[0]}
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+/* ==========================================================================
+   SISTEMA DE AGENDAMENTO (WIZARD 5 PASSOS)
+   ========================================================================== */
+
+function initBookingWizard() {
+    renderWizardServices();
+    renderWizardBarbers();
+    initWizardDatePicker();
+    
+    const phoneInput = document.getElementById('wizard-telefone');
+    if (phoneInput && typeof UICore !== 'undefined') {
+        UICore.applyPhoneMask(phoneInput);
+    }
+}
+
+function renderWizardServices() {
+    const container = document.getElementById('wizard-services-grid');
+    if (!container) return;
+
+    container.innerHTML = SERVICOS.map(s => `
+        <div class="wizard-choice-card ${wizardState.servico?.id === s.id ? 'selected' : ''}" onclick="wizardEscolherServico('${s.id}')">
+            <div>
+                <strong style="display: block; font-size: 1.05rem; margin-bottom: 0.25rem;">${s.nome}</strong>
+                <small style="color: var(--text-secondary);">${s.descricao || ''}</small>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; padding-top: 0.5rem; border-top: 1px solid var(--border-subtle);">
+                <span style="font-weight: 800; color: var(--accent); font-size: 1.15rem;">R$ ${s.preco},00</span>
+                <span style="font-size: 0.8rem; color: var(--text-muted);"><i class="fas fa-clock"></i> ${s.duracao} min</span>
+            </div>
+        </div>
+    `).join('');
+}
+
+function wizardEscolherServico(serviceId) {
+    const servico = SERVICOS.find(s => s.id === serviceId);
+    if (!servico) return;
+    wizardState.servico = servico;
+    renderWizardServices();
+    document.getElementById('btn-step1-next').disabled = false;
+}
+
+function renderWizardBarbers() {
+    const container = document.getElementById('wizard-barbers-grid');
+    if (!container) return;
+
+    container.innerHTML = BARBEIROS.map(b => `
+        <div class="wizard-choice-card ${wizardState.barbeiro?.id === b.id ? 'selected' : ''}" onclick="wizardEscolherBarbeiro(${b.id})">
+            <div style="display: flex; align-items: center; gap: 0.85rem; margin-bottom: 0.5rem;">
+                <img src="${b.foto}" alt="${b.nome}" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border-accent);">
+                <div>
+                    <strong style="display: block; font-size: 1.05rem;">${b.nome}</strong>
+                    <small style="color: var(--accent); font-weight: 600;">${b.especialidade}</small>
+                </div>
+            </div>
+            <p style="font-size: 0.825rem; color: var(--text-secondary); line-height: 1.4;">${b.bio || ''}</p>
+        </div>
+    `).join('');
+}
+
+function wizardEscolherBarbeiro(barberId) {
+    const barbeiro = BARBEIROS.find(b => b.id === barberId);
+    if (!barbeiro) return;
+    wizardState.barbeiro = barbeiro;
+    renderWizardBarbers();
+    document.getElementById('btn-step2-next').disabled = false;
+}
+
+function initWizardDatePicker() {
+    const dateInput = document.getElementById('wizard-date-input');
+    if (!dateInput) return;
+
+    const todayStr = new Date().toISOString().split('T')[0];
+    dateInput.min = todayStr;
+    dateInput.value = todayStr;
+    wizardState.data = todayStr;
+
+    dateInput.addEventListener('change', (e) => {
+        wizardState.data = e.target.value;
+        atualizarChipsData(e.target.value);
+        carregarSlotsWizard();
+    });
+
+    // Quick chips
+    const chipHoje = document.getElementById('chip-hoje');
+    const chipAmanha = document.getElementById('chip-amanha');
+    const chipDepois = document.getElementById('chip-depois');
+
+    if (chipHoje) {
+        chipHoje.addEventListener('click', () => {
+            const d = new Date().toISOString().split('T')[0];
+            dateInput.value = d;
+            wizardState.data = d;
+            atualizarChipsData(d);
+            carregarSlotsWizard();
+        });
+    }
+
+    if (chipAmanha) {
+        chipAmanha.addEventListener('click', () => {
+            const d = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+            dateInput.value = d;
+            wizardState.data = d;
+            atualizarChipsData(d);
+            carregarSlotsWizard();
+        });
+    }
+
+    if (chipDepois) {
+        chipDepois.addEventListener('click', () => {
+            const d = new Date(Date.now() + 172800000).toISOString().split('T')[0];
+            dateInput.value = d;
+            wizardState.data = d;
+            atualizarChipsData(d);
+            carregarSlotsWizard();
+        });
+    }
+}
+
+function atualizarChipsData(selectedDate) {
+    const today = new Date().toISOString().split('T')[0];
+    const amanha = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+    const depois = new Date(Date.now() + 172800000).toISOString().split('T')[0];
+
+    document.querySelectorAll('.chip-date').forEach(c => c.classList.remove('active'));
+    if (selectedDate === today) document.getElementById('chip-hoje')?.classList.add('active');
+    else if (selectedDate === amanha) document.getElementById('chip-amanha')?.classList.add('active');
+    else if (selectedDate === depois) document.getElementById('chip-depois')?.classList.add('active');
+}
+
+async function carregarSlotsWizard() {
+    const container = document.getElementById('wizard-slots-grid');
+    if (!container) return;
+
+    if (!wizardState.barbeiro) {
+        container.innerHTML = '<p class="text-secondary" style="grid-column: 1/-1;">Por favor, selecione um barbeiro na etapa anterior.</p>';
+        return;
+    }
+
+    container.innerHTML = '<div class="slots-loading" style="grid-column: 1/-1;"><i class="fas fa-spinner fa-spin"></i> Verificando disponibilidade...</div>';
+
+    const slots = await carregarHorariosDisponiveis(wizardState.barbeiro.id, wizardState.data);
+
+    if (!slots || slots.length === 0) {
+        container.innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; padding: 1.5rem 0;">
+                <i class="fas fa-calendar-times" style="font-size: 2rem; color: var(--warning); margin-bottom: 0.5rem; display: block;"></i>
+                <strong style="color: var(--text-primary); display: block;">Nenhum horário disponível para esta data</strong>
+                <small style="color: var(--text-secondary);">Barbearia fechada ou agenda cheia. Selecione outra data.</small>
+            </div>
+        `;
+        document.getElementById('btn-step3-next').disabled = true;
+        return;
+    }
+
+    container.innerHTML = slots.map(slot => `
+        <button type="button" class="time-slot-btn ${wizardState.horario === slot ? 'selected' : ''}" onclick="wizardEscolherHorario('${slot}')">
+            ${slot}
+        </button>
+    `).join('');
+}
+
+function wizardEscolherHorario(slot) {
+    wizardState.horario = slot;
+    document.querySelectorAll('.time-slot-btn').forEach(btn => {
+        btn.classList.toggle('selected', btn.textContent.trim() === slot);
+    });
+    document.getElementById('btn-step3-next').disabled = false;
+}
+
+function wizardAvancar(step) {
+    if (step === 3) {
+        carregarSlotsWizard();
+    }
+    if (step === 4) {
+        renderizarResumoPasso4();
+    }
+    mudarAbaWizard(step);
+}
+
+function wizardVoltar(step) {
+    mudarAbaWizard(step);
+}
+
+function mudarAbaWizard(step) {
+    wizardState.step = step;
+    document.querySelectorAll('.wizard-pane').forEach((p, idx) => {
+        p.classList.toggle('active', idx + 1 === step);
+    });
+
+    document.querySelectorAll('.step-dot').forEach((dot, idx) => {
+        dot.classList.remove('active', 'completed');
+        if (idx + 1 === step) dot.classList.add('active');
+        else if (idx + 1 < step) dot.classList.add('completed');
+    });
+}
+
+function renderizarResumoPasso4() {
+    const invoiceItems = document.getElementById('wizard-invoice-items');
+    const totalPrice = document.getElementById('wizard-total-price');
+    if (!invoiceItems || !totalPrice) return;
+
+    const dataBR = new Date(wizardState.data + 'T12:00:00').toLocaleDateString('pt-BR');
+
+    invoiceItems.innerHTML = `
+        <div class="invoice-row"><span>Serviço:</span><strong>${wizardState.servico?.nome}</strong></div>
+        <div class="invoice-row"><span>Barbeiro:</span><strong>${wizardState.barbeiro?.nome}</strong></div>
+        <div class="invoice-row"><span>Data:</span><strong>${dataBR}</strong></div>
+        <div class="invoice-row"><span>Horário:</span><strong>${wizardState.horario}</strong></div>
+        <div class="invoice-row"><span>Duração Estimada:</span><strong>${wizardState.servico?.duracao} minutos</strong></div>
+    `;
+
+    totalPrice.textContent = `R$ ${wizardState.servico?.preco || 0},00`;
+}
+
+async function confirmarAgendamentoWizard() {
+    const nome = document.getElementById('wizard-nome').value.trim();
+    const telefone = document.getElementById('wizard-telefone').value.trim();
+    const email = document.getElementById('wizard-email').value.trim();
+
+    if (!nome || !telefone) {
+        if (typeof UICore !== 'undefined') {
+            UICore.toast('Campos Obrigatórios', 'Por favor, informe seu nome e WhatsApp para confirmar.', 'warning');
+        } else {
+            alert('Por favor, informe seu nome e WhatsApp.');
+        }
+        return;
+    }
+
+    const btnConfirmar = document.getElementById('btn-final-confirm');
+    if (btnConfirmar) {
+        btnConfirmar.disabled = true;
+        btnConfirmar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Confirmando...';
+    }
+
+    const dados = {
+        servico: wizardState.servico,
+        barbeiro: wizardState.barbeiro,
+        data: wizardState.data,
+        horario: wizardState.horario,
+        nome: nome,
+        telefone: telefone,
+        email: email
+    };
+
+    const resultado = await criarAgendamento(dados);
+
+    if (btnConfirmar) {
+        btnConfirmar.disabled = false;
+        btnConfirmar.innerHTML = '<i class="fas fa-check-circle"></i> Confirmar Agendamento';
+    }
+
+    if (resultado.success) {
+        renderizarSucessoWizard(resultado.data);
+        mudarAbaWizard(5);
+        if (typeof UICore !== 'undefined') {
+            UICore.toast('Sucesso!', 'Agendamento registrado com sucesso!', 'success');
+        }
+    } else {
+        if (typeof UICore !== 'undefined') {
+            UICore.toast('Erro', resultado.error || 'Erro ao registrar agendamento. Tente novamente.', 'error');
+        } else {
+            alert('Erro ao registrar agendamento.');
+        }
+    }
+}
+
+function renderizarSucessoWizard(agendamento) {
+    const ticket = document.getElementById('wizard-success-ticket');
+    const dataBR = new Date(agendamento.data + 'T12:00:00').toLocaleDateString('pt-BR');
+    
+    if (ticket) {
+        ticket.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem; margin-bottom: 0.75rem;">
+                <strong style="color: var(--accent); font-size: 1rem;"><i class="fas fa-ticket-alt"></i> TICKET #${agendamento.id}</strong>
+                <span class="badge badge-success">Confirmado</span>
+            </div>
+            <p><strong>Cliente:</strong> ${agendamento.cliente_nome}</p>
+            <p><strong>Serviço:</strong> ${agendamento.servico_nome}</p>
+            <p><strong>Barbeiro:</strong> ${agendamento.barbeiro_nome}</p>
+            <p><strong>Data e Hora:</strong> ${dataBR} às ${agendamento.horario}</p>
+            <p><strong>Valor:</strong> R$ ${agendamento.preco},00</p>
+            <p style="margin-top: 0.5rem; font-size: 0.8125rem; color: var(--text-muted);"><i class="fas fa-map-pin"></i> Rua José Cosme da Silva, 1021 - Bela Vista, Palhoça</p>
+        `;
+    }
+
+    const btnZap = document.getElementById('btn-whatsapp-confirmation');
+    if (btnZap) {
+        const msg = `Olá! Confirmei meu agendamento na Barber Serra.\n*Código:* #${agendamento.id}\n*Serviço:* ${agendamento.servico_nome}\n*Barbeiro:* ${agendamento.barbeiro_nome}\n*Data:* ${dataBR} às ${agendamento.horario}\n*Nome:* ${agendamento.cliente_nome}`;
+        btnZap.href = `https://wa.me/5548988139261?text=${encodeURIComponent(msg)}`;
+    }
+}
+
+function reiniciarWizard() {
+    wizardState = {
+        step: 1,
+        servico: null,
+        barbeiro: null,
+        data: new Date().toISOString().split('T')[0],
+        horario: null,
+        cliente: { nome: '', telefone: '', email: '' }
+    };
+    renderWizardServices();
+    renderWizardBarbers();
+    document.getElementById('btn-step1-next').disabled = true;
+    document.getElementById('btn-step2-next').disabled = true;
+    document.getElementById('btn-step3-next').disabled = true;
+    mudarAbaWizard(1);
+}
+
+function abrirModalAgendamentoSite() {
+    if (typeof reiniciarWizard === 'function') reiniciarWizard();
+    if (typeof UICore !== 'undefined') {
+        UICore.openModal('modal-agendamento-site');
+    }
+}
+
+function abrirWizardAgendamento() {
+    abrirModalAgendamentoSite();
+}
+
+function selecionarServicoDireto(serviceId) {
+    wizardEscolherServico(serviceId);
+    abrirModalAgendamentoSite();
+    wizardAvancar(2);
+}
+
+function selecionarBarbeiroDireto(barberId) {
+    if (!wizardState.servico) {
+        wizardEscolherServico('corte-degrade');
+    }
+    wizardEscolherBarbeiro(barberId);
+    abrirModalAgendamentoSite();
+    wizardAvancar(3);
+}

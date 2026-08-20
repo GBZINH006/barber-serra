@@ -1,25 +1,213 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Clientes - Admin | BARBER SERRA</title>
-  <link rel="stylesheet" href="../css/admin.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clientes CRM — Admin BARBER SERRA</title>
+    <meta name="theme-color" content="#090a0d">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet" href="../css/design-system.css">
+    <link rel="stylesheet" href="css/admin.css">
 </head>
-<body class="admin-page">
-  <aside class="sidebar">[...]</aside>
-  <div class="main-content">
-    <header class="topbar"><h1>Clientes</h1></header>
-    <div class="page-content container">
-      <p class="muted">Gerencie clientes e pontos de fidelidade.</p>
-      <table class="admin-table">
-        <thead><tr><th>Nome</th><th>Email</th><th>Telefone</th><th>Pontos</th></tr></thead>
-        <tbody>
-          <tr><td>Felipe Gomes</td><td>felipe@example.com</td><td>(48) 98813-9261</td><td>12</td></tr>
-        </tbody>
-      </table>
+<body class="admin-body">
+
+    <div class="mobile-drawer-backdrop" id="admin-sidebar-backdrop"></div>
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="admin-sidebar">
+        <a href="dashboard.html" class="sidebar-brand">
+            <div class="logo-icon-wrapper" style="width: 36px; height: 36px; font-size: 1.1rem;">
+                <i class="fas fa-cut"></i>
+            </div>
+            <div class="logo-text">
+                <span class="logo-name" style="font-size: 1rem;">BARBER SERRA</span>
+                <span class="logo-sub">PAINEL SAAS</span>
+            </div>
+        </a>
+
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="sidebar-item"><i class="fas fa-chart-pie"></i><span>Dashboard</span></a>
+            <a href="agendamentos.html" class="sidebar-item"><i class="fas fa-calendar-alt"></i><span>Agendamentos</span></a>
+            <a href="clientes.html" class="sidebar-item active"><i class="fas fa-users"></i><span>Clientes CRM</span></a>
+            <a href="barbeiros.html" class="sidebar-item"><i class="fas fa-user-tie"></i><span>Barbeiros</span></a>
+            <a href="servicos.html" class="sidebar-item"><i class="fas fa-scissors"></i><span>Serviços</span></a>
+            <a href="horarios.html" class="sidebar-item"><i class="fas fa-clock"></i><span>Horários & Grade</span></a>
+            <a href="relatorios.html" class="sidebar-item"><i class="fas fa-file-invoice-dollar"></i><span>Relatórios</span></a>
+            <a href="configuracoes.html" class="sidebar-item"><i class="fas fa-cog"></i><span>Configurações</span></a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-user">
+                <img src="../images/barber-1.svg" alt="Admin Avatar" id="admin-user-avatar">
+                <div class="sidebar-user-details">
+                    <span class="sidebar-user-name" id="admin-user-name">Mateus Rabelo</span>
+                    <span class="sidebar-user-role">Master Barber • Admin</span>
+                </div>
+            </div>
+            <button type="button" class="btn-sidebar-logout" onclick="logoutAdmin()"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+    </aside>
+
+    <div class="admin-main-wrapper">
+        <header class="admin-topbar">
+            <div class="topbar-left">
+                <button type="button" class="mobile-toggle" id="sidebar-mobile-toggle"><i class="fas fa-bars"></i></button>
+                <h1 class="topbar-title">Gestão de Clientes (CRM)</h1>
+            </div>
+            <div class="topbar-right">
+                <button type="button" class="btn btn-primary btn-sm" onclick="abrirModalNovoCliente()">
+                    <i class="fas fa-user-plus"></i> Novo Cliente
+                </button>
+            </div>
+        </header>
+
+        <main class="admin-content">
+            <div class="card" style="padding: 1.5rem;">
+                <div class="appointments-filter-bar">
+                    <div>
+                        <span class="badge badge-gold"><i class="fas fa-database"></i> Base de Clientes</span>
+                        <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin-top: 0.25rem;">Relacionamento & Histórico</h2>
+                    </div>
+                    <div style="min-width: 260px;">
+                        <input type="text" id="input-search-clients" class="form-control" placeholder="Buscar por nome, telefone ou e-mail..." oninput="filtrarClientesAdmin()">
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>WhatsApp</th>
+                                <th>E-mail</th>
+                                <th>Total Visitas</th>
+                                <th>Total Investido</th>
+                                <th>Pontos VIP</th>
+                                <th>Status</th>
+                                <th style="text-align: right;">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-clients-table-body">
+                            <!-- Inserido dinamicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
     </div>
-  </div>
-  <script src="../js/supabase.js"></script>
+
+    <!-- Modal: Detalhes do Cliente -->
+    <div class="modal-backdrop" id="modal-detalhes-cliente">
+        <div class="modal-panel">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-user-circle text-accent"></i> Ficha do Cliente</h3>
+                <button type="button" class="modal-close-btn" onclick="UICore.closeModal('modal-detalhes-cliente')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" id="modal-detalhes-cliente-corpo"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="UICore.closeModal('modal-detalhes-cliente')">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/ui-core.js"></script>
+    <script src="../js/supabase.js"></script>
+    <script src="js/admin-core.js"></script>
+    <script>
+        let todosClientesAdmin = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await carregarClientesAdmin();
+        });
+
+        async function carregarClientesAdmin() {
+            todosClientesAdmin = await obterListaClientesAdmin();
+            renderizarTabelaClientes(todosClientesAdmin);
+        }
+
+        function renderizarTabelaClientes(lista) {
+            const tbody = document.getElementById('admin-clients-table-body');
+            if (!tbody) return;
+
+            if (!lista || lista.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 2rem; color: var(--text-muted);">Nenhum cliente encontrado.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = lista.map(c => `
+                <tr>
+                    <td>
+                        <strong style="display: block; color: var(--text-primary); font-size: 0.95rem;">${c.nome}</strong>
+                        <small style="color: var(--text-muted);">Última visita: ${c.ultima_visita || 'Recente'}</small>
+                    </td>
+                    <td>
+                        <a href="https://wa.me/55${(c.telefone || '').replace(/\D/g, '')}" target="_blank" style="color: #25d366;" title="Chamar no WhatsApp">
+                            <i class="fab fa-whatsapp"></i> ${c.telefone || '--'}
+                        </a>
+                    </td>
+                    <td>${c.email || '--'}</td>
+                    <td><strong>${c.total_visitas || 1} cortes</strong></td>
+                    <td><strong style="color: var(--accent);">R$ ${(c.total_gasto || 40).toFixed(2).replace('.', ',')}</strong></td>
+                    <td><span class="badge badge-gold">${c.pontos || 50} pts</span></td>
+                    <td><span class="badge badge-success">Ativo</span></td>
+                    <td style="text-align: right;">
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="verFichaCliente('${c.id || c.telefone}')">
+                            <i class="fas fa-eye"></i> Histórico
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filtrarClientesAdmin() {
+            const query = document.getElementById('input-search-clients').value.toLowerCase().trim();
+            const filtrados = todosClientesAdmin.filter(c => 
+                c.nome.toLowerCase().includes(query) ||
+                (c.email && c.email.toLowerCase().includes(query)) ||
+                (c.telefone && c.telefone.includes(query))
+            );
+            renderizarTabelaClientes(filtrados);
+        }
+
+        function verFichaCliente(idOuTel) {
+            const cliente = todosClientesAdmin.find(c => c.id === idOuTel || c.telefone === idOuTel) || todosClientesAdmin[0];
+            if (!cliente) return;
+
+            const corpo = document.getElementById('modal-detalhes-cliente-corpo');
+            corpo.innerHTML = `
+                <div style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.5rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem;">
+                        <div style="width: 50px; height: 50px; border-radius: 50%; background: var(--surface-hover); border: 1px solid var(--border-accent); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--accent);">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                            <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text-primary);">${cliente.nome}</h3>
+                            <span class="badge badge-gold"><i class="fas fa-crown"></i> Membro VIP (${cliente.pontos || 50} pts)</span>
+                        </div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.9rem;">
+                        <p><strong>WhatsApp:</strong> ${cliente.telefone}</p>
+                        <p><strong>E-mail:</strong> ${cliente.email || 'Não informado'}</p>
+                        <p><strong>Total de Atendimentos:</strong> ${cliente.total_visitas || 1}</p>
+                        <p><strong>Total Investido:</strong> R$ ${(cliente.total_gasto || 40).toFixed(2).replace('.', ',')}</p>
+                        <p><strong>Preferência de Corte:</strong> Degradê navalhado alto com acabamento na tesoura.</p>
+                    </div>
+                </div>
+            `;
+            UICore.openModal('modal-detalhes-cliente');
+        }
+
+        function abrirModalNovoCliente() {
+            UICore.toast('Novo Cliente', 'Cadastre novos agendamentos para registrar novos clientes automaticamente.', 'info');
+        }
+    </script>
 </body>
 </html>

@@ -1,34 +1,158 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Meus Agendamentos - BARBER SERRA</title>
-  <link rel="stylesheet" href="css/cliente-dashboard.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Agendamentos — BARBER SERRA</title>
+    <meta name="theme-color" content="#090a0d">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet" href="css/design-system.css">
+    <link rel="stylesheet" href="css/cliente-dashboard.css">
 </head>
-<body>
-  <header class="header">
-    <div class="container header-content">
-      <div class="brand"><i class="fas fa-cut"></i> BARBER SERRA</div>
-      <nav>
-        <a href="cliente-dashboard.html">Dashboard</a>
-        <a href="cliente-agendamentos.html" class="active">Meus Agendamentos</a>
-        <a href="cliente-perfil.html">Perfil</a>
-      </nav>
+<body class="client-app">
+
+    <!-- Header -->
+    <header class="client-header">
+        <div class="container client-header-container">
+            <a href="cliente-dashboard.html" class="brand-logo" aria-label="BARBER SERRA Dashboard">
+                <div class="logo-icon-wrapper">
+                    <i class="fas fa-cut"></i>
+                </div>
+                <div class="logo-text">
+                    <span class="logo-name">BARBER SERRA</span>
+                    <span class="logo-sub">MEUS AGENDAMENTOS</span>
+                </div>
+            </a>
+
+            <!-- Nav Links -->
+            <nav class="client-nav">
+                <a href="cliente-dashboard.html" class="client-nav-link"><i class="fas fa-home"></i> Visão Geral</a>
+                <a href="cliente-agendamentos.html" class="client-nav-link active"><i class="fas fa-calendar-alt"></i> Meus Agendamentos</a>
+                <a href="cliente-perfil.html" class="client-nav-link"><i class="fas fa-user-circle"></i> Meu Perfil</a>
+                <a href="index.html" class="client-nav-link"><i class="fas fa-external-link-alt"></i> Ver Site</a>
+            </nav>
+
+            <!-- User Menu -->
+            <div class="user-profile-menu">
+                <button type="button" class="user-avatar-btn" id="btn-profile-menu" onclick="toggleProfileDropdown()">
+                    <img src="images/avatar-felipe.svg" alt="Avatar" class="user-avatar-img" id="client-avatar-top">
+                    <span class="user-avatar-name" id="client-name-top">Cliente</span>
+                    <i class="fas fa-chevron-down" style="font-size: 0.75rem; color: var(--text-muted);"></i>
+                </button>
+
+                <div class="profile-dropdown" id="profile-dropdown">
+                    <a href="cliente-perfil.html" class="dropdown-item"><i class="fas fa-user-edit"></i> Editar Perfil</a>
+                    <a href="cliente-dashboard.html" class="dropdown-item"><i class="fas fa-home"></i> Painel Geral</a>
+                    <div style="height: 1px; background: var(--border); margin: 0.25rem 0;"></div>
+                    <button type="button" class="dropdown-item danger" onclick="logoutCliente()"><i class="fas fa-sign-out-alt"></i> Sair da Conta</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="client-main">
+        <div class="container">
+            <!-- Header Page -->
+            <div class="page-greeting-header">
+                <div>
+                    <h1 class="greeting-title"><i class="fas fa-history text-accent"></i> Meus Agendamentos</h1>
+                    <p class="greeting-subtitle">Histórico completo de visitas, horários marcados e serviços realizados.</p>
+                </div>
+                <a href="cliente-dashboard.html#booking-wizard-section" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Novo Agendamento
+                </a>
+            </div>
+
+            <!-- Filter and Search Bar -->
+            <div class="card" style="padding: 1.5rem; margin-bottom: 1.75rem;">
+                <div class="appointments-filter-bar">
+                    <div class="filter-pills" id="appointments-filter-pills">
+                        <button type="button" class="tab-pill active" data-filter="todos">Todos</button>
+                        <button type="button" class="tab-pill" data-filter="confirmado">Confirmados</button>
+                        <button type="button" class="tab-pill" data-filter="concluido">Concluídos</button>
+                        <button type="button" class="tab-pill" data-filter="cancelado">Cancelados</button>
+                    </div>
+
+                    <div style="min-width: 260px;">
+                        <input type="text" id="input-search-appointments" class="form-control" placeholder="Buscar por serviço ou barbeiro..." oninput="filtrarAgendamentosCliente()">
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Data & Horário</th>
+                                <th>Serviço</th>
+                                <th>Barbeiro</th>
+                                <th>Valor</th>
+                                <th>Status</th>
+                                <th style="text-align: right;">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="client-all-appointments-body">
+                            <!-- Inserido dinamicamente via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Detalhes do Agendamento -->
+    <div class="modal-backdrop" id="modal-detalhes-agendamento">
+        <div class="modal-panel">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-ticket-alt text-accent"></i> Detalhes do Agendamento</h3>
+                <button type="button" class="modal-close-btn" onclick="UICore.closeModal('modal-detalhes-agendamento')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-detalhes-corpo"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="UICore.closeModal('modal-detalhes-agendamento')">Fechar</button>
+            </div>
+        </div>
     </div>
-  </header>
 
-  <main class="container">
-    <h1>Meus Agendamentos</h1>
-    <p class="muted">Lista com seus agendamentos e status.</p>
-    <table class="admin-table">
-      <thead><tr><th>Data</th><th>Horário</th><th>Serviço</th><th>Barbeiro</th><th>Status</th></tr></thead>
-      <tbody>
-        <tr><td>2026-08-20</td><td>15:00</td><td>Corte Degradê</td><td>Mateus</td><td>Confirmado</td></tr>
-      </tbody>
-    </table>
-  </main>
+    <!-- Modal Cancelamento -->
+    <div class="modal-backdrop" id="modal-cancelar-agendamento">
+        <div class="modal-panel">
+            <div class="modal-header">
+                <h3 class="modal-title" style="color: var(--danger);"><i class="fas fa-exclamation-triangle"></i> Cancelar Agendamento</h3>
+                <button type="button" class="modal-close-btn" onclick="UICore.closeModal('modal-cancelar-agendamento')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
+                    Tem certeza de que deseja cancelar seu horário? Essa ação liberará o horário para outro cliente.
+                </p>
+                <div class="form-group">
+                    <label class="form-label" for="cancel-reason">Motivo do cancelamento (opcional):</label>
+                    <textarea id="cancel-reason" class="form-control" rows="3" placeholder="Ex: Imprevisto no trabalho..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="UICore.closeModal('modal-cancelar-agendamento')">Voltar</button>
+                <button type="button" class="btn btn-danger" id="btn-confirmar-cancelamento" onclick="executarCancelamento()">Confirmar Cancelamento</button>
+            </div>
+        </div>
+    </div>
 
-  <script src="js/supabase.js"></script>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/ui-core.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/cliente-dashboard.js"></script>
 </body>
 </html>

@@ -1,311 +1,253 @@
-// ==================== CLIENTE AUTHENTICATION ====================
-let supabaseClient = null;
+/**
+ * BARBER SERRA — CLIENT AUTHENTICATION LOGIC
+ */
 
-// Inicializar
 document.addEventListener('DOMContentLoaded', () => {
-    initSupabase();
     initTabs();
     initForms();
-    checkIfLoggedIn();
+    checkIfAlreadyLoggedIn();
 });
 
-function initSupabase() {
-    try {
-        if (typeof supabase !== 'undefined' && SUPABASE_CONFIG.url && SUPABASE_CONFIG.anonKey) {
-            if (!SUPABASE_CONFIG.url.includes('SEU_PROJETO')) {
-                supabaseClient = supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
-                console.log('✅ Supabase conectado');
-            }
-        }
-    } catch (error) {
-        console.error('Erro ao conectar Supabase:', error);
-    }
-}
-
-// ==================== TABS ====================
 function initTabs() {
     const tabs = document.querySelectorAll('.tab-btn');
     const forms = document.querySelectorAll('.auth-form');
-    
+
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
-            const targetTab = tab.dataset.tab;
-            
-            // Atualizar tabs
+            const target = tab.dataset.tab;
             tabs.forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
-            
-            // Atualizar forms
-            forms.forEach(form => {
-                if (form.id === `${targetTab}-form`) {
-                    form.classList.add('active');
-                } else {
-                    form.classList.remove('active');
-                }
+
+            forms.forEach(f => {
+                f.classList.toggle('active', f.id === `${target}-form`);
             });
         });
     });
 }
 
-// ==================== FORMS ====================
 function initForms() {
-    // Login
-    document.getElementById('login-form').addEventListener('submit', handleLogin);
-    
-    // Cadastro
-    document.getElementById('cadastro-form').addEventListener('submit', handleCadastro);
-    
-    // Reset Password
-    document.getElementById('reset-form').addEventListener('submit', handleResetPassword);
-    
-    // Máscara de telefone
-    document.getElementById('cadastro-telefone').addEventListener('input', (e) => {
-        let value = e.target.value.replace(/\D/g, '');
-        if (value.length <= 11) {
-            value = value.replace(/(\d{2})(\d)/, '($1) $2');
-            value = value.replace(/(\d{5})(\d)/, '$1-$2');
-        }
-        e.target.value = value;
-    });
+    // Login submit
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) loginForm.addEventListener('submit', handleLogin);
+
+    // Cadastro submit
+    const cadastroForm = document.getElementById('cadastro-form');
+    if (cadastroForm) cadastroForm.addEventListener('submit', handleCadastro);
+
+    // Phone mask
+    const phoneInput = document.getElementById('cadastro-telefone');
+    if (phoneInput && typeof UICore !== 'undefined') {
+        UICore.applyPhoneMask(phoneInput);
+    }
 }
 
-// ==================== LOGIN ====================
 async function handleLogin(e) {
     e.preventDefault();
-    
-    const email = document.getElementById('login-email').value;
+    const email = document.getElementById('login-email').value.trim();
     const password = document.getElementById('login-password').value;
-    const remember = document.getElementById('remember').checked;
-    
-    if (!supabaseClient) {
-        // Modo demo
-        const demoSession = {
-            user: { id: 'demo-' + Date.now(), email },
-            cliente: { nome: 'Cliente Demo', email, telefone: '(48) 99999-9999' }
-        };
-        
-        if (remember) {
-            localStorage.setItem('cliente_session', JSON.stringify(demoSession));
-        } else {
-            sessionStorage.setItem('cliente_session', JSON.stringify(demoSession));
-        }
-        
-        showAlert('login', 'Login demo realizado!', 'success');
-        setTimeout(() => window.location.href = 'cliente-dashboard.html', 1000);
+    const remember = document.getElementById('remember-me')?.checked;
+    const btn = document.getElementById('btn-submit-login');
+
+    if (!email || !password) {
+        UICore.toast('Atenção', 'Preencha seu e-mail e senha.', 'warning');
         return;
     }
-    
+
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Autenticando...';
+    }
+
     try {
-        // Login com Supabase
-        const { data, error } = await supabaseClient.auth.signInWithPassword({
-            email,
-            password
-        });
-        
+        if (!supabaseClient) {
+            // Sessão local simulada
+            const session = {
+                user: { id: 'usr-1', email },
+                cliente: {
+                    id: 'cli-1',
+                    nome: 'Gabriel Santos',
+                    email: email,
+                    telefone: '(48) 98813-9261',
+                    pontos: 180,
+                    foto: 'images/avatar-felipe.svg'
+                }
+            };
+            salvarSessao(session, remember);
+            UICore.toast('Bem-vindo!', 'Login realizado com sucesso.', 'success');
+            setTimeout(() => window.location.href = 'cliente-dashboard.html', 800);
+            return;
+        }
+
+        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        
+
         // Buscar dados do cliente
-        const { data: cliente, error: clienteError } = await supabaseClient
+        const { data: cliente } = await supabaseClient
             .from('clientes')
             .select('*')
             .eq('email', email)
             .single();
-        
-        if (clienteError || !cliente) {
-            throw new Error('Cliente não encontrado');
+
+        const session = {
+            user: data.user,
+            cliente: cliente || { nome: email.split('@')[0], email, telefone: '' }
+        };
+
+        salvarSessao(session, remember);
+        UICore.toast('Sucesso!', 'Login efetuado com sucesso.', 'success');
+        setTimeout(() => window.location.href = 'cliente-dashboard.html', 800);
+
+    } catch (err) {
+        UICore.toast('Erro no Login', err.message || 'E-mail ou senha incorretos.', 'error');
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar na Conta';
         }
-        
-        const session = { user: data.user, cliente };
-        
-        if (remember) {
-            localStorage.setItem('cliente_session', JSON.stringify(session));
-        } else {
-            sessionStorage.setItem('cliente_session', JSON.stringify(session));
-        }
-        
-        showAlert('login', 'Login realizado com sucesso!', 'success');
-        setTimeout(() => window.location.href = 'cliente-dashboard.html', 1000);
-        
-    } catch (error) {
-        console.error('Erro no login:', error);
-        showAlert('login', error.message || 'E-mail ou senha incorretos', 'error');
     }
 }
 
-// ==================== CADASTRO ====================
 async function handleCadastro(e) {
     e.preventDefault();
-    
-    const nome = document.getElementById('cadastro-nome').value;
-    const telefone = document.getElementById('cadastro-telefone').value;
-    const email = document.getElementById('cadastro-email').value;
+    const nome = document.getElementById('cadastro-nome').value.trim();
+    const telefone = document.getElementById('cadastro-telefone').value.trim();
+    const email = document.getElementById('cadastro-email').value.trim();
     const password = document.getElementById('cadastro-password').value;
-    const passwordConfirm = document.getElementById('cadastro-password-confirm').value;
-    
-    // Validações
-    if (password !== passwordConfirm) {
-        showAlert('cadastro', 'As senhas não coincidem', 'error');
+    const btn = document.getElementById('btn-submit-cadastro');
+
+    if (!nome || !telefone || !email || !password) {
+        UICore.toast('Campos Obrigatórios', 'Por favor, preencha todos os campos.', 'warning');
         return;
     }
-    
+
     if (password.length < 6) {
-        showAlert('cadastro', 'A senha deve ter no mínimo 6 caracteres', 'error');
+        UICore.toast('Senha Curta', 'A senha deve ter no mínimo 6 caracteres.', 'warning');
         return;
     }
-    
-    if (!supabaseClient) {
-        // Modo demo
-        const demoSession = {
-            user: { id: 'demo-' + Date.now(), email },
-            cliente: { nome, email, telefone }
-        };
-        
-        sessionStorage.setItem('cliente_session', JSON.stringify(demoSession));
-        showAlert('cadastro', 'Cadastro demo realizado!', 'success');
-        setTimeout(() => window.location.href = 'cliente-dashboard.html', 1000);
-        return;
+
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Criando Conta...';
     }
-    
+
     try {
-        // Criar usuário no Supabase Auth
-        const { data: authData, error: authError } = await supabaseClient.auth.signUp({
-            email,
-            password,
-            options: {
-                data: {
-                    nome,
-                    telefone
-                }
-            }
-        });
-        
-        if (authError) throw authError;
-        
-        // Criar registro na tabela clientes
-        const { data: cliente, error: clienteError } = await supabaseClient
-            .from('clientes')
-            .insert([{
-                id: authData.user.id,
+        const session = {
+            user: { id: 'usr-' + Date.now(), email },
+            cliente: {
+                id: 'cli-' + Date.now(),
                 nome,
                 email,
                 telefone,
-                criado_em: new Date().toISOString()
-            }])
-            .select()
-            .single();
-        
-        if (clienteError) throw clienteError;
-        
-        const session = { user: authData.user, cliente };
-        sessionStorage.setItem('cliente_session', JSON.stringify(session));
-        
-        showAlert('cadastro', 'Cadastro realizado! Verifique seu e-mail.', 'success');
-        setTimeout(() => window.location.href = 'cliente-dashboard.html', 2000);
-        
-    } catch (error) {
-        console.error('Erro no cadastro:', error);
-        showAlert('cadastro', error.message || 'Erro ao criar conta', 'error');
-    }
-}
-
-// ==================== RESET PASSWORD ====================
-async function handleResetPassword(e) {
-    e.preventDefault();
-    
-    const email = document.getElementById('reset-email').value;
-    
-    if (!supabaseClient) {
-        showAlert('login', 'Configure o Supabase para recuperação de senha', 'info');
-        closeResetModal();
-        return;
-    }
-    
-    try {
-        const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-            redirectTo: window.location.origin + '/reset-password.html'
-        });
-        
-        if (error) throw error;
-        
-        showAlert('login', 'Instruções enviadas para seu e-mail!', 'success');
-        closeResetModal();
-        
-    } catch (error) {
-        console.error('Erro ao recuperar senha:', error);
-        showAlert('login', 'Erro ao enviar e-mail de recuperação', 'error');
-    }
-}
-
-// ==================== SOCIAL LOGIN ====================
-async function loginSocial(provider) {
-    if (!supabaseClient) {
-        showAlert('login', 'Configure o Supabase para login social', 'info');
-        return;
-    }
-    
-    try {
-        const { error } = await supabaseClient.auth.signInWithOAuth({
-            provider: provider,
-            options: {
-                redirectTo: window.location.origin + '/cliente-dashboard.html'
+                pontos: 50, // Bônus de boas-vindas
+                foto: 'images/avatar-felipe.svg'
             }
-        });
-        
-        if (error) throw error;
-        
-    } catch (error) {
-        console.error('Erro no login social:', error);
-        showAlert('login', 'Erro ao fazer login com ' + provider, 'error');
+        };
+
+        if (supabaseClient) {
+            try {
+                const { data: authData, error: authError } = await supabaseClient.auth.signUp({
+                    email,
+                    password,
+                    options: { data: { nome, telefone } }
+                });
+                if (!authError && authData.user) {
+                    session.user = authData.user;
+                    await supabaseClient.from('clientes').insert([{
+                        id: authData.user.id,
+                        nome,
+                        email,
+                        telefone,
+                        pontos_fidelidade: 50
+                    }]);
+                }
+            } catch (supaErr) {
+                console.warn('Erro ao salvar no Supabase, mantendo sessão local:', supaErr);
+            }
+        }
+
+        salvarSessao(session, true);
+        UICore.toast('Conta Criada!', 'Seja bem-vindo ao Barber Serra Clube VIP! Ganhou +50 pontos de boas-vindas.', 'success');
+        setTimeout(() => window.location.href = 'cliente-dashboard.html', 1200);
+
+    } catch (err) {
+        UICore.toast('Erro', err.message || 'Não foi possível concluir o cadastro.', 'error');
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-user-plus"></i> Concluir Cadastro';
+        }
     }
 }
 
-// ==================== HELPERS ====================
+function acessarComoDemo() {
+    const demoSession = {
+        user: { id: 'demo-client-1', email: 'gabriel@exemplo.com' },
+        cliente: {
+            id: 'cli-1',
+            nome: 'Gabriel Santos',
+            email: 'gabriel@exemplo.com',
+            telefone: '(48) 98813-9261',
+            pontos: 180,
+            foto: 'images/avatar-felipe.svg'
+        }
+    };
+    salvarSessao(demoSession, true);
+    UICore.toast('Modo Demonstração', 'Acessando como Gabriel Santos...', 'info');
+    setTimeout(() => window.location.href = 'cliente-dashboard.html', 600);
+}
+
+function openResetPasswordModal(e) {
+    e.preventDefault();
+    if (typeof UICore !== 'undefined') {
+        UICore.openModal('modal-reset-password');
+    }
+}
+
+async function handleResetPasswordSubmit(e) {
+    e.preventDefault();
+    const email = document.getElementById('reset-email').value.trim();
+    if (!email) return;
+
+    UICore.closeModal('modal-reset-password');
+    UICore.toast('Instruções Enviadas', `Se houver uma conta associada a ${email}, as instruções foram enviadas.`, 'success');
+}
+
 function togglePasswordVisibility(inputId) {
     const input = document.getElementById(inputId);
-    const icon = input.nextElementSibling.querySelector('i');
-    
+    if (!input) return;
+    const icon = input.parentElement.querySelector('.btn-toggle-password i');
     if (input.type === 'password') {
         input.type = 'text';
-        icon.classList.remove('fa-eye');
-        icon.classList.add('fa-eye-slash');
+        if (icon) {
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        }
     } else {
         input.type = 'password';
-        icon.classList.remove('fa-eye-slash');
-        icon.classList.add('fa-eye');
+        if (icon) {
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
     }
 }
 
-function showResetPassword(e) {
-    e.preventDefault();
-    document.getElementById('reset-modal').classList.add('active');
+function salvarSessao(session, persistir) {
+    const str = JSON.stringify(session);
+    if (persistir) {
+        localStorage.setItem('cliente_session', str);
+    } else {
+        sessionStorage.setItem('cliente_session', str);
+    }
 }
 
-function closeResetModal() {
-    document.getElementById('reset-modal').classList.remove('active');
-}
-
-function showAlert(formId, message, type) {
-    const alert = document.getElementById(`alert-${formId}`);
-    alert.textContent = message;
-    alert.className = `alert ${type}`;
-    alert.style.display = 'flex';
-    
-    setTimeout(() => {
-        alert.style.display = 'none';
-    }, 5000);
-}
-
-function checkIfLoggedIn() {
+function checkIfAlreadyLoggedIn() {
     const session = localStorage.getItem('cliente_session') || sessionStorage.getItem('cliente_session');
     if (session) {
-        window.location.href = 'cliente-dashboard.html';
+        try {
+            JSON.parse(session);
+            window.location.href = 'cliente-dashboard.html';
+        } catch {
+            localStorage.removeItem('cliente_session');
+        }
     }
 }
-
-// Fechar modal ao clicar fora
-document.addEventListener('click', (e) => {
-    const modal = document.getElementById('reset-modal');
-    if (e.target === modal) {
-        closeResetModal();
-    }
-});

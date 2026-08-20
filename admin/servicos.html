@@ -1,25 +1,214 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Serviços - Admin | BARBER SERRA</title>
-  <link rel="stylesheet" href="../css/admin.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serviços & Catálogo — Admin BARBER SERRA</title>
+    <meta name="theme-color" content="#090a0d">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet" href="../css/design-system.css">
+    <link rel="stylesheet" href="css/admin.css">
 </head>
-<body class="admin-page">
-  <aside class="sidebar">[...]</aside>
-  <div class="main-content">
-    <header class="topbar"><h1>Serviços</h1></header>
-    <div class="page-content container">
-      <p class="muted">Gerencie lista de serviços e preços.</p>
-      <table class="admin-table">
-        <thead><tr><th>ID</th><th>Serviço</th><th>Preço</th><th>Duração</th></tr></thead>
-        <tbody>
-          <tr><td>corte-degrade</td><td>Corte Degradê</td><td>R$40,00</td><td>45min</td></tr>
-        </tbody>
-      </table>
+<body class="admin-body">
+
+    <div class="mobile-drawer-backdrop" id="admin-sidebar-backdrop"></div>
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="admin-sidebar">
+        <a href="dashboard.html" class="sidebar-brand">
+            <div class="logo-icon-wrapper" style="width: 36px; height: 36px; font-size: 1.1rem;">
+                <i class="fas fa-cut"></i>
+            </div>
+            <div class="logo-text">
+                <span class="logo-name" style="font-size: 1rem;">BARBER SERRA</span>
+                <span class="logo-sub">PAINEL SAAS</span>
+            </div>
+        </a>
+
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="sidebar-item"><i class="fas fa-chart-pie"></i><span>Dashboard</span></a>
+            <a href="agendamentos.html" class="sidebar-item"><i class="fas fa-calendar-alt"></i><span>Agendamentos</span></a>
+            <a href="clientes.html" class="sidebar-item"><i class="fas fa-users"></i><span>Clientes CRM</span></a>
+            <a href="barbeiros.html" class="sidebar-item"><i class="fas fa-user-tie"></i><span>Barbeiros</span></a>
+            <a href="servicos.html" class="sidebar-item active"><i class="fas fa-scissors"></i><span>Serviços</span></a>
+            <a href="horarios.html" class="sidebar-item"><i class="fas fa-clock"></i><span>Horários & Grade</span></a>
+            <a href="relatorios.html" class="sidebar-item"><i class="fas fa-file-invoice-dollar"></i><span>Relatórios</span></a>
+            <a href="configuracoes.html" class="sidebar-item"><i class="fas fa-cog"></i><span>Configurações</span></a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-user">
+                <img src="../images/barber-1.svg" alt="Admin Avatar" id="admin-user-avatar">
+                <div class="sidebar-user-details">
+                    <span class="sidebar-user-name" id="admin-user-name">Mateus Rabelo</span>
+                    <span class="sidebar-user-role">Master Barber • Admin</span>
+                </div>
+            </div>
+            <button type="button" class="btn-sidebar-logout" onclick="logoutAdmin()"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+    </aside>
+
+    <div class="admin-main-wrapper">
+        <header class="admin-topbar">
+            <div class="topbar-left">
+                <button type="button" class="mobile-toggle" id="sidebar-mobile-toggle"><i class="fas fa-bars"></i></button>
+                <h1 class="topbar-title">Catálogo de Serviços</h1>
+            </div>
+            <div class="topbar-right">
+                <button type="button" class="btn btn-primary btn-sm" onclick="abrirModalServico()">
+                    <i class="fas fa-plus"></i> Novo Serviço
+                </button>
+            </div>
+        </header>
+
+        <main class="admin-content">
+            <div class="card" style="padding: 1.5rem;">
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Serviço</th>
+                                <th>Categoria</th>
+                                <th>Preço (R$)</th>
+                                <th>Duração Estimada</th>
+                                <th>Destaque</th>
+                                <th>Status</th>
+                                <th style="text-align: right;">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-services-table-body">
+                            <!-- Inserido dinamicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
     </div>
-  </div>
-  <script src="../js/supabase.js"></script>
+
+    <!-- Modal Serviço -->
+    <div class="modal-backdrop" id="modal-servico">
+        <div class="modal-panel">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-scissors text-accent"></i> Cadastro de Serviço</h3>
+                <button type="button" class="modal-close-btn" onclick="UICore.closeModal('modal-servico')"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="form-servico" onsubmit="salvarServico(event)">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label" for="service-name">Nome do Serviço</label>
+                        <input type="text" id="service-name" class="form-control" placeholder="Ex: Barboterapia Especial" required>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label" for="service-price">Preço (R$)</label>
+                            <input type="number" id="service-price" class="form-control" placeholder="50" required min="10">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="service-duration">Duração (minutos)</label>
+                            <input type="number" id="service-duration" class="form-control" placeholder="45" required min="15" step="5">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="service-category">Categoria</label>
+                        <select id="service-category" class="form-control">
+                            <option value="cortes">Cortes</option>
+                            <option value="barba">Barba & Spa</option>
+                            <option value="combos">Combos VIP</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="service-desc">Descrição</label>
+                        <textarea id="service-desc" class="form-control" rows="2" placeholder="Detalhes do procedimento e acabamento..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="UICore.closeModal('modal-servico')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Salvar Serviço</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/ui-core.js"></script>
+    <script src="../js/supabase.js"></script>
+    <script src="js/admin-core.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            await renderizarServicosAdmin();
+        });
+
+        async function renderizarServicosAdmin() {
+            const tbody = document.getElementById('admin-services-table-body');
+            if (!tbody) return;
+
+            const servicos = await obterListaServicosAdmin();
+
+            tbody.innerHTML = servicos.map(s => `
+                <tr>
+                    <td>
+                        <strong style="display: block; color: var(--text-primary); font-size: 0.95rem;">${s.nome}</strong>
+                        <small style="color: var(--text-muted);">${s.descricao || ''}</small>
+                    </td>
+                    <td><span class="badge badge-gold">${(s.categoria || 'cortes').toUpperCase()}</span></td>
+                    <td><strong style="color: var(--accent); font-size: 1.05rem;">R$ ${s.preco},00</strong></td>
+                    <td><i class="fas fa-clock text-accent"></i> ${s.duracao} minutos</td>
+                    <td>${s.destaque ? '<span class="badge badge-warning">Sim</span>' : '<span style="color: var(--text-muted);">Não</span>'}</td>
+                    <td><span class="badge badge-success">Ativo</span></td>
+                    <td style="text-align: right;">
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="editarServico('${s.id}')">
+                            <i class="fas fa-edit"></i> Editar
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function abrirModalServico() {
+            document.getElementById('form-servico').reset();
+            UICore.openModal('modal-servico');
+        }
+
+        function editarServico(id) {
+            const s = SERVICOS.find(serv => serv.id === id);
+            if (!s) return;
+            document.getElementById('service-name').value = s.nome;
+            document.getElementById('service-price').value = s.preco;
+            document.getElementById('service-duration').value = s.duracao;
+            document.getElementById('service-category').value = s.categoria || 'cortes';
+            document.getElementById('service-desc').value = s.descricao || '';
+            UICore.openModal('modal-servico');
+        }
+
+        function salvarServico(e) {
+            e.preventDefault();
+            const nome = document.getElementById('service-name').value;
+            const preco = Number(document.getElementById('service-price').value);
+            const duracao = Number(document.getElementById('service-duration').value);
+            const categoria = document.getElementById('service-category').value;
+            const descricao = document.getElementById('service-desc').value;
+
+            SERVICOS.push({
+                id: 'serv-' + Date.now(),
+                nome,
+                preco,
+                duracao,
+                categoria,
+                descricao,
+                destaque: false
+            });
+
+            UICore.closeModal('modal-servico');
+            UICore.toast('Serviço Salvo', 'Catálogo atualizado com sucesso!', 'success');
+            renderizarServicosAdmin();
+        }
+    </script>
 </body>
 </html>

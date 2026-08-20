@@ -1,26 +1,183 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Barbeiros - Admin | BARBER SERRA</title>
-  <link rel="stylesheet" href="../css/admin.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barbeiros & Equipe — Admin BARBER SERRA</title>
+    <meta name="theme-color" content="#090a0d">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet" href="../css/design-system.css">
+    <link rel="stylesheet" href="css/admin.css">
 </head>
-<body class="admin-page">
-  <aside class="sidebar">[...]</aside>
-  <div class="main-content">
-    <header class="topbar"><h1>Barbeiros</h1></header>
-    <div class="page-content container">
-      <p class="muted">Lista e ordem de exibição dos barbeiros.</p>
-      <div class="card">
-        <ul>
-          <li>Mateus Rabelo — Cortes Modernos — ativo</li>
-          <li>Caio Martins — Design de Barba — ativo</li>
-          <li>Bruno Costa — Cortes Clássicos — ativo</li>
-        </ul>
-      </div>
+<body class="admin-body">
+
+    <div class="mobile-drawer-backdrop" id="admin-sidebar-backdrop"></div>
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="admin-sidebar">
+        <a href="dashboard.html" class="sidebar-brand">
+            <div class="logo-icon-wrapper" style="width: 36px; height: 36px; font-size: 1.1rem;">
+                <i class="fas fa-cut"></i>
+            </div>
+            <div class="logo-text">
+                <span class="logo-name" style="font-size: 1rem;">BARBER SERRA</span>
+                <span class="logo-sub">PAINEL SAAS</span>
+            </div>
+        </a>
+
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="sidebar-item"><i class="fas fa-chart-pie"></i><span>Dashboard</span></a>
+            <a href="agendamentos.html" class="sidebar-item"><i class="fas fa-calendar-alt"></i><span>Agendamentos</span></a>
+            <a href="clientes.html" class="sidebar-item"><i class="fas fa-users"></i><span>Clientes CRM</span></a>
+            <a href="barbeiros.html" class="sidebar-item active"><i class="fas fa-user-tie"></i><span>Barbeiros</span></a>
+            <a href="servicos.html" class="sidebar-item"><i class="fas fa-scissors"></i><span>Serviços</span></a>
+            <a href="horarios.html" class="sidebar-item"><i class="fas fa-clock"></i><span>Horários & Grade</span></a>
+            <a href="relatorios.html" class="sidebar-item"><i class="fas fa-file-invoice-dollar"></i><span>Relatórios</span></a>
+            <a href="configuracoes.html" class="sidebar-item"><i class="fas fa-cog"></i><span>Configurações</span></a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-user">
+                <img src="../images/barber-1.svg" alt="Admin Avatar" id="admin-user-avatar">
+                <div class="sidebar-user-details">
+                    <span class="sidebar-user-name" id="admin-user-name">Mateus Rabelo</span>
+                    <span class="sidebar-user-role">Master Barber • Admin</span>
+                </div>
+            </div>
+            <button type="button" class="btn-sidebar-logout" onclick="logoutAdmin()"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+    </aside>
+
+    <div class="admin-main-wrapper">
+        <header class="admin-topbar">
+            <div class="topbar-left">
+                <button type="button" class="mobile-toggle" id="sidebar-mobile-toggle"><i class="fas fa-bars"></i></button>
+                <h1 class="topbar-title">Equipe de Barbeiros</h1>
+            </div>
+            <div class="topbar-right">
+                <button type="button" class="btn btn-primary btn-sm" onclick="abrirModalBarbeiro()">
+                    <i class="fas fa-plus"></i> Adicionar Barbeiro
+                </button>
+            </div>
+        </header>
+
+        <main class="admin-content">
+            <div class="schedule-grid-cards" id="admin-barbers-grid">
+                <!-- Barbeiros renderizados dinamicamente -->
+            </div>
+        </main>
     </div>
-  </div>
-  <script src="../js/supabase.js"></script>
+
+    <!-- Modal Barbeiro -->
+    <div class="modal-backdrop" id="modal-barbeiro">
+        <div class="modal-panel">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-user-tie text-accent"></i> Cadastro de Barbeiro</h3>
+                <button type="button" class="modal-close-btn" onclick="UICore.closeModal('modal-barbeiro')"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="form-barbeiro" onsubmit="salvarBarbeiro(event)">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label" for="barber-name">Nome do Profissional</label>
+                        <input type="text" id="barber-name" class="form-control" placeholder="Ex: Felipe Costa" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="barber-specialty">Especialidade Principal</label>
+                        <input type="text" id="barber-specialty" class="form-control" placeholder="Ex: Fade & Cortes Modernos" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="barber-bio">Biografia / Descrição</label>
+                        <textarea id="barber-bio" class="form-control" rows="3" placeholder="Resumo da experiência e técnicas..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="UICore.closeModal('modal-barbeiro')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Salvar Profissional</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/ui-core.js"></script>
+    <script src="../js/supabase.js"></script>
+    <script src="js/admin-core.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            await renderizarBarbeirosAdmin();
+        });
+
+        async function renderizarBarbeirosAdmin() {
+            const grid = document.getElementById('admin-barbers-grid');
+            if (!grid) return;
+
+            const barbeiros = await obterListaBarbeirosAdmin();
+
+            grid.innerHTML = barbeiros.map(b => `
+                <div class="schedule-card card-hover">
+                    <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1rem;">
+                        <img src="${b.foto.startsWith('http') ? b.foto : `../${b.foto}`}" alt="${b.nome}" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-accent);">
+                        <div>
+                            <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary);">${b.nome}</h3>
+                            <span style="font-size: 0.8125rem; color: var(--accent); font-weight: 600;">${b.especialidade}</span>
+                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">
+                                ★ ${b.avaliacao || '5.0'} (${b.atendimentos || '300+'}+ cortes)
+                            </div>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1.25rem;">${b.bio || ''}</p>
+                    <div class="schedule-footer">
+                        <span class="badge badge-success"><i class="fas fa-circle" style="font-size: 6px;"></i> Ativo na Grade</span>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="editarBarbeiro(${b.id})">
+                            <i class="fas fa-edit"></i> Editar
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function abrirModalBarbeiro() {
+            document.getElementById('form-barbeiro').reset();
+            UICore.openModal('modal-barbeiro');
+        }
+
+        function editarBarbeiro(id) {
+            const b = BARBEIROS.find(barb => barb.id === id);
+            if (!b) return;
+            document.getElementById('barber-name').value = b.nome;
+            document.getElementById('barber-specialty').value = b.especialidade;
+            document.getElementById('barber-bio').value = b.bio || '';
+            UICore.openModal('modal-barbeiro');
+        }
+
+        function salvarBarbeiro(e) {
+            e.preventDefault();
+            const nome = document.getElementById('barber-name').value;
+            const especialidade = document.getElementById('barber-specialty').value;
+            const bio = document.getElementById('barber-bio').value;
+
+            BARBEIROS.push({
+                id: BARBEIROS.length + 1,
+                nome,
+                especialidade,
+                bio,
+                foto: 'images/barber-1.svg',
+                avaliacao: 5.0,
+                atendimentos: 0,
+                ativo: true
+            });
+
+            UICore.closeModal('modal-barbeiro');
+            UICore.toast('Barbeiro Salvo', 'Dados da equipe atualizados!', 'success');
+            renderizarBarbeirosAdmin();
+        }
+    </script>
 </body>
 </html>

@@ -3,251 +3,270 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meus Agendamentos - BARBER SERRA</title>
+    <title>Painel do Cliente — BARBER SERRA</title>
+    <meta name="theme-color" content="#090a0d">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet" href="css/design-system.css">
     <link rel="stylesheet" href="css/cliente-dashboard.css">
 </head>
-<body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container header-content">
-            <div class="brand">
-                <i class="fas fa-cut"></i>
-                <span>BARBER SERRA</span>
-            </div>
-            <nav class="nav-menu">
-                <a href="#agendamentos" class="nav-link active">Meus Agendamentos</a>
-                <a href="#novo" class="nav-link">Novo Agendamento</a>
-                <a href="#perfil" class="nav-link">Perfil</a>
+<body class="client-app">
+
+    <!-- Header / Navbar Minimalista -->
+    <header class="client-header">
+        <div class="container client-header-container">
+            <a href="cliente-dashboard.html" class="brand-logo" aria-label="BARBER SERRA">
+                <div class="logo-icon-wrapper" style="width: 36px; height: 36px; font-size: 1.05rem;">
+                    <i class="fas fa-cut"></i>
+                </div>
+                <div class="logo-text">
+                    <span class="logo-name" style="font-size: 1rem;">BARBER SERRA</span>
+                </div>
+            </a>
+
+            <!-- Nav Links -->
+            <nav class="client-nav">
+                <a href="cliente-dashboard.html" class="client-nav-link active">Início</a>
+                <a href="cliente-agendamentos.html" class="client-nav-link">Histórico de Cortes</a>
+                <a href="cliente-perfil.html" class="client-nav-link">Meu Perfil</a>
+                <a href="index.html" class="client-nav-link" style="color: var(--text-muted);">Ver Site</a>
             </nav>
-            <div class="user-actions">
-                <button class="btn-icon" title="Notificações">
-                    <i class="fas fa-bell"></i>
-                    <span class="badge">2</span>
+
+            <!-- User Menu & CTA -->
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <button type="button" class="btn btn-primary btn-sm" onclick="abrirModalAgendamentoCliente()">
+                    <i class="fas fa-calendar-plus"></i> Agendar Horário
                 </button>
-                <div class="user-menu">
-                    <img src="images/avatar-felipe.svg" alt="Usuário" id="user-avatar">
-                    <div class="dropdown">
-                        <span id="user-name-header">Cliente</span>
-                        <button onclick="logout()" class="btn-logout-small">
-                            <i class="fas fa-sign-out-alt"></i> Sair
-                        </button>
+
+                <div class="user-profile-menu">
+                    <button type="button" class="user-avatar-btn" id="btn-profile-menu" onclick="toggleProfileDropdown()">
+                        <img src="images/avatar-felipe.svg" alt="Avatar" class="user-avatar-img" id="client-avatar-top">
+                        <span class="user-avatar-name" id="client-name-top">Cliente</span>
+                        <i class="fas fa-chevron-down" style="font-size: 0.7rem; color: var(--text-muted);"></i>
+                    </button>
+
+                    <div class="profile-dropdown" id="profile-dropdown">
+                        <a href="cliente-perfil.html" class="dropdown-item"><i class="fas fa-user-edit"></i> Meu Perfil</a>
+                        <a href="cliente-agendamentos.html" class="dropdown-item"><i class="fas fa-history"></i> Meus Agendamentos</a>
+                        <a href="https://wa.me/5548988139261" target="_blank" class="dropdown-item"><i class="fab fa-whatsapp"></i> Falar com a Barbearia</a>
+                        <div style="height: 1px; background: var(--border); margin: 0.25rem 0;"></div>
+                        <button type="button" class="dropdown-item danger" onclick="logoutCliente()"><i class="fas fa-sign-out-alt"></i> Sair da Conta</button>
                     </div>
                 </div>
-                <button class="mobile-toggle" id="mobile-toggle">
-                    <i class="fas fa-bars"></i>
-                </button>
             </div>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="main-content">
-        <div class="container">
-            <!-- Welcome Section -->
-            <section class="welcome-section">
-                <div class="welcome-text">
-                    <h1>Olá, <span id="user-name">Cliente</span>! 👋</h1>
-                    <p>Gerencie seus agendamentos e agende novos horários</p>
+    <!-- Main Content Minimalista -->
+    <main class="client-main">
+        <div class="container" style="max-width: 920px;">
+            
+            <!-- Greeting & VIP Badge Bar -->
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border-subtle); flex-wrap: wrap; gap: 1rem;">
+                <div>
+                    <h1 style="font-size: 1.85rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em;">
+                        Olá, <span id="client-first-name" class="gradient-text">Gabriel</span>
+                    </h1>
+                    <p style="font-size: 0.95rem; color: var(--text-secondary); margin-top: 2px;">Bem-vindo ao seu espaço exclusivo na Barber Serra.</p>
                 </div>
-                <button class="btn-primary" onclick="scrollToSection('novo')">
-                    <i class="fas fa-plus"></i>
-                    Novo Agendamento
-                </button>
-            </section>
-
-            <!-- Stats Cards -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon upcoming">
-                        <i class="fas fa-calendar-check"></i>
-                    </div>
-                    <div>
-                        <span class="stat-label">Próximo Agendamento</span>
-                        <h3 class="stat-value" id="proximo-agendamento">--</h3>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon total">
-                        <i class="fas fa-history"></i>
-                    </div>
-                    <div>
-                        <span class="stat-label">Total de Atendimentos</span>
-                        <h3 class="stat-value" id="total-atendimentos">0</h3>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon points">
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <div>
-                        <span class="stat-label">Pontos Fidelidade</span>
-                        <h3 class="stat-value" id="pontos-fidelidade">0</h3>
-                    </div>
+                
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <span class="badge badge-gold" id="client-vip-badge">
+                        <i class="fas fa-crown"></i> Clube VIP • <span id="stat-pontos-vip">180 pts</span>
+                    </span>
+                    <span class="badge badge-info" id="client-total-badge">
+                        <i class="fas fa-check"></i> <span id="stat-total-cortes">12</span> visitas realizadas
+                    </span>
                 </div>
             </div>
 
-            <!-- Agendamentos Section -->
-            <section id="agendamentos" class="section">
-                <div class="section-header">
-                    <h2>Meus Agendamentos</h2>
-                    <div class="filter-tabs">
-                        <button class="filter-tab active" data-filter="todos">Todos</button>
-                        <button class="filter-tab" data-filter="confirmado">Confirmados</button>
-                        <button class="filter-tab" data-filter="concluido">Concluídos</button>
-                    </div>
+            <!-- Próximo Agendamento (Hero Card da tela) -->
+            <div style="margin-bottom: 2.5rem;">
+                <h2 style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem;">
+                    Seu Próximo Horário
+                </h2>
+                <div class="next-appointment-card" id="next-appointment-box" style="margin-bottom: 0;">
+                    <!-- Preenchido dinamicamente via cliente-dashboard.js -->
                 </div>
-                
-                <div class="agendamentos-list" id="agendamentos-list">
-                    <div class="loading-state">
-                        <i class="fas fa-spinner fa-spin"></i>
-                        <p>Carregando agendamentos...</p>
-                    </div>
-                </div>
-            </section>
+            </div>
 
-            <!-- Novo Agendamento Section -->
-            <section id="novo" class="section">
-                <div class="section-header">
-                    <h2>Novo Agendamento</h2>
-                    <p>Escolha o serviço, barbeiro e horário desejado</p>
+            <!-- Histórico Recente (Limpo e Direto) -->
+            <div class="card" style="padding: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+                    <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-primary);">
+                        <i class="fas fa-history text-accent"></i> Últimos Atendimentos
+                    </h3>
+                    <a href="cliente-agendamentos.html" class="btn btn-ghost btn-sm" style="font-size: 0.8125rem;">
+                        Ver histórico completo <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
 
-                <div class="booking-wizard">
-                    <!-- Step 1: Serviço -->
-                    <div class="wizard-step active" data-step="1">
-                        <h3>1. Escolha o Serviço</h3>
-                        <div class="services-grid" id="services-grid">
-                            <!-- Carregado dinamicamente -->
-                        </div>
-                        <button class="btn-next" onclick="nextBookingStep(2)" disabled>
-                            Próximo <i class="fas fa-arrow-right"></i>
-                        </button>
-                    </div>
-
-                    <!-- Step 2: Barbeiro -->
-                    <div class="wizard-step" data-step="2">
-                        <h3>2. Escolha o Barbeiro</h3>
-                        <div class="barbers-grid" id="barbers-grid">
-                            <!-- Carregado dinamicamente -->
-                        </div>
-                        <div class="wizard-buttons">
-                            <button class="btn-back" onclick="prevBookingStep(1)">
-                                <i class="fas fa-arrow-left"></i> Voltar
-                            </button>
-                            <button class="btn-next" onclick="nextBookingStep(3)" disabled>
-                                Próximo <i class="fas fa-arrow-right"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Step 3: Data e Horário -->
-                    <div class="wizard-step" data-step="3">
-                        <h3>3. Escolha Data e Horário</h3>
-                        <div class="datetime-picker">
-                            <div class="date-picker">
-                                <label>Data</label>
-                                <input type="date" id="booking-date" min="">
-                            </div>
-                            <div class="time-slots" id="time-slots">
-                                <p class="hint">Selecione uma data para ver os horários disponíveis</p>
-                            </div>
-                        </div>
-                        <div class="wizard-buttons">
-                            <button class="btn-back" onclick="prevBookingStep(2)">
-                                <i class="fas fa-arrow-left"></i> Voltar
-                            </button>
-                            <button class="btn-next" onclick="nextBookingStep(4)" disabled>
-                                Próximo <i class="fas fa-arrow-right"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Step 4: Confirmação -->
-                    <div class="wizard-step" data-step="4">
-                        <h3>4. Confirme seu Agendamento</h3>
-                        <div class="booking-summary" id="booking-summary">
-                            <!-- Preenchido dinamicamente -->
-                        </div>
-                        <div class="wizard-buttons">
-                            <button class="btn-back" onclick="prevBookingStep(3)">
-                                <i class="fas fa-arrow-left"></i> Voltar
-                            </button>
-                            <button class="btn-confirm" onclick="confirmBooking()">
-                                <i class="fas fa-check"></i> Confirmar Agendamento
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Step 5: Sucesso -->
-                    <div class="wizard-step" data-step="5">
-                        <div class="success-state">
-                            <i class="fas fa-check-circle"></i>
-                            <h3>Agendamento Confirmado!</h3>
-                            <p>Você receberá uma confirmação via WhatsApp</p>
-                            <div class="booking-details" id="booking-details-final"></div>
-                            <button class="btn-primary" onclick="resetBooking()">
-                                Fazer Novo Agendamento
-                            </button>
-                        </div>
-                    </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Data & Hora</th>
+                                <th>Serviço</th>
+                                <th>Barbeiro</th>
+                                <th>Investimento</th>
+                                <th>Status</th>
+                                <th style="text-align: right;">Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody id="client-recent-table-body">
+                            <!-- Inserido dinamicamente via JS -->
+                        </tbody>
+                    </table>
                 </div>
-            </section>
+            </div>
 
-            <!-- Perfil Section -->
-            <section id="perfil" class="section">
-                <div class="section-header">
-                    <h2>Meu Perfil</h2>
-                </div>
-                
-                <div class="profile-card">
-                    <div class="profile-header">
-                        <img src="images/avatar-felipe.svg" alt="Avatar" class="profile-avatar">
-                        <div>
-                            <h3 id="profile-name">Cliente</h3>
-                            <p id="profile-email">email@exemplo.com</p>
-                        </div>
-                    </div>
-                    
-                    <div class="profile-info">
-                        <div class="info-item">
-                            <i class="fas fa-phone"></i>
-                            <div>
-                                <span class="label">Telefone</span>
-                                <span class="value" id="profile-phone">--</span>
-                            </div>
-                        </div>
-                        <div class="info-item">
-                            <i class="fas fa-calendar-check"></i>
-                            <div>
-                                <span class="label">Cliente desde</span>
-                                <span class="value" id="profile-since">--</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <button class="btn-logout" onclick="logout()">
-                        <i class="fas fa-sign-out-alt"></i>
-                        Sair da Conta
-                    </button>
-                </div>
-            </section>
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2024 BARBER SERRA. Todos os direitos reservados.</p>
-            <a href="index.html">Voltar ao site</a>
-        </div>
-    </footer>
+    <!-- ==================== MODAL DE AGENDAMENTO (FOCUS MODE) ==================== -->
+    <div class="modal-backdrop" id="modal-booking-wizard">
+        <div class="modal-panel" style="max-width: 680px;">
+            <div class="modal-header">
+                <div>
+                    <span class="badge badge-gold" style="font-size: 0.7rem;"><i class="fas fa-bolt"></i> Agendamento Online</span>
+                    <h3 class="modal-title" style="margin-top: 4px;">Reservar Horário</h3>
+                </div>
+                <button type="button" class="modal-close-btn" onclick="UICore.closeModal('modal-booking-wizard')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
 
+            <div class="modal-body" style="padding: 1.75rem;">
+                <!-- Wizard Steps Indicator -->
+                <div class="wizard-steps-indicator" style="margin-bottom: 1.5rem;">
+                    <div class="step-dot active" data-step-indicator="1"><span>1</span><small>Serviço</small></div>
+                    <div class="step-line"></div>
+                    <div class="step-dot" data-step-indicator="2"><span>2</span><small>Barbeiro</small></div>
+                    <div class="step-line"></div>
+                    <div class="step-dot" data-step-indicator="3"><span>3</span><small>Data/Hora</small></div>
+                    <div class="step-line"></div>
+                    <div class="step-dot" data-step-indicator="4"><span>4</span><small>Confirmar</small></div>
+                </div>
+
+                <!-- PASSO 1: SERVIÇO -->
+                <div class="wizard-pane active" id="wizard-pane-1">
+                    <h4 style="font-size: 1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1rem;">1. Escolha o serviço</h4>
+                    <div class="wizard-cards-grid" id="wizard-services-grid" style="grid-template-columns: 1fr 1fr; gap: 0.75rem;"></div>
+                    <div class="wizard-nav-btns">
+                        <span></span>
+                        <button type="button" class="btn btn-primary" id="btn-step1-next" disabled onclick="wizardAvancar(2)">
+                            Continuar <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- PASSO 2: BARBEIRO -->
+                <div class="wizard-pane" id="wizard-pane-2">
+                    <h4 style="font-size: 1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1rem;">2. Escolha o barbeiro</h4>
+                    <div class="wizard-cards-grid" id="wizard-barbers-grid" style="grid-template-columns: 1fr; gap: 0.75rem;"></div>
+                    <div class="wizard-nav-btns">
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="wizardVoltar(1)"><i class="fas fa-arrow-left"></i> Voltar</button>
+                        <button type="button" class="btn btn-primary" id="btn-step2-next" disabled onclick="wizardAvancar(3)">
+                            Continuar <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- PASSO 3: DATA & HORA -->
+                <div class="wizard-pane" id="wizard-pane-3">
+                    <h4 style="font-size: 1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1rem;">3. Data e Horário</h4>
+                    <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem;">
+                        <div>
+                            <label class="form-label" for="wizard-date-input">Data do Corte</label>
+                            <input type="date" id="wizard-date-input" class="form-control">
+                            <div class="date-quick-chips" style="margin-top: 0.5rem;">
+                                <button type="button" class="chip-date active" id="chip-hoje">Hoje</button>
+                                <button type="button" class="chip-date" id="chip-amanha">Amanhã</button>
+                                <button type="button" class="chip-date" id="chip-depois">Depois de amanhã</button>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="form-label">Horários Disponíveis</label>
+                            <div class="slots-grid" id="wizard-slots-grid" style="max-height: 180px;"></div>
+                        </div>
+                    </div>
+                    <div class="wizard-nav-btns">
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="wizardVoltar(2)"><i class="fas fa-arrow-left"></i> Voltar</button>
+                        <button type="button" class="btn btn-primary" id="btn-step3-next" disabled onclick="wizardAvancar(4)">
+                            Continuar <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- PASSO 4: RESUMO & CONFIRMAÇÃO -->
+                <div class="wizard-pane" id="wizard-pane-4">
+                    <h4 style="font-size: 1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1rem;">4. Confirmação do Horário</h4>
+                    <div class="booking-summary-invoice card" style="margin-bottom: 1.5rem;">
+                        <div class="invoice-items" id="wizard-invoice-items"></div>
+                        <div class="invoice-total">
+                            <span>Total:</span>
+                            <strong class="total-price" id="wizard-total-price">R$ 0,00</strong>
+                        </div>
+                    </div>
+                    <div class="wizard-nav-btns">
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="wizardVoltar(3)"><i class="fas fa-arrow-left"></i> Voltar</button>
+                        <button type="button" class="btn btn-primary btn-lg" id="btn-final-confirm" onclick="confirmarAgendamentoCliente()">
+                            <i class="fas fa-check-circle"></i> Confirmar Horário
+                        </button>
+                    </div>
+                </div>
+
+                <!-- PASSO 5: SUCESSO -->
+                <div class="wizard-pane" id="wizard-pane-5">
+                    <div class="booking-success-box text-center" style="padding: 1rem 0;">
+                        <div class="success-icon-animated" style="width: 56px; height: 56px; font-size: 1.5rem; margin-bottom: 1rem;">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--text-primary); margin-bottom: 0.25rem;">Horário Agendado!</h3>
+                        <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1.25rem;">Seu agendamento foi registrado com sucesso.</p>
+
+                        <div class="success-ticket card" id="wizard-success-ticket" style="margin-bottom: 1.5rem;"></div>
+
+                        <div class="success-actions">
+                            <a href="#" id="btn-whatsapp-confirmation" target="_blank" class="btn btn-primary btn-sm">
+                                <i class="fab fa-whatsapp"></i> Notificar no WhatsApp
+                            </a>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="UICore.closeModal('modal-booking-wizard'); carregarDadosClienteDashboard();">
+                                Concluir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Detalhes do Agendamento -->
+    <div class="modal-backdrop" id="modal-detalhes-agendamento">
+        <div class="modal-panel">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-ticket-alt text-accent"></i> Detalhes do Agendamento</h3>
+                <button type="button" class="modal-close-btn" onclick="UICore.closeModal('modal-detalhes-agendamento')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-detalhes-corpo"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="UICore.closeModal('modal-detalhes-agendamento')">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/config.js"></script>
+    <script src="js/ui-core.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/script.js"></script>
     <script src="js/cliente-dashboard.js"></script>
 </body>
 </html>
